@@ -12,11 +12,12 @@
 #include <QListWidget>
 
 #include "CodeEditor.h"
+#include "BuildOutput.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this))
 {
-  resize(600, 800);
+  resize(600, 600);
   setCentralWidget(_editor);
   QAction* a = new QAction(this);
   a->setText("Quit");
@@ -36,19 +37,17 @@ GLShaderDev::GLShaderDev()
 
   statusBar()->showMessage("5sec Random message", 5000);
 
+  _output = new BuildOutput;
+
   QDockWidget *compile = new QDockWidget(tr("Build log"), this);
   compile->setAllowedAreas(Qt::BottomDockWidgetArea);
   compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | (compile->features() & ~QDockWidget::DockWidgetFloatable));
-  QTreeWidget* list = new QTreeWidget(this);
-//   new QTreeWidgetItem(tr("Oak"), list);
-//   new QTreeWidgetItem(tr("BItch"), list);
-
-  compile->setWidget(list);
+  compile->setWidget(_output);
 
   addDockWidget(Qt::BottomDockWidgetArea, compile);
   QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  dockWidget->setWidget(new QListWidget(this));
+//   dockWidget->setWidget(new QListWidget(this));
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 

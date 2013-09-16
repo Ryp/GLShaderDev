@@ -3,6 +3,7 @@
 
 #include <QtGui/QMainWindow>
 
+class BuildOutput;
 class CodeEditor;
 
 class GLShaderDev : public QMainWindow
@@ -18,6 +19,7 @@ public slots:
 
 private:
   CodeEditor*	_editor;
+  BuildOutput*	_output;
 };
 
 #endif // GLSHADERDEV_H
