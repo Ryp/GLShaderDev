@@ -9,49 +9,64 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QDockWidget>
 #include <QtGui/QTreeWidget>
-#include <QListWidget>
+
+#include <QtOpenGL/QGLContext>
 
 #include "CodeEditor.h"
 #include "BuildOutput.h"
+#include "OpenGLWidget.h"
 
 GLShaderDev::GLShaderDev()
-: _editor(new CodeEditor(this))
+: _editor(new CodeEditor(this)),
+  _output(new BuildOutput(this))
 {
   resize(600, 600);
   setCentralWidget(_editor);
-  QAction* a = new QAction(this);
-  a->setText("Quit");
-  a->setShortcut(tr("Ctrl+Q"));
-  connect(a, SIGNAL(triggered()), SLOT(close()));
-
-  QAction* b = new QAction(this);
-  b->setText("Open...");
-  b->setShortcut(tr("Ctrl+O"));
-  connect(b, SIGNAL(triggered()), SLOT(open()));
-
-  QMenu* menu = menuBar()->addMenu("File");
-  menu->addAction(b);
-  menu->addAction(a);
-
   connect(_editor, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabClosed(int)));
-
   statusBar()->showMessage("5sec Random message", 5000);
 
-  _output = new BuildOutput;
+  QGLFormat glFormat;
+  glFormat.setVersion(4, 2);
+  glFormat.setProfile(QGLFormat::CoreProfile);
+  glFormat.setSampleBuffers(true);
+  _glview = new OpenGLWidget(glFormat, this);
 
+  initializeActions();
+  initializeDockWidgets();
+}
+
+GLShaderDev::~GLShaderDev() {}
+
+void GLShaderDev::initializeActions()
+{
+  QAction* quitAction = new QAction(this);
+  quitAction->setText("Quit");
+  quitAction->setShortcut(tr("Ctrl+Q"));
+  connect(quitAction, SIGNAL(triggered()), SLOT(close()));
+
+  QAction* openAction = new QAction(this);
+  openAction->setText("Open...");
+  openAction->setShortcut(tr("Ctrl+O"));
+  connect(openAction, SIGNAL(triggered()), SLOT(open()));
+
+  QMenu* menu = menuBar()->addMenu("File");
+  menu->addAction(openAction);
+  menu->addAction(quitAction);
+}
+
+void GLShaderDev::initializeDockWidgets()
+{
   QDockWidget *compile = new QDockWidget(tr("Build log"), this);
   compile->setAllowedAreas(Qt::BottomDockWidgetArea);
   compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | (compile->features() & ~QDockWidget::DockWidgetFloatable));
   compile->setWidget(_output);
-
   addDockWidget(Qt::BottomDockWidgetArea, compile);
+
   QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-//   dockWidget->setWidget(new QListWidget(this));
+    dockWidget->setWidget(_glview);
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
-
-GLShaderDev::~GLShaderDev() {}
 
 void GLShaderDev::open()
 {
