@@ -1,0 +1,12 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/">
+    <file alias="application-icon.png">rc/icon/application-icon.png</file>
+    <file alias="project-development-new-template.png">rc/icon/16x16/project-development-new-template.png</file>
+    <file alias="project-open.png">rc/icon/16x16/project-open.png</file>
+    <file alias="document-new.png">rc/icon/16x16/document-new.png</file>
+    <file alias="document-open.png">rc/icon/16x16/document-open.png</file>
+    <file alias="document-save.png">rc/icon/16x16/document-save.png</file>
+    <file alias="application-exit.png">rc/icon/16x16/application-exit.png</file>
+  </qresource>
+</RCC>

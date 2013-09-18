@@ -19,7 +19,15 @@ public:
   void	initializeDockWidgets();
 
 public slots:
-  void	open();
+  void	newProject();
+  void	openProject();
+
+  void	newFile();
+  void	openFile();
+  void	saveFile();
+
+  void	buildShader();
+
   void	onTabClosed(int index);
 
 private:

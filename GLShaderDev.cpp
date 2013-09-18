@@ -20,7 +20,9 @@ GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this))
 {
-  resize(600, 600);
+  resize(1000, 800);
+  setWindowIcon(QIcon(":/application-icon.png"));
+
   setCentralWidget(_editor);
   connect(_editor, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabClosed(int)));
   statusBar()->showMessage("5sec Random message", 5000);
@@ -39,18 +41,38 @@ GLShaderDev::~GLShaderDev() {}
 
 void GLShaderDev::initializeActions()
 {
-  QAction* quitAction = new QAction(this);
-  quitAction->setText("Quit");
+  QAction* newProjectAction = new QAction(QIcon(":/project-development-new-template.png"), tr("New Project"), this);
+  connect(newProjectAction, SIGNAL(triggered()), SLOT(newProject()));
+
+  QAction* openProjectAction = new QAction(QIcon(":/project-open.png"), tr("Open Project..."), this);
+  connect(openProjectAction, SIGNAL(triggered()), SLOT(openProject()));
+
+  QAction* newFileAction = new QAction(QIcon(":/document-new.png"), tr("New..."), this);
+  newFileAction->setShortcut(tr("Ctrl+N"));
+  connect(newFileAction, SIGNAL(triggered()), SLOT(newFile()));
+
+  QAction* openFileAction = new QAction(QIcon(":/document-open.png"), tr("Open..."), this);
+  openFileAction->setShortcut(tr("Ctrl+O"));
+  connect(openFileAction, SIGNAL(triggered()), SLOT(openFile()));
+
+  QAction* saveFileAction = new QAction(QIcon(":/document-save.png"), tr("Save"), this);
+  saveFileAction->setShortcut(tr("Ctrl+S"));
+  connect(saveFileAction, SIGNAL(triggered()), SLOT(saveFile()));
+
+  QAction* quitAction = new QAction(QIcon(":/application-exit.png"), tr("Quit"), this);
   quitAction->setShortcut(tr("Ctrl+Q"));
   connect(quitAction, SIGNAL(triggered()), SLOT(close()));
 
-  QAction* openAction = new QAction(this);
-  openAction->setText("Open...");
-  openAction->setShortcut(tr("Ctrl+O"));
-  connect(openAction, SIGNAL(triggered()), SLOT(open()));
+  QMenu* menu;
+  menu = menuBar()->addMenu(tr("Project"));
+  menu->addAction(newProjectAction);
+  menu->addAction(openProjectAction);
 
-  QMenu* menu = menuBar()->addMenu("File");
-  menu->addAction(openAction);
+  menu = menuBar()->addMenu(tr("File"));
+  menu->addAction(newFileAction);
+  menu->addAction(openFileAction);
+  menu->addAction(saveFileAction);
+  menu->addSeparator();
   menu->addAction(quitAction);
 }
 
@@ -68,8 +90,24 @@ void GLShaderDev::initializeDockWidgets()
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 
-void GLShaderDev::open()
+void GLShaderDev::newProject()
 {
+  // TODO
+}
+
+void GLShaderDev::openProject()
+{
+  // TODO
+}
+
+void GLShaderDev::newFile()
+{
+  // TODO
+}
+
+void GLShaderDev::openFile()
+{
+  // TODO
   QString fileName = QFileDialog::getOpenFileName();
 
   if (!fileName.isEmpty())
@@ -78,15 +116,24 @@ void GLShaderDev::open()
   }
 }
 
+void GLShaderDev::saveFile()
+{
+  // TODO
+}
+
+void GLShaderDev::buildShader()
+{
+  // TODO
+}
+
 void GLShaderDev::onTabClosed(int index)
 {
   if (index == -1)
     return;
 
   QWidget* tabItem = _editor->widget(index);
-  // Removes the tab at position index from this stack of widgets.
-  // The page widget itself is not deleted.
   _editor->removeTab(index);
+  delete tabItem;
 }
 
 #include "GLShaderDev.moc"

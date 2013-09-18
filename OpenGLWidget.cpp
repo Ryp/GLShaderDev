@@ -8,14 +8,9 @@
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& format, QWidget *parent)
 : QGLWidget(format, parent)
-{
-  std::cout << "GLWidget created !" << std::endl;
-}
+{}
 
-OpenGLWidget::~OpenGLWidget()
-{
-  std::cout << "GLWidget destroyed !" << std::endl;
-}
+OpenGLWidget::~OpenGLWidget() {}
 
 QSize OpenGLWidget::sizeHint() const
 {
@@ -24,9 +19,7 @@ QSize OpenGLWidget::sizeHint() const
 
 void	OpenGLWidget::initializeGL()
 {
-  std::cout << "OpenGL Initializing... !" << std::endl;
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
   if ( !prepareShaderProgram( "simple.vert", "simple.frag" ) )
     return;
 
@@ -53,15 +46,14 @@ void	OpenGLWidget::initializeGL()
 
     // Enable the "vertex" attribute to bind it to our currently bound
     // vertex buffer.
-    m_shader.setAttributeBuffer( "vertex", GL_FLOAT, 0, 4 );
-    m_shader.enableAttributeArray( "vertex" );
+    m_shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4);
+    m_shader.enableAttributeArray("vertex");
 }
 
 void	OpenGLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glDrawArrays( GL_TRIANGLES, 0, 3 );
-  std::cout << "Repaint." << std::endl;
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)

@@ -1,2 +1,16 @@
+#Ryp custom
 *.kdev4*
+*#*.bak
+
+#Qt project
+cmake_install.cmake
+CMakeFiles
+CMakeCache.txt
+*.moc
+*.depends
+Makefile
+
+#Project specific
+GLShaderDev
+
 !.gitignore
