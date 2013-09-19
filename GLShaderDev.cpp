@@ -1,5 +1,10 @@
 #include "GLShaderDev.h"
 
+#include <QtCore/QTimer>
+#include <QtCore/QSettings>
+
+#include <QtOpenGL/QGLContext>
+
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QMenu>
@@ -12,8 +17,6 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QMessageBox>
 
-#include <QtOpenGL/QGLContext>
-
 #include "CodeEditor.h"
 #include "BuildOutput.h"
 #include "OpenGLWidget.h"
@@ -23,7 +26,7 @@ GLShaderDev::GLShaderDev()
   _output(new BuildOutput(this))
 {
   resize(1000, 800);
-  setWindowIcon(QIcon(":/application-icon.png"));
+  setWindowIcon(QIcon(":/glsd-icon.png"));
 
   setCentralWidget(_editor);
   connect(_editor, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabClosed(int)));
@@ -49,8 +52,13 @@ void GLShaderDev::initializeActions()
   fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), this, SLOT(newFile()), QKeySequence::New);
   fileMenu->addAction(QIcon(":/document-open.png"), tr("&Open..."), this, SLOT(openFile()), QKeySequence::Open);
   recent = fileMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
-  QAction* clearFileRecentAction = recent->addAction(tr("&Clear List"), this, SLOT(clearFileRecent()));
-  clearFileRecentAction->setEnabled(false);
+
+  for (int i = 0; i < MaxRecentFiles; ++i)
+    (_recentFileActions[i] = recent->addAction(tr("..."), this, SLOT(openRecentFile())))->setVisible(true);
+  (_recentFileActions[MaxRecentFiles] = recent->addSeparator())->setVisible(true);
+  (_recentFileActions[MaxRecentFiles + 1] = recent->addAction(tr("&Clear List"), this, SLOT(clearFileRecent())))->setEnabled(false);
+  updateRecentFiles();
+
   fileMenu->addSeparator();
   fileMenu->addAction(QIcon(":/document-save-all.png"), tr("Save Al&l"), this, SLOT(saveFileAll()), tr("Ctrl+L"));
   fileMenu->addAction(QIcon(":/document-save.png"), tr("&Save"), this, SLOT(saveFile()), QKeySequence::Save);
@@ -70,8 +78,8 @@ void GLShaderDev::initializeActions()
   menuBar()->addMenu("|")->setEnabled(false);
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
-  helpMenu->addAction(QIcon(":/application-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
-  helpMenu->addAction(QIcon(":/application-icon.png"), tr("About &Qt"), qApp, SLOT(aboutQt()));
+  helpMenu->addAction(QIcon(":/glsd-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
+  helpMenu->addAction(QIcon(":/qt-icon.png"), tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 void GLShaderDev::initializeDockWidgets()
@@ -121,12 +129,24 @@ void GLShaderDev::openFile()
   if (!fileName.isEmpty())
   {
     _editor->openFile(fileName);
+    addRecentFile(fileName);
   }
+}
+
+void GLShaderDev::openRecentFile()
+{
+  QAction*	action = qobject_cast<QAction*>(sender());
+
+  if (action)
+    _editor->openFile(action->data().toString());
 }
 
 void GLShaderDev::clearFileRecent()
 {
-  // TODO
+  QSettings	settings;
+
+  settings.setValue("recentFiles", QStringList());
+  updateRecentFiles();
 }
 
 void GLShaderDev::saveFileAll()
@@ -162,6 +182,38 @@ void GLShaderDev::onTabClosed(int index)
 void GLShaderDev::about()
 {
   QMessageBox::about(this, tr("About GLShaderDev"), tr("<b>GLShaderDev</b> is a GLSL shader editor"));
+}
+
+void GLShaderDev::updateRecentFiles()
+{
+  QSettings	settings;
+  QStringList	recentFiles = settings.value("recentFiles").toStringList();
+  int		listLength = std::min(recentFiles.count(), static_cast<int>(MaxRecentFiles));
+
+  for (int i = 0; i < MaxRecentFiles; ++i)
+  {
+    if (i < listLength)
+    {
+      _recentFileActions[i]->setText(tr("&%1 %2 [%3]").arg(i + 1).arg(QFileInfo(recentFiles[i]).fileName()).arg(recentFiles[i]));
+      _recentFileActions[i]->setData(recentFiles[i]);
+    }
+    _recentFileActions[i]->setVisible((i < listLength));
+  }
+  _recentFileActions[MaxRecentFiles]->setVisible((listLength > 0));
+  _recentFileActions[MaxRecentFiles + 1]->setEnabled((listLength > 0));
+}
+
+void GLShaderDev::addRecentFile(QString filename)
+{
+  QSettings	settings;
+  QStringList	recentFiles = settings.value("recentFiles").toStringList();
+
+  recentFiles.removeAll(filename);
+  recentFiles.prepend(filename);
+  while (recentFiles.size() > MaxRecentFiles)
+    recentFiles.removeLast();
+  settings.setValue("recentFiles", recentFiles);
+  updateRecentFiles();
 }
 
 #include "GLShaderDev.moc"

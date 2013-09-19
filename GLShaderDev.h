@@ -16,6 +16,13 @@ public:
   GLShaderDev();
   virtual ~GLShaderDev();
 
+private:
+  void	initializeActions();
+  void	initializeDockWidgets();
+
+  void	updateRecentFiles();
+  void	addRecentFile(QString filename);
+
 public slots:
   void	newProject();
   void	openProject();
@@ -24,6 +31,7 @@ public slots:
 
   void	newFile();
   void	openFile();
+  void	openRecentFile();
   void	clearFileRecent();
   void	saveFileAll();
   void	saveFile();
@@ -36,13 +44,14 @@ public slots:
   void	about();
 
 private:
-  void	initializeActions();
-  void	initializeDockWidgets();
+  enum { MaxRecentFiles = 9 };
 
 private:
   CodeEditor*	_editor;
   BuildOutput*	_output;
   OpenGLWidget*	_glview;
+  QAction*	_recentFileActions[MaxRecentFiles + 2];
+  QTimer*	_activityTimer;
 };
 
 #endif // GLSHADERDEV_H

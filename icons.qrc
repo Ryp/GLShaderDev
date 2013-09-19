@@ -1,7 +1,8 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
   <qresource prefix="/">
-    <file alias="application-icon.png">rc/icon/application-icon.png</file>
+    <file alias="glsd-icon.png">rc/icon/glsd-icon.png</file>
+    <file alias="qt-icon.png">rc/icon/qt-icon.png</file>
     <file alias="project-development-new-template.png">rc/icon/16x16/project-development-new-template.png</file>
     <file alias="project-development-close.png">rc/icon/16x16/project-development-close.png</file>
     <file alias="project-open.png">rc/icon/16x16/project-open.png</file>
