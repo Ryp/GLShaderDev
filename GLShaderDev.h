@@ -3,9 +3,11 @@
 
 #include <QtGui/QMainWindow>
 
+QT_BEGIN_NAMESPACE
 class OpenGLWidget;
 class BuildOutput;
 class CodeEditor;
+QT_END_NAMESPACE
 
 class GLShaderDev : public QMainWindow
 {
@@ -14,21 +16,28 @@ public:
   GLShaderDev();
   virtual ~GLShaderDev();
 
-public:
-  void	initializeActions();
-  void	initializeDockWidgets();
-
 public slots:
   void	newProject();
   void	openProject();
+  void	clearProjectRecent();
+  void	closeProject();
 
   void	newFile();
   void	openFile();
+  void	clearFileRecent();
+  void	saveFileAll();
   void	saveFile();
+  void	saveFileAs();
 
   void	buildShader();
 
   void	onTabClosed(int index);
+
+  void	about();
+
+private:
+  void	initializeActions();
+  void	initializeDockWidgets();
 
 private:
   CodeEditor*	_editor;

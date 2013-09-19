@@ -3,7 +3,9 @@
 
 #include <qt4/QtGui/QWidget>
 
+QT_BEGIN_NAMESPACE
 class QHBoxLayout;
+QT_END_NAMESPACE
 
 class BuildOutput : public QWidget
 {

@@ -1,5 +1,6 @@
 #include "GLShaderDev.h"
 
+#include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QMenu>
 #include <QtGui/QMenuBar>
@@ -9,6 +10,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QDockWidget>
 #include <QtGui/QTreeWidget>
+#include <QtGui/QMessageBox>
 
 #include <QtOpenGL/QGLContext>
 
@@ -25,7 +27,7 @@ GLShaderDev::GLShaderDev()
 
   setCentralWidget(_editor);
   connect(_editor, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabClosed(int)));
-  statusBar()->showMessage("5sec Random message", 5000);
+  statusBar()->showMessage(tr("5sec Random message"), 5000);
 
   QGLFormat glFormat;
   glFormat.setVersion(4, 2);
@@ -41,39 +43,35 @@ GLShaderDev::~GLShaderDev() {}
 
 void GLShaderDev::initializeActions()
 {
-  QAction* newProjectAction = new QAction(QIcon(":/project-development-new-template.png"), tr("New Project"), this);
-  connect(newProjectAction, SIGNAL(triggered()), SLOT(newProject()));
+  QMenu* recent;
 
-  QAction* openProjectAction = new QAction(QIcon(":/project-open.png"), tr("Open Project..."), this);
-  connect(openProjectAction, SIGNAL(triggered()), SLOT(openProject()));
+  QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
+  fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), this, SLOT(newFile()), QKeySequence::New);
+  fileMenu->addAction(QIcon(":/document-open.png"), tr("&Open..."), this, SLOT(openFile()), QKeySequence::Open);
+  recent = fileMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
+  QAction* clearFileRecentAction = recent->addAction(tr("&Clear List"), this, SLOT(clearFileRecent()));
+  clearFileRecentAction->setEnabled(false);
+  fileMenu->addSeparator();
+  fileMenu->addAction(QIcon(":/document-save-all.png"), tr("Save Al&l"), this, SLOT(saveFileAll()), tr("Ctrl+L"));
+  fileMenu->addAction(QIcon(":/document-save.png"), tr("&Save"), this, SLOT(saveFile()), QKeySequence::Save);
+  fileMenu->addAction(QIcon(":/document-save-as.png"), tr("Save &As..."), this, SLOT(saveFileAs()), QKeySequence::SaveAs);
+  fileMenu->addSeparator();
+  fileMenu->addAction(QIcon(":/application-exit.png"), tr("&Quit"), this, SLOT(close()), QKeySequence::Quit);
 
-  QAction* newFileAction = new QAction(QIcon(":/document-new.png"), tr("New..."), this);
-  newFileAction->setShortcut(tr("Ctrl+N"));
-  connect(newFileAction, SIGNAL(triggered()), SLOT(newFile()));
+  QMenu* projectMenu = menuBar()->addMenu(tr("&Project"));
+  projectMenu->addAction(QIcon(":/project-development-new-template.png"), tr("&New Project"), this, SLOT(newProject()));
+  projectMenu->addAction(QIcon(":/project-open.png"), tr("&Open Project..."), this, SLOT(openProject()));
+  recent = projectMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
+  QAction* clearProjectRecentAction = recent->addAction(tr("&Clear List"), this, SLOT(clearProjectRecent()));
+  clearProjectRecentAction->setEnabled(false);
+  projectMenu->addSeparator();
+  projectMenu->addAction(QIcon(":/project-development-close.png"), tr("&Close Project"), this, SLOT(closeProject()));
 
-  QAction* openFileAction = new QAction(QIcon(":/document-open.png"), tr("Open..."), this);
-  openFileAction->setShortcut(tr("Ctrl+O"));
-  connect(openFileAction, SIGNAL(triggered()), SLOT(openFile()));
+  menuBar()->addMenu("|")->setEnabled(false);
 
-  QAction* saveFileAction = new QAction(QIcon(":/document-save.png"), tr("Save"), this);
-  saveFileAction->setShortcut(tr("Ctrl+S"));
-  connect(saveFileAction, SIGNAL(triggered()), SLOT(saveFile()));
-
-  QAction* quitAction = new QAction(QIcon(":/application-exit.png"), tr("Quit"), this);
-  quitAction->setShortcut(tr("Ctrl+Q"));
-  connect(quitAction, SIGNAL(triggered()), SLOT(close()));
-
-  QMenu* menu;
-  menu = menuBar()->addMenu(tr("Project"));
-  menu->addAction(newProjectAction);
-  menu->addAction(openProjectAction);
-
-  menu = menuBar()->addMenu(tr("File"));
-  menu->addAction(newFileAction);
-  menu->addAction(openFileAction);
-  menu->addAction(saveFileAction);
-  menu->addSeparator();
-  menu->addAction(quitAction);
+  QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
+  helpMenu->addAction(QIcon(":/application-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
+  helpMenu->addAction(QIcon(":/application-icon.png"), tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 void GLShaderDev::initializeDockWidgets()
@@ -86,7 +84,7 @@ void GLShaderDev::initializeDockWidgets()
 
   QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    dockWidget->setWidget(_glview);
+  dockWidget->setWidget(_glview);
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 
@@ -96,6 +94,16 @@ void GLShaderDev::newProject()
 }
 
 void GLShaderDev::openProject()
+{
+  // TODO
+}
+
+void GLShaderDev::clearProjectRecent()
+{
+  // TODO
+}
+
+void GLShaderDev::closeProject()
 {
   // TODO
 }
@@ -116,7 +124,22 @@ void GLShaderDev::openFile()
   }
 }
 
+void GLShaderDev::clearFileRecent()
+{
+  // TODO
+}
+
+void GLShaderDev::saveFileAll()
+{
+  // TODO
+}
+
 void GLShaderDev::saveFile()
+{
+  // TODO
+}
+
+void GLShaderDev::saveFileAs()
 {
   // TODO
 }
@@ -134,6 +157,11 @@ void GLShaderDev::onTabClosed(int index)
   QWidget* tabItem = _editor->widget(index);
   _editor->removeTab(index);
   delete tabItem;
+}
+
+void GLShaderDev::about()
+{
+  QMessageBox::about(this, tr("About GLShaderDev"), tr("<b>GLShaderDev</b> is a GLSL shader editor"));
 }
 
 #include "GLShaderDev.moc"
