@@ -3,6 +3,8 @@
   <qresource prefix="/">
     <file alias="glsd-icon.png">rc/icon/glsd-icon.png</file>
     <file alias="qt-icon.png">rc/icon/qt-icon.png</file>
+  </qresource>
+  <qresource prefix="/">
     <file alias="project-development-new-template.png">rc/icon/16x16/project-development-new-template.png</file>
     <file alias="project-development-close.png">rc/icon/16x16/project-development-close.png</file>
     <file alias="project-open.png">rc/icon/16x16/project-open.png</file>
@@ -12,6 +14,7 @@
     <file alias="document-save-all.png">rc/icon/16x16/document-save-all.png</file>
     <file alias="document-save.png">rc/icon/16x16/document-save.png</file>
     <file alias="document-save-as.png">rc/icon/16x16/document-save-as.png</file>
+    <file alias="dialog-close.png">rc/icon/16x16/dialog-close.png</file>
     <file alias="application-exit.png">rc/icon/16x16/application-exit.png</file>
   </qresource>
 </RCC>

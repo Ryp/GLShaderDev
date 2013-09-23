@@ -1,7 +1,8 @@
 #ifndef CODEEDITOR_H
 #define CODEEDITOR_H
 
-#include <qt4/QtGui/QTabWidget>
+#include <QTabWidget>
+
 #include "CodeWidget.h"
 
 class CodeEditor : public QTabWidget
@@ -12,7 +13,20 @@ public:
   ~CodeEditor();
 
 public:
+  int	getFileCount();
+
+public slots:
+  void	onTabClosed(int index);
+  void	onTabChangedText();
+  void	closeCurrentTab();
+  void	save();
+  void	saveAll();
+
+public:
   void	openFile(const QString& file);
+
+private:
+  void	saveTab(int index);
 
 private:
   CodeWidget*	_codeWidget;

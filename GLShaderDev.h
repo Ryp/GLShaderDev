@@ -1,7 +1,7 @@
 #ifndef GLSHADERDEV_H
 #define GLSHADERDEV_H
 
-#include <QtGui/QMainWindow>
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 class OpenGLWidget;
@@ -17,11 +17,13 @@ public:
   virtual ~GLShaderDev();
 
 private:
+  void	initializeOpenGL();
   void	initializeActions();
   void	initializeDockWidgets();
 
   void	updateRecentFiles();
-  void	addRecentFile(QString filename);
+  void	addRecentFile(const QString& filename);
+  void	openFile(const QString& filename);
 
 public slots:
   void	newProject();
@@ -30,16 +32,12 @@ public slots:
   void	closeProject();
 
   void	newFile();
-  void	openFile();
+  void	openFileDialog();
   void	openRecentFile();
   void	clearFileRecent();
-  void	saveFileAll();
-  void	saveFile();
   void	saveFileAs();
 
   void	buildShader();
-
-  void	onTabClosed(int index);
 
   void	about();
 
@@ -51,7 +49,6 @@ private:
   BuildOutput*	_output;
   OpenGLWidget*	_glview;
   QAction*	_recentFileActions[MaxRecentFiles + 2];
-  QTimer*	_activityTimer;
 };
 
 #endif // GLSHADERDEV_H

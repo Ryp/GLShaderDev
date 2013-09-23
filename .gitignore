@@ -8,6 +8,7 @@ CMakeFiles
 CMakeCache.txt
 *.moc
 *.depends
+*.cxx
 Makefile
 
 #Project specific

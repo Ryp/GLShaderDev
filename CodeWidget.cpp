@@ -1,10 +1,14 @@
+#include <iostream> // FIXME
+
 #include "CodeWidget.h"
 #include "ShaderLexer.h"
 
 #include <qscilexercpp.h> // FIXME
 
-CodeWidget::CodeWidget(QWidget *parent)
-: QsciScintilla(parent)
+CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
+: QsciScintilla(parent),
+  _filename(filename),
+  _isModified(false)
 {
   QFont font = this->font();
   font.setFamily("Monospace");
@@ -28,8 +32,28 @@ CodeWidget::CodeWidget(QWidget *parent)
 
 CodeWidget::~CodeWidget() {}
 
+QString CodeWidget::getCode()
+{
+  return (text());
+}
+
+const QString& CodeWidget::getFilename() const
+{
+  return (_filename);
+}
+
+void CodeWidget::setModifiedState(bool state)
+{
+  _isModified = state;
+}
+
 void CodeWidget::onTextChanged()
 {
+  if (_isModified ^ isModified())
+  {
+    _isModified = !_isModified;
+    emit onCodeTouched();
+  }
   setMarginWidth(0, fontMetrics().width(QString::number(lines())) + 6);
 }
 

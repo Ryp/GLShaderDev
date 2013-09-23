@@ -1,17 +1,30 @@
 #ifndef CODEWIDGET_H
 #define CODEWIDGET_H
 
-#include <qt4/Qsci/qsciscintilla.h>
+#include <Qsci/qsciscintilla.h>
+#include <QString>
 
 class CodeWidget : public QsciScintilla
 {
   Q_OBJECT
 public:
-  CodeWidget(QWidget *parent = 0);
+  CodeWidget(const QString& filename, QWidget *parent = 0);
   ~CodeWidget();
+
+public:
+  QString		getCode();
+  const QString&	getFilename() const;
+  void			setModifiedState(bool state);
 
 public slots:
   void	onTextChanged();
+
+signals:
+  void	onCodeTouched();
+
+private:
+  QString	_filename;
+  bool		_isModified;
 };
 
 #endif // CODEWIDGET_H
