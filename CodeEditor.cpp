@@ -24,7 +24,7 @@ void CodeEditor::onTabClosed(int index)
   tabItem->deleteLater();
 }
 
-void CodeEditor::onTabChangedText()
+void CodeEditor::onTabCodeTouched()
 {
   QWidget*	widget = qobject_cast<QWidget*>(sender());
   int		index;
@@ -73,7 +73,7 @@ void CodeEditor::openFile(const QString& file)
   if (!f->open(QIODevice::ReadWrite | QIODevice::Text))
     return ;
   CodeWidget* tab = new CodeWidget(file, this);
-  connect(tab, SIGNAL(onCodeTouched()), this, SLOT(onTabChangedText()));
+  connect(tab, SIGNAL(onCodeTouched()), this, SLOT(onTabCodeTouched()));
 
   tab->setText(f->readAll());
   tab->setModifiedState(false);

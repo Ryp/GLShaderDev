@@ -12,12 +12,9 @@ public:
   CodeEditor(QWidget *parent = 0);
   ~CodeEditor();
 
-public:
-  int	getFileCount();
-
 public slots:
   void	onTabClosed(int index);
-  void	onTabChangedText();
+  void	onTabCodeTouched();
   void	closeCurrentTab();
   void	save();
   void	saveAll();
