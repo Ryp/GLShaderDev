@@ -8,7 +8,8 @@ ShaderLexer::~ShaderLexer() {}
 
 void ShaderLexer::styleText(int start, int end)
 {
-
+  static_cast<void>(start);
+  static_cast<void>(end);
 }
 
 const char* ShaderLexer::language() const
@@ -18,6 +19,7 @@ const char* ShaderLexer::language() const
 
 QString ShaderLexer::description(int style) const
 {
+  static_cast<void>(style);
   return ("OpenGL Shading Language");
 }
 /*

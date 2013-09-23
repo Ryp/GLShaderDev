@@ -1,8 +1,5 @@
-#include "GL/glew.h"
-#include "GL/gl.h"
-
 #include <iostream>
-#include <QtGui/QKeyEvent>
+#include <QKeyEvent>
 
 #include "OpenGLWidget.h"
 
@@ -20,7 +17,7 @@ QSize OpenGLWidget::sizeHint() const
 void	OpenGLWidget::initializeGL()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  if ( !prepareShaderProgram( "simple.vert", "simple.frag" ) )
+  if ( !prepareShaderProgram( ":/simple.vert", ":/simple.frag" ) )
     return;
 
   // We need us some vertex data. Start simple with a triangle ;-)

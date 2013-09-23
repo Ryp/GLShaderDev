@@ -11,4 +11,7 @@ CMakeCache.txt
 *.cxx
 Makefile
 
+#Project specific
+GLShaderDev
+
 !.gitignore

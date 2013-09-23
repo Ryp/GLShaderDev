@@ -17,9 +17,11 @@ CodeEditor::~CodeEditor() {}
 
 void CodeEditor::onTabClosed(int index)
 {
+  QWidget*	tabItem;
+
   if (index == -1)
     return;
-  QWidget* tabItem = widget(index);
+  tabItem = widget(index);
   removeTab(index);
   tabItem->deleteLater();
 }

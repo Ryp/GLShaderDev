@@ -1,9 +1,7 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
-#include <qt4/QtGui/QWidget>
-#include <qt4/QtOpenGL/QGLWidget>
-
+#include <QGLWidget>
 #include <QGLBuffer>
 #include <QGLShaderProgram>
 
@@ -26,7 +24,7 @@ protected:
 private:
   bool prepareShaderProgram( const QString& vertexShaderPath,
 			     const QString& fragmentShaderPath );
-  
+
   QGLShaderProgram m_shader;
   QGLBuffer m_vertexBuffer;
 };

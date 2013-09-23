@@ -1,22 +1,15 @@
-#include "GLShaderDev.h"
 #include <iostream> // FIXME
+#include <QSettings>
+#include <QApplication>
+#include <QMenu>
+#include <QMenuBar>
+#include <QAction>
+#include <QToolBar>
+#include <QFileDialog>
+#include <QDockWidget>
+#include <QMessageBox>
 
-#include <QtCore/QSettings>
-
-#include <QtOpenGL/QGLContext>
-
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QAction>
-#include <QtGui/QStatusBar>
-#include <QtGui/QToolBar>
-#include <QtGui/QFileDialog>
-#include <QtGui/QDockWidget>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QMessageBox>
-
+#include "GLShaderDev.h"
 #include "CodeEditor.h"
 #include "BuildOutput.h"
 #include "OpenGLWidget.h"
@@ -29,7 +22,6 @@ GLShaderDev::GLShaderDev()
   setWindowIcon(QIcon(":/glsd-icon.png"));
   setCentralWidget(_editor);
 
-  //statusBar()->showMessage(tr("5sec Random message"), 5000);
   initializeOpenGL();
   initializeActions();
   initializeDockWidgets();
@@ -39,7 +31,8 @@ GLShaderDev::~GLShaderDev() {}
 
 void GLShaderDev::initializeOpenGL()
 {
-  QGLFormat glFormat;
+  QGLFormat	glFormat;
+
   glFormat.setVersion(4, 2);
   glFormat.setProfile(QGLFormat::CoreProfile);
   glFormat.setSampleBuffers(true);
