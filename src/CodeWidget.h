@@ -17,6 +17,7 @@ public:
   void			setModifiedState(bool state);
 
 public slots:
+  void	onLinesChanged();
   void	onTextChanged();
 
 signals:

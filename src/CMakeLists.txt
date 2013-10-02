@@ -1,4 +1,4 @@
-set(GLShaderDev_SRCS OpenGLWidget.cpp BuildOutput.cpp ShaderLexer.cpp CodeWidget.cpp CodeEditor.cpp GLShaderDev.cpp main.cpp)
+set(GLShaderDev_SRCS OpenGLWidget.cpp BuildOutput.cpp QsciLexerGLSL.cpp CodeWidget.cpp CodeEditor.cpp GLShaderDev.cpp main.cpp)
 set(GLShaderDev_RCCS resources.qrc)
 
 qt4_automoc(${GLShaderDev_SRCS})

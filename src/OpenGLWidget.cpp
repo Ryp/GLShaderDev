@@ -17,7 +17,7 @@ QSize OpenGLWidget::sizeHint() const
 void	OpenGLWidget::initializeGL()
 {
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-  if ( !prepareShaderProgram( ":/simple.vert", ":/simple.frag" ) )
+  if (!prepareShaderProgram(":/simple.vert", ":/simple.frag"))
     return;
 
   // We need us some vertex data. Start simple with a triangle ;-)
@@ -55,7 +55,7 @@ void	OpenGLWidget::paintGL()
 
 void	OpenGLWidget::resizeGL(int w, int h)
 {
-  glViewport( 0, 0, w, qMax( h, 1 ) );
+  glViewport(0, 0, w, qMax( h, 1 ));
 }
 
 void	OpenGLWidget::keyPressEvent(QKeyEvent* e)
@@ -63,7 +63,7 @@ void	OpenGLWidget::keyPressEvent(QKeyEvent* e)
   switch (e->key())
   {
     default:
-      QGLWidget::keyPressEvent( e );
+      QGLWidget::keyPressEvent(e);
   }
 }
 

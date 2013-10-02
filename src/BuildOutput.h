@@ -1,7 +1,7 @@
 #ifndef BUILDOUTPUT_H
 #define BUILDOUTPUT_H
 
-#include <qt4/QtGui/QWidget>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QHBoxLayout;

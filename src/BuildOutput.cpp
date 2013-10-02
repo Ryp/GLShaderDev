@@ -20,7 +20,8 @@ BuildOutput::BuildOutput(QWidget* parent)
   list->setFont(font);
 
   QStringList l;
-  l << "Pute" << "Negre";
+  l.append("Pute");
+  l.append("Negre");
 //   QTreeWidgetItem* a = new QTreeWidgetItem(list, l);
 //   QTreeWidgetItem* b = new QTreeWidgetItem(list, l);
   _layout->addWidget(list);

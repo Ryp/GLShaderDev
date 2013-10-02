@@ -25,6 +25,8 @@ GLShaderDev::GLShaderDev()
   initializeOpenGL();
   initializeActions();
   initializeDockWidgets();
+
+  openFile("/home/ryp/Dev/C++/GLShaderDev/untitled.glsl"); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -42,7 +44,6 @@ void GLShaderDev::initializeOpenGL()
 void GLShaderDev::initializeActions()
 {
   QMenu* recent;
-
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), this, SLOT(newFile()), QKeySequence::New);
   fileMenu->addAction(QIcon(":/document-open.png"), tr("&Open..."), this, SLOT(openFileDialog()), QKeySequence::Open);
@@ -81,16 +82,17 @@ void GLShaderDev::initializeActions()
 
 void GLShaderDev::initializeDockWidgets()
 {
+  QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
+  dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+  dockWidget->setWidget(_glview);
+  addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+
   QDockWidget *compile = new QDockWidget(tr("Build log"), this);
   compile->setAllowedAreas(Qt::BottomDockWidgetArea);
   compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | (compile->features() & ~QDockWidget::DockWidgetFloatable));
   compile->setWidget(_output);
   addDockWidget(Qt::BottomDockWidgetArea, compile);
 
-  QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
-  dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  dockWidget->setWidget(_glview);
-  addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 }
 
 void GLShaderDev::updateRecentFiles()
