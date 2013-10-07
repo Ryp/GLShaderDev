@@ -6,6 +6,12 @@
 QsciLexerGLSL::QsciLexerGLSL(QObject *parent)
 : QsciLexerCustom(parent)
 {
+  _defaultFont.setFamily("Monospace");
+  _defaultFont.setPointSize(9);
+  QFont ft(_defaultFont);
+
+  ft.setBold(true);
+
   _styles[Default] = QsciStyle(Default);
   _styles[Default].setDescription("Default");
   _styles[Default].setFont(defaultFont(0));
@@ -15,9 +21,15 @@ QsciLexerGLSL::QsciLexerGLSL(QObject *parent)
   _styles[Comment].setColor("#888888");
   _styles[Comment].setFont(defaultFont(0));
 
-  _styles[GLKeyword] = QsciStyle(GLKeyword);
-  _styles[GLKeyword].setDescription("GLKeyword");
-  _styles[GLKeyword].setFont(defaultFont(0));
+  _styles[Keyword] = QsciStyle(Keyword);
+  _styles[Keyword].setDescription("Keyword");
+  _styles[Keyword].setFont(ft);
+
+  _styles[Operator] = QsciStyle(Operator);
+  _styles[Operator].setDescription("Operator");
+  _styles[Operator].setColor("#2288ff");
+  _styles[Operator].setFont(ft);
+  
 }
 
 QsciLexerGLSL::~QsciLexerGLSL() {}
@@ -27,11 +39,43 @@ const char* QsciLexerGLSL::language() const
   return ("GLSL");
 }
 
-QString QsciLexerGLSL::description(int style) const
+// const char* QsciLexerGLSL::lexer() const
+// {
+//   return ("cpp");
+// }
+
+QStringList QsciLexerGLSL::autoCompletionWordSeparators() const
 {
-  if (style < 0 || style >= MaxStyle)
-    style = 0;
-  return (_styles.at(style).description());
+  QStringList	cws;
+
+  cws << ".";
+  return (cws);
+}
+
+const char *QsciLexerGLSL::blockStartKeyword(int *style) const
+{
+  if (style)
+    *style = Keyword;
+  return ("case catch class default do else for if while");
+}
+
+const char *QsciLexerGLSL::blockStart(int *style) const
+{
+  if (style)
+    *style = Operator;
+  return ("{");
+}
+
+const char *QsciLexerGLSL::blockEnd(int *style) const
+{
+  if (style)
+    *style = Operator;
+  return ("}");
+}
+
+int QsciLexerGLSL::braceStyle() const
+{
+  return (Operator);
 }
 
 void QsciLexerGLSL::styleText(int start, int end)
@@ -63,28 +107,46 @@ void QsciLexerGLSL::styleText(int start, int end)
   }
 }
 
-QFont QsciLexerGLSL::defaultFont(int style) const
+QString QsciLexerGLSL::description(int style) const
 {
-  QFont	ft;
-
-  static_cast<void>(style);
-  ft.setFamily("Monospace");
-  ft.setPointSize(9);
-  return (ft);
+  if (style < 0 || style >= MaxStyle)
+    style = 0;
+  return (_styles.at(style).description());
 }
 
-QColor QsciLexerGLSL::color(int style) const
+QFont QsciLexerGLSL::defaultFont(int style) const
+{
+  if (style < 0 || style >= MaxStyle)
+    style = 0;
+  return (_styles.at(style).font());
+}
+
+QColor QsciLexerGLSL::defaultColor(int style) const
 {
   if (style < 0 || style >= MaxStyle)
     style = 0;
   return (_styles.at(style).color());
 }
 
-QFont QsciLexerGLSL::font(int style) const
+QColor QsciLexerGLSL::defaultPaper(int style) const
 {
-  if (style < 0 || style >= MaxStyle)
-    style = 0;
-  return (_styles.at(style).font());
+  return QsciLexer::defaultPaper(style);
+}
+
+bool QsciLexerGLSL::defaultEolFill(int style) const
+{
+  return QsciLexer::defaultEolFill(style);
+}
+
+const char* QsciLexerGLSL::keywords(int set) const
+{
+  static_cast<void>(set);
+  return ("in out varying uniform");
+}
+
+const char* QsciLexerGLSL::wordCharacters() const
+{
+  return ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
 }
 
 QsciLexerGLSL::QsciLexerGLSL(const QsciLexerGLSL& other)

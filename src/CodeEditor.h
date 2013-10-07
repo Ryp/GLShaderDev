@@ -14,7 +14,8 @@ public:
 
 public slots:
   void	onTabClosed(int index);
-  void	onTabCodeTouched();
+  void	onTabCodeSavePointLeft();
+  void	onTabCodeSavePointReached();
   void	closeCurrentTab();
   void	save();
   void	saveAll();

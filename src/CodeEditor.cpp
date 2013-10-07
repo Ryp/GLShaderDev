@@ -26,7 +26,7 @@ void CodeEditor::onTabClosed(int index)
   tabItem->deleteLater();
 }
 
-void CodeEditor::onTabCodeTouched()
+void CodeEditor::onTabCodeSavePointLeft()
 {
   QWidget*	widget = qobject_cast<QWidget*>(sender());
   int		index;
@@ -36,6 +36,18 @@ void CodeEditor::onTabCodeTouched()
   if ((index = indexOf(widget)) == -1)
     return ;
   setTabIcon(index, QIcon(":/document-save.png"));
+}
+
+void CodeEditor::onTabCodeSavePointReached()
+{
+  QWidget*	widget = qobject_cast<QWidget*>(sender());
+  int		index;
+
+  if (!widget)
+    return ;
+  if ((index = indexOf(widget)) == -1)
+    return ;
+  setTabIcon(index, QIcon());
 }
 
 void CodeEditor::closeCurrentTab()
@@ -75,10 +87,15 @@ void CodeEditor::openFile(const QString& file)
   if (!f->open(QIODevice::ReadWrite | QIODevice::Text))
     return ;
   CodeWidget* tab = new CodeWidget(file, this);
-  connect(tab, SIGNAL(onCodeTouched()), this, SLOT(onTabCodeTouched()));
+
+
+  connect(tab, SIGNAL(SCN_SAVEPOINTLEFT()), this, SLOT(onTabCodeSavePointLeft()));
+  connect(tab, SIGNAL(SCN_SAVEPOINTREACHED()), this, SLOT(onTabCodeSavePointReached()));
 
   tab->setText(f->readAll());
-  tab->setModifiedState(false);
+  tab->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
+
+
   addTab(tab, info.fileName());
   setCurrentWidget(tab);
 }
@@ -89,8 +106,7 @@ void CodeEditor::saveTab(int index)
 
   if (!tabWidget)
     return ;
-  tabWidget->setModifiedState(false);
-  setTabIcon(index, QIcon());
+  tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 }
 
 #include "CodeEditor.moc"

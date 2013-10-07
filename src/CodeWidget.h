@@ -14,18 +14,12 @@ public:
 public:
   QString		getCode();
   const QString&	getFilename() const;
-  void			setModifiedState(bool state);
 
 public slots:
   void	onLinesChanged();
-  void	onTextChanged();
-
-signals:
-  void	onCodeTouched();
 
 private:
   QString	_filename;
-  bool		_isModified;
 };
 
 #endif // CODEWIDGET_H

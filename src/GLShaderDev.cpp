@@ -89,7 +89,7 @@ void GLShaderDev::initializeDockWidgets()
 
   QDockWidget *compile = new QDockWidget(tr("Build log"), this);
   compile->setAllowedAreas(Qt::BottomDockWidgetArea);
-  compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | (compile->features() & ~QDockWidget::DockWidgetFloatable));
+  compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | compile->features());
   compile->setWidget(_output);
   addDockWidget(Qt::BottomDockWidgetArea, compile);
 
