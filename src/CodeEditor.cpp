@@ -88,13 +88,11 @@ void CodeEditor::openFile(const QString& file)
     return ;
   CodeWidget* tab = new CodeWidget(file, this);
 
-
   connect(tab, SIGNAL(SCN_SAVEPOINTLEFT()), this, SLOT(onTabCodeSavePointLeft()));
   connect(tab, SIGNAL(SCN_SAVEPOINTREACHED()), this, SLOT(onTabCodeSavePointReached()));
 
   tab->setText(f->readAll());
   tab->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
-
 
   addTab(tab, info.fileName());
   setCurrentWidget(tab);
@@ -105,6 +103,8 @@ void CodeEditor::saveTab(int index)
   CodeWidget*	tabWidget = qobject_cast<CodeWidget*>(widget(index));
 
   if (!tabWidget)
+    return ;
+  if (!tabWidget->isModified())
     return ;
   tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 }

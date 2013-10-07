@@ -4,6 +4,8 @@
 #include <Qsci/qsciscintilla.h>
 #include <QString>
 
+class QsciLexer;
+
 class CodeWidget : public QsciScintilla
 {
   Q_OBJECT
@@ -12,7 +14,6 @@ public:
   ~CodeWidget();
 
 public:
-  QString		getCode();
   const QString&	getFilename() const;
 
 public slots:
@@ -20,6 +21,7 @@ public slots:
 
 private:
   QString	_filename;
+  QsciLexer*	_lexer;
 };
 
 #endif // CODEWIDGET_H
