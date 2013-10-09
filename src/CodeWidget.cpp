@@ -6,20 +6,20 @@ CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
   _filename(filename),
   _lexer(new QsciLexerGLSL(this))
 {
-  QFont font = this->font();
-  font.setFamily("Monospace");
+  QFont ft = this->font();
+  ft.setFamily("Monospace");
 
-  setFont(font);
-  setMarginsFont(font);
+  setFont(ft);
+  setMarginsFont(ft);
   setMarginLineNumbers(0, true);
   setSelectionToEol(true);
-  setCaretWidth(2);
   setTabWidth(2);
+  setCaretWidth(2);
   setCaretLineVisible(true);
   setCaretLineBackgroundColor(QColor(0xf8, 0xf8, 0xf8));
 
-  _lexer->setDefaultFont(font);
-  _lexer->setFont(font);
+  _lexer->setDefaultFont(ft);
+  _lexer->setFont(ft);
   setLexer(_lexer);
 
   connect(this, SIGNAL(linesChanged()), this, SLOT(onLinesChanged()));

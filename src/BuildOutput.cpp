@@ -15,9 +15,9 @@ BuildOutput::BuildOutput(QWidget* parent)
   QTreeWidget* list = new QTreeWidget(this);
   list->header()->hide();
   list->setRootIsDecorated(false);
-  QFont font = this->font();
-  font.setFamily("Monospace");
-  list->setFont(font);
+  QFont ft = this->font();
+  ft.setFamily("Monospace");
+  list->setFont(ft);
 
   QStringList l;
   l.append("Pute");

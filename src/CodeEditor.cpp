@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <QFile>
 #include <QFileInfo>
 
@@ -10,49 +12,60 @@ CodeEditor::CodeEditor(QWidget *parent)
 : QTabWidget(parent)
 {
   setTabsClosable(true);
-  connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(onTabClosed(int)));
+  connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 
 CodeEditor::~CodeEditor() {}
 
-void CodeEditor::onTabClosed(int index)
-{
-  QWidget*	tabItem;
-
-  if (index == -1)
-    return;
-  tabItem = widget(index);
-  removeTab(index);
-  tabItem->deleteLater();
-}
-
 void CodeEditor::onTabCodeSavePointLeft()
 {
-  QWidget*	widget = qobject_cast<QWidget*>(sender());
+  QWidget*	senderWidget = qobject_cast<QWidget*>(sender());
   int		index;
 
-  if (!widget)
-    return ;
-  if ((index = indexOf(widget)) == -1)
+  if ((index = indexOf(senderWidget)) == -1)
     return ;
   setTabIcon(index, QIcon(":/document-save.png"));
 }
 
 void CodeEditor::onTabCodeSavePointReached()
 {
-  QWidget*	widget = qobject_cast<QWidget*>(sender());
+  QWidget*	senderWidget = qobject_cast<QWidget*>(sender());
   int		index;
 
-  if (!widget)
-    return ;
-  if ((index = indexOf(widget)) == -1)
+  if ((index = indexOf(senderWidget)) == -1)
     return ;
   setTabIcon(index, QIcon());
 }
 
+void CodeEditor::closeTab(int index)
+{
+  CodeWidget*	tabItem;
+  int		ret;
+
+  if (index == -1)
+    return ;
+  if ((tabItem = qobject_cast<CodeWidget*>(widget(index))) == 0)
+    return ;
+  if (tabItem->isModified())
+  {
+    if ((ret = QMessageBox::warning(this, tr("Close Document") + " - " + tr("GLShaderDev"), tr("The document \"%1\" has unsaved changes. Would you like to save them?").arg(tabItem->getFilename()), QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel)) == QMessageBox::Cancel)
+      return ;
+    else if (ret == QMessageBox::Yes)
+      saveTab(index);
+  }
+  removeTab(index);
+  tabItem->deleteLater();
+}
+
 void CodeEditor::closeCurrentTab()
 {
-  onTabClosed(currentIndex());
+  closeTab(currentIndex());
+}
+
+void CodeEditor::closeAllTabs()
+{
+  while (count() > 0)
+    closeTab(currentIndex());
 }
 
 void CodeEditor::save()
@@ -92,6 +105,8 @@ void CodeEditor::openFile(const QString& file)
   connect(tab, SIGNAL(SCN_SAVEPOINTREACHED()), this, SLOT(onTabCodeSavePointReached()));
 
   tab->setText(f->readAll());
+  f->close();
+
   tab->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 
   addTab(tab, info.fileName());
@@ -106,6 +121,8 @@ void CodeEditor::saveTab(int index)
     return ;
   if (!tabWidget->isModified())
     return ;
+
+  std::cout << "File saved" << std::endl;
   tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 }
 

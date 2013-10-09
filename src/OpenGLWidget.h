@@ -9,11 +9,12 @@ class OpenGLWidget : public QGLWidget
 {
   Q_OBJECT
 public:
-  OpenGLWidget(const QGLFormat& format, QWidget *parent = 0);
+  OpenGLWidget(const QGLFormat& fmt, QWidget *parent = 0);
   ~OpenGLWidget();
 
 public:
   QSize	sizeHint() const;
+  void	setShader(QGLShaderProgram& prgm);
 
 protected:
   virtual void initializeGL();
@@ -22,11 +23,12 @@ protected:
   virtual void keyPressEvent(QKeyEvent* e);
 
 private:
+  void	configureShader();
   bool prepareShaderProgram( const QString& vertexShaderPath,
 			     const QString& fragmentShaderPath );
 
-  QGLShaderProgram m_shader;
-  QGLBuffer m_vertexBuffer;
+  QGLShaderProgram	_shader;
+  QGLBuffer		_vertexBuffer;
 };
 
 #endif // OPENGLWIDGET_H

@@ -2,6 +2,7 @@
 #define GLSHADERDEV_H
 
 #include <QMainWindow>
+#include <QMutex>
 
 QT_BEGIN_NAMESPACE
 class OpenGLWidget;
@@ -26,6 +27,8 @@ private:
   void	openFile(const QString& filename);
 
 public slots:
+  void	closeEvent(QCloseEvent* event);
+
   void	newProject();
   void	openProject();
   void	clearProjectRecent();
@@ -37,7 +40,7 @@ public slots:
   void	clearFileRecent();
   void	saveFileAs();
 
-  void	buildShader();
+  void	buildCurrentProject();
 
   void	about();
 
@@ -47,8 +50,10 @@ private:
 private:
   CodeEditor*	_editor;
   BuildOutput*	_output;
+  QDockWidget*	_buildOutputDock;
   OpenGLWidget*	_glview;
   QAction*	_recentFileActions[MaxRecentFiles + 2];
+  QMutex	_buildMutex;
 };
 
 #endif // GLSHADERDEV_H

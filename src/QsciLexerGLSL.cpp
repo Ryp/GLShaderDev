@@ -29,7 +29,7 @@ QsciLexerGLSL::QsciLexerGLSL(QObject *parent)
   _styles[Operator].setDescription("Operator");
   _styles[Operator].setColor("#2288ff");
   _styles[Operator].setFont(ft);
-  
+
 }
 
 QsciLexerGLSL::~QsciLexerGLSL() {}
@@ -100,7 +100,7 @@ void QsciLexerGLSL::styleText(int start, int end)
     else
       style = Default;
 
-    qDebug() << "Styling" << len << "bytes" << description(style);
+//     qDebug() << "Styling" << len << "bytes" << description(style);
     setStyling(len, style);
     if (i < list.size() - 1)
       setStyling(1, Default); // Newline char style

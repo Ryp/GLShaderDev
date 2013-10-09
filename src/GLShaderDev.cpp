@@ -18,7 +18,9 @@ GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this))
 {
-  resize(1000, 800);
+  connect(this, SIGNAL(closeEvent(QCloseEvent*)), this, SLOT(onClose()));
+
+  resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
   setWindowIcon(QIcon(":/glsd-icon.png"));
   setCentralWidget(_editor);
 
@@ -26,7 +28,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile("/home/ryp/Dev/C++/GLShaderDev/untitled.glsl"); // FIXME Debug only
+  openFile("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.vert"); // FIXME Debug only
+  openFile("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag"); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -61,6 +64,7 @@ void GLShaderDev::initializeActions()
   fileMenu->addAction(QIcon(":/document-save-as.png"), tr("Save &As..."), this, SLOT(saveFileAs()), QKeySequence::SaveAs);
   fileMenu->addSeparator();
   fileMenu->addAction(QIcon(":/dialog-close.png"), tr("&Close"), _editor, SLOT(closeCurrentTab()), tr("Ctrl+W"));
+  fileMenu->addAction(QIcon(":/dialog-close.png"), tr("Cl&ose All"), _editor, SLOT(closeAllTabs()), tr("Ctrl+Shift+W"));
   fileMenu->addSeparator();
   fileMenu->addAction(QIcon(":/application-exit.png"), tr("&Quit"), this, SLOT(close()), QKeySequence::Quit);
 
@@ -70,6 +74,8 @@ void GLShaderDev::initializeActions()
   recent = projectMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
   QAction* clearProjectRecentAction = recent->addAction(tr("&Clear List"), this, SLOT(clearProjectRecent()));
   clearProjectRecentAction->setEnabled(false);
+  projectMenu->addSeparator();
+  projectMenu->addAction(QIcon(":/run-build.png"), tr("&Build Current"), this, SLOT(buildCurrentProject()), tr("F8"));
   projectMenu->addSeparator();
   projectMenu->addAction(QIcon(":/project-development-close.png"), tr("&Close Project"), this, SLOT(closeProject()));
 
@@ -86,13 +92,14 @@ void GLShaderDev::initializeDockWidgets()
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   dockWidget->setWidget(_glview);
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
+  dockWidget->setFloating(true);
 
-  QDockWidget *compile = new QDockWidget(tr("Build log"), this);
-  compile->setAllowedAreas(Qt::BottomDockWidgetArea);
-  compile->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | compile->features());
-  compile->setWidget(_output);
-  addDockWidget(Qt::BottomDockWidgetArea, compile);
-
+  _buildOutputDock = new QDockWidget(tr("Build log"), this);
+  _buildOutputDock->setAllowedAreas(Qt::BottomDockWidgetArea);
+  _buildOutputDock->setFeatures(QDockWidget::DockWidgetVerticalTitleBar | _buildOutputDock->features());
+  _buildOutputDock->setWidget(_output);
+  addDockWidget(Qt::BottomDockWidgetArea, _buildOutputDock);
+  _buildOutputDock->hide();
 }
 
 void GLShaderDev::updateRecentFiles()
@@ -134,6 +141,15 @@ void GLShaderDev::openFile(const QString& filename)
     _editor->openFile(filename);
     addRecentFile(filename);
   }
+}
+
+void GLShaderDev::closeEvent(QCloseEvent* event)
+{
+  static_cast<void>(event);
+  // FIXME Save opened tabs for next execution
+  _editor->closeAllTabs();
+  std::cout << "Closing app..." << std::endl;
+  // TODO
 }
 
 void GLShaderDev::newProject()
@@ -187,9 +203,12 @@ void GLShaderDev::saveFileAs()
   // TODO
 }
 
-void GLShaderDev::buildShader()
+void GLShaderDev::buildCurrentProject()
 {
-  // TODO
+  QMutexLocker	sl(&_buildMutex);
+
+  _buildOutputDock->setVisible(true);
+  //TODO
 }
 
 void GLShaderDev::about()

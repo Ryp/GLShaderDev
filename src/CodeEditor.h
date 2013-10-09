@@ -13,10 +13,11 @@ public:
   ~CodeEditor();
 
 public slots:
-  void	onTabClosed(int index);
   void	onTabCodeSavePointLeft();
   void	onTabCodeSavePointReached();
+  void	closeTab(int index);
   void	closeCurrentTab();
+  void	closeAllTabs();
   void	save();
   void	saveAll();
 

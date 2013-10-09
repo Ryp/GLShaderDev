@@ -17,6 +17,9 @@
     <file alias="dialog-close.png">../rc/icon/16x16/dialog-close.png</file>
     <file alias="application-exit.png">../rc/icon/16x16/application-exit.png</file>
   </qresource>
+    <qresource prefix="/">
+    <file alias="run-build.png">../rc/icon/16x16/run-build.png</file>
+  </qresource>
   <qresource prefix="/">
     <file alias="simple.vert">../rc/shader/simple.vert</file>
     <file alias="simple.frag">../rc/shader/simple.frag</file>
