@@ -18,8 +18,6 @@ GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this))
 {
-  connect(this, SIGNAL(closeEvent(QCloseEvent*)), this, SLOT(onClose()));
-
   resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
   setWindowIcon(QIcon(":/glsd-icon.png"));
   setCentralWidget(_editor);
