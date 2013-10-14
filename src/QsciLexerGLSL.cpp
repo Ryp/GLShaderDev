@@ -178,4 +178,3 @@ QsciLexerGLSL& QsciLexerGLSL::operator=(const QsciLexerGLSL& other)
   return (*this);
 }
 
-#include "QsciLexerGLSL.moc"

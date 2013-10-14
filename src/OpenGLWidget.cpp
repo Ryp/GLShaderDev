@@ -117,4 +117,3 @@ bool OpenGLWidget::prepareShaderProgram( const QString& vertexShaderPath,
   return result;
 }
 
-#include "OpenGLWidget.moc"

@@ -43,8 +43,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.vert"); // FIXME Debug only
-  openFile("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag"); // FIXME Debug only
+  openFile(":/simple.vert"); // FIXME Debug only
+  openFile(":/simple.frag"); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -231,4 +231,3 @@ void GLShaderDev::about()
   QMessageBox::about(this, tr("About GLShaderDev"), tr("<b>GLShaderDev</b> is a GLSL shader editor"));
 }
 
-#include "GLShaderDev.moc"

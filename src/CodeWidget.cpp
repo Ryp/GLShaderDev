@@ -53,5 +53,3 @@ void CodeWidget::onLinesChanged()
 {
   setMarginWidth(0, fontMetrics().width(QString::number(lines())) + 6);
 }
-
-#include "CodeWidget.moc"

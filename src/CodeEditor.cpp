@@ -142,5 +142,3 @@ void CodeEditor::saveTab(int index)
   std::cout << "File saved" << std::endl;
   tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 }
-
-#include "CodeEditor.moc"

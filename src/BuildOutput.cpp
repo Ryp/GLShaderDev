@@ -48,4 +48,3 @@ BuildOutput::BuildOutput(QWidget* parent)
 
 BuildOutput::~BuildOutput() {}
 
-#include "BuildOutput.moc"
