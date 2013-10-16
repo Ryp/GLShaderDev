@@ -166,15 +166,3 @@ const char* QsciLexerGLSL::wordCharacters() const
   return ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
 }
 
-QsciLexerGLSL::QsciLexerGLSL(const QsciLexerGLSL& other)
-: QsciLexerCustom()
-{
-  static_cast<void>(other);
-}
-
-QsciLexerGLSL& QsciLexerGLSL::operator=(const QsciLexerGLSL& other)
-{
-  static_cast<void>(other);
-  return (*this);
-}
-

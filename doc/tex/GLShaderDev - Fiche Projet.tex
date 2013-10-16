@@ -1,0 +1,54 @@
+\documentclass[10pt, a4paper]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{geometry} % Required to change the page size to A4
+\usepackage{graphicx} % Required for including pictures
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\begin{document}
+\pagenumbering{gobble}
+%----------------------------------------------------------------------------------------
+
+\begin{center}
+\HRule \\[0.2cm]
+{ \huge \bfseries Fiche Projet - GLShaderDev \\
+  \small Environnement de développement pour shaders OpenGL
+}\\[0.2cm]
+\HRule
+\end{center}
+
+\section*{Introduction}
+GLShaderDev est un IDE Open source pour GLSL (OpenGL Shading Language). \\
+Ecris en C++, utilisant Qt, il permettra de compiler automatiquement le code GLSL et d'en avoir la visualisation directe dans l'éditeur.
+Un log de compilation intelligent sera integré avec possibilité d'être renvoyé aux lignes de code posant problème, et l'éditeur proposera la coloration ainsi que la completion. Toute la difficulté sera de permettre à l'utilisateur de travailler sur ses shaders sans écrire le moindre appel à l'API OpenGL.
+
+\section*{Contexte}
+OpenGL est un outil qui attire de plus en plus l'attention des développeurs de jeux, mais dispose de relativement peu d'outils performants face à DirectX, son concurrent de Microsoft.
+Cet IDE est une tentative pour combler le manque d'outils de développement de shaders, et de pourvoir à la communauté OpenGL un outil fiable et à jour.
+
+\section*{Equipe}
+\noindent
+\textbf{Thibault Schueller:} Intégration d'OpenGL et parsing GLSL \\
+\textbf{Stéphane Nguyen:} Interface utilisateur Qt
+
+\section*{Partenaires}
+Aucun partenaire pour l'instant, mais avoir un contact avec des sociétés comme ATI ou Nvidia pourrait être extrêmement pertinent.
+Le support de la communauté OpenGL pourrait aussi être très intéressant pour ce projet.
+
+\section*{Objectifs}
+Le dépôt sera hébergé sur github, pour permettre l'interaction avec la communauté. \\
+Un objectif de 1000 téléchargements sur la page github nous parait pertinent.
+
+\section*{Planning général}
+\noindent
+08/12/2013: 1$^{er}$ prototype utilisable avec support de la compilation automatique \\
+08/02/2014: Completion et coloration syntaxique \\
+08/05/2014: Integration OpenGL complète \\
+08/06/2014: Fin du PFA
+
+%----------------------------------------------------------------------------------------
+\end{document}

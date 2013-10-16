@@ -1,0 +1,147 @@
+\documentclass[10pt, a4paper]{article} % Default font size is 12pt, it can be changed here
+
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+\usepackage{geometry} % Required to change the page size to A4
+\usepackage{graphicx} % Required for including pictures
+\usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
+\usepackage{wrapfig} % Allows in-line images such as the example fish picture
+\usepackage{lmodern}
+
+\linespread{1.2} % Line spacing
+%\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
+\graphicspath{{./Pictures/}} % Specifies the directory where pictures are stored
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\begin{document}
+
+%----------------------------------------------------------------------------------------
+\begin{titlepage}
+
+\center % Center everything on the page
+\textsc{\Large Projet de fin d'année}\\[0.5cm] % Major heading such as course name
+\textsc{\large Cahier des charges}\\[0.5cm] % Minor heading such as course title
+
+\HRule \\[0.4cm]
+{ \huge \bfseries GLShaderDev \\
+  \small Environnement de développement pour shaders OpenGL
+}\\[0.4cm]
+\HRule \\[1.5cm]
+\center{\includegraphics[height=6cm]{teapot}}
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Auteurs:}\\
+Thibault \textsc{Schueller} \\ % Your name
+Stéphane \textsc{Nguyen} % Your name
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.4\textwidth}
+\begin{flushright}
+\end{flushright}
+\end{minipage}\\[2cm]
+
+{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
+
+\includegraphics{epismall}\\[1cm] % Include a department/university logo - this will require the graphicx package
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Include a table of contents
+
+\newpage % Begins the essay on a new page instead of on the same page as the table of contents 
+
+%----------------------------------------------------------------------------------------
+
+\section{Fonctionnalités} % Major section
+
+Cet IDE sera axé sur la facilité d'édition du code GLSL et la facilité à passer du code à la visualisation du résultat.
+
+\subsection{Édition du code} % Sub-section
+
+\subsubsection{Colorisation} 
+
+Comme tout IDE qui se respecte, ce programme proposera une colorisation du language GLSL, qui comporte une série de mots-clés et d'opérateurs intégrés.
+
+\begin{figure}[H]
+\center{\includegraphics[width=0.8\linewidth]{colorisation}}
+\caption{Colorisation de base de KDevelop}
+\label{fig:colorisation}
+\end{figure}
+
+\subsubsection{Completion} 
+
+Pour être efficace dans l'écriture du code, une completion sera aussi intégrée à l'IDE, avec au minimum le support des fonctions de base GLSL.
+
+\begin{figure}[H]
+\center{\includegraphics[width=0.45\linewidth]{completion}}
+\caption{Example de completion}
+\label{fig:completion}
+\end{figure}
+
+Il suffira alors d'invoquer le parser de completion avec Ctrl+Space pour afficher une liste de fonctions correspondant au mot tapé.
+
+\subsubsection{Gestion de projet} 
+
+Comme un shader est composé de plusieurs fichiers sources, il sera possible de créer des projets shader. \\
+Il contiendront le nom des fichiers ouverts au sein du projet et ses options.
+
+%------------------------------------------------
+
+\subsection{Visualisation} % Sub-section
+
+Le principal interêt dans la création d'un IDE pour shader réside dans la visualisation directe du résultat.
+Une fenêtre OpenGL sera donc ouverte en permanence à l'écran, qui affichera la scène avec son traitement via le shader. \\
+Celle-ci sera constamment à jour avec le code pour plus de flexibilité. \\
+Il sera aussi possible de facilement prendre des screenshots.
+
+\subsubsection{Contenu de la scène} 
+
+Comme le but de l'IDE n'est pas de permettre de créer de la geometrie 3D mais d'en modifier affichage, il devra prévoir des scènes de bases sur lesquelles appliquer le shader.
+En voici une liste de base:
+\begin{itemize}
+  \item Un cube
+  \item Un modèle charge à partir d'un fichier
+  \item Une simple texture (pour les effets de post-processing notamment)
+\end{itemize}
+  
+\subsubsection{Contrôle sur la scène}
+
+En sus de pouvoir afficher une variété de scènes à l'écran, maximiser le contrôle du développeur sur le rendu est important. \\
+Il sera donc possible de tourner le rendu autour de son origine avec la souris, de zoomer avec la molette, voir même se deplacer librement dans la scène à la manière d'une caméra flottante. \\
+Un panel de gestion de la configuration d'OpenGL sera aussi intégré pour activer certains flags pendant l'exécution. (activer/désactiver le texturing par exemple).
+
+\subsubsection{Historique}
+
+Pour facilement comparer le travail en cours, l'utilisateur pourra pousser dans un historique sa version courante.
+
+Il sera possible de parcourir l'historique de toutes les versions poussées, les visualiser et revenir à leur code. Cet historique sera sauvegardé et associé au projet courant.
+
+Une fenêtre OpenGL flottante sera ouverte si l'on désire visualiser une version précédente.
+
+\subsubsection{Compilation}
+
+La procédure de compilation des shaders sera automatique et le log de compilation sera visible dans un panel de l'application.
+En cas d'erreur, il sera possible de cliquer dans le log, ce qui nous renverra sur la ligne de code en question, à la manière d'un IDE classique.
+
+\begin{figure}[H] % Example image
+\center{\includegraphics[width=1\linewidth]{log}}
+\caption{Example de log interactif}
+\label{fig:compilation}
+\end{figure}
+
+%------------------------------------------------
+
+\section{Technologies utilisées}
+
+Pour permettre de viser un public large de développeurs, le programme sera realisé en C++ couplé avec Qt (supérieur à 4.6).
+Quant à la version d'OpenGL, seront supportées les versions dîtes ``modernes'' (supérieur à 3.3).
+\end{document}

@@ -38,7 +38,6 @@
 # of the authors and should not be interpreted as representing official policies,
 # either expressed or implied, of the FreeBSD Project.
 #=============================================================================
-
 find_path ( QSCINTILLA_INCLUDE_DIR
   NAMES Qsci/qsciscintilla.h
   HINTS ${QT_INCLUDE_DIR}
@@ -71,7 +70,6 @@ if ( QScintilla_FIND_VERSION AND QSCINTILLA_VERSION_STRING )
     endif ()
   endif ()
 endif ()
-
 find_library ( QSCINTILLA_LIBRARY
   NAMES qscintilla qscintilla2 libqscintilla2
   HINTS ${QT_LIBRARY_DIR}
@@ -89,7 +87,6 @@ endif ()
 
 # handle the QUIETLY and REQUIRED arguments
 include ( FindPackageHandleStandardArgs )
-
 if ( CMAKE_VERSION LESS 2.8.3 )
   find_package_handle_standard_args( QScintilla DEFAULT_MSG QSCINTILLA_LIBRARY QSCINTILLA_INCLUDE_DIR _QSCINTILLA_VERSION_MATCH )
 else ()
