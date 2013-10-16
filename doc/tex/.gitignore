@@ -1,0 +1,7 @@
+!.gitignore
+
+#TeX
+*.pdf
+*.toc
+*.log
+*.aux
