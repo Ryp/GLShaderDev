@@ -3,9 +3,9 @@ set(GLShaderDev_SRCS OpenGLWidget.cpp BuildOutput.cpp QsciLexerGLSL.cpp CodeWidg
 set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Shader/ShaderObject.cpp Shader/ShaderProgram.cpp Shader/ShaderManager.cpp)
 set(GLShaderDev_RCCS resources.qrc)
 
+qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
 qt4_automoc(MOC_SOURCES ${MOC_HEADERS})
 qt4_add_resources(GLShaderDev_RCC_SRCS ${GLShaderDev_RCCS})
-qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
 
 set("${CMAKE_CXX_FLAGS} -Wall -Wextra -ansi" CMAKE_CXX_FLAGS)
 
