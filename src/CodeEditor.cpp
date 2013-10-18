@@ -111,7 +111,7 @@ void CodeEditor::openFile(const QString& file)
   }
   if (!info.exists())
   {
-    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + file, QMessageBox::Ok, QMessageBox::NoButton, QMessageBox::NoButton);
+    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + file);
     return ;
   }
   if (!f->open(QIODevice::ReadWrite | QIODevice::Text))

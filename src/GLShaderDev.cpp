@@ -30,10 +30,12 @@
 #include "CodeEditor.h"
 #include "BuildOutput.h"
 #include "OpenGLWidget.h"
+#include "Dialog/NewFileDialog.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
-  _output(new BuildOutput(this))
+  _output(new BuildOutput(this)),
+  _newFileDialog(new NewFileDialog(this))
 {
   resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
   setWindowIcon(QIcon(":/glsd-icon.png"));
@@ -43,8 +45,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile(":/simple.vert"); // FIXME Debug only
-  openFile(":/simple.frag"); // FIXME Debug only
+  openFile(QFile("../rc/shader/simple.vert").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/simple.frag").fileName()); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -63,7 +65,8 @@ void GLShaderDev::initializeActions()
 {
   QMenu* recent;
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-  fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), this, SLOT(newFile()), QKeySequence::New);
+  fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), _newFileDialog, SLOT(exec()), QKeySequence::New);
+  connect(_newFileDialog, SIGNAL(accepted()), this, SLOT(newFile()));
   fileMenu->addAction(QIcon(":/document-open.png"), tr("&Open..."), this, SLOT(openFileDialog()), QKeySequence::Open);
   recent = fileMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
 
@@ -107,7 +110,7 @@ void GLShaderDev::initializeDockWidgets()
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
   dockWidget->setWidget(_glview);
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
-  dockWidget->setFloating(true);
+//   dockWidget->setFloating(true); FIXME
 
   _buildOutputDock = new QDockWidget(tr("Build log"), this);
   _buildOutputDock->setAllowedAreas(Qt::BottomDockWidgetArea);
@@ -189,7 +192,18 @@ void GLShaderDev::closeProject()
 
 void GLShaderDev::newFile()
 {
-  // TODO
+  QFile		file(_newFileDialog->getNewFileName());
+  QFileInfo	info(file);
+
+  if (info.exists())
+    _editor->openFile(file.fileName());
+  if (file.open(QIODevice::ReadWrite))
+  {
+    file.close();
+    _editor->openFile(file.fileName());
+  }
+  else
+    QMessageBox::warning(this, tr("Error"), tr("Could not create file"));
 }
 
 void GLShaderDev::openFileDialog()

@@ -22,6 +22,7 @@
 #include <QMutex>
 
 class OpenGLWidget;
+class NewFileDialog;
 class BuildOutput;
 class CodeEditor;
 
@@ -63,12 +64,13 @@ private:
   enum { MaxRecentFiles = 9 };
 
 private:
-  CodeEditor*	_editor;
-  BuildOutput*	_output;
-  QDockWidget*	_buildOutputDock;
-  OpenGLWidget*	_glview;
-  QAction*	_recentFileActions[MaxRecentFiles + 2];
-  QMutex	_buildMutex;
+  CodeEditor*		_editor;
+  BuildOutput*		_output;
+  QDockWidget*		_buildOutputDock;
+  OpenGLWidget*		_glview;
+  NewFileDialog*	_newFileDialog;
+  QAction*		_recentFileActions[MaxRecentFiles + 2];
+  QMutex		_buildMutex;
 };
 
 #endif // GLSHADERDEV_H

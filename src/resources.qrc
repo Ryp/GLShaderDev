@@ -10,11 +10,13 @@
     <file alias="project-open.png">../rc/icon/16x16/project-open.png</file>
     <file alias="document-new.png">../rc/icon/16x16/document-new.png</file>
     <file alias="document-open.png">../rc/icon/16x16/document-open.png</file>
+    <file alias="document-open-folder.png">../rc/icon/16x16/document-open-folder.png</file>
     <file alias="document-open-recent.png">../rc/icon/16x16/document-open-recent.png</file>
     <file alias="document-save-all.png">../rc/icon/16x16/document-save-all.png</file>
     <file alias="document-save.png">../rc/icon/16x16/document-save.png</file>
     <file alias="document-save-as.png">../rc/icon/16x16/document-save-as.png</file>
     <file alias="dialog-close.png">../rc/icon/16x16/dialog-close.png</file>
+    <file alias="dialog-cancel.png">../rc/icon/16x16/dialog-cancel.png</file>
     <file alias="application-exit.png">../rc/icon/16x16/application-exit.png</file>
   </qresource>
     <qresource prefix="/">

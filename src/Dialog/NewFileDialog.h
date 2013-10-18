@@ -15,27 +15,43 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BUILDOUTPUT_H
-#define BUILDOUTPUT_H
+#ifndef NEWFILEDIALOG_H
+#define NEWFILEDIALOG_H
 
-#include <QWidget>
+#include <QDialog>
+
+#include "Shader/ShaderObject.h"
 
 QT_BEGIN_NAMESPACE
-class QHBoxLayout;
+class QComboBox;
+class QLineEdit;
+class QPushButton;
 QT_END_NAMESPACE
 
-class BuildOutput : public QWidget
+class NewFileDialog : public QDialog
 {
   Q_OBJECT
 public:
-  BuildOutput(QWidget* parent = 0);
-  ~BuildOutput();
+  NewFileDialog(QWidget *parent = 0);
+  ~NewFileDialog();
 
-signals:
-  void	onLineSensitiveItem(int line, int type);
+public:
+  const QString&		getNewFileName() const;
+  ShaderObject::ShaderType	getNewFileType() const;
+
+public slots:
+  void	accept();
+  void	browseFolder();
 
 private:
-  QHBoxLayout*	_layout;
+  QString			_file;
+  ShaderObject::ShaderType	_type;
+  QComboBox*			_shaderCombo;
+  QLineEdit*			_folderLineEdit;
+  QLineEdit*			_fileNameLineEdit;
+  QPushButton*			_newButton;
+  QPushButton*			_cancelButton;
+  QPushButton*			_browseButton;
 };
 
-#endif // BUILDOUTPUT_H
+#endif // NEWFILEDIALOG_H
