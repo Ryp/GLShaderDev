@@ -47,4 +47,3 @@ BuildOutput::BuildOutput(QWidget* parent)
 }
 
 BuildOutput::~BuildOutput() {}
-

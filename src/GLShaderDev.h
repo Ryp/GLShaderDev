@@ -31,7 +31,7 @@ class GLShaderDev : public QMainWindow
   Q_OBJECT
 public:
   GLShaderDev();
-  virtual ~GLShaderDev();
+  ~GLShaderDev();
 
 private:
   void	initializeOpenGL();

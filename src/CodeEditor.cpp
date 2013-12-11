@@ -19,8 +19,6 @@
 
 #include <QFile>
 #include <QFileInfo>
-
-#include <QMenu>
 #include <QMessageBox>
 
 #include "CodeEditor.h"
