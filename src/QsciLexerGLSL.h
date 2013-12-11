@@ -18,8 +18,8 @@
 #ifndef QSCILEXERGLSL_H
 #define QSCILEXERGLSL_H
 
-#include <qscilexercustom.h>
-#include <qscistyle.h>
+#include <Qsci/qscistyle.h>
+#include <Qsci/qscilexercustom.h>
 
 class QsciLexerGLSL : public QsciLexerCustom
 {

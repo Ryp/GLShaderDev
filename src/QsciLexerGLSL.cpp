@@ -15,7 +15,7 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <qsciscintilla.h>
+#include <Qsci/qsciscintilla.h>
 #include <QDebug>
 
 #include "QsciLexerGLSL.h"
