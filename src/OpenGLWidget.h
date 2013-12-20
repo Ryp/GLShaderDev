@@ -18,9 +18,9 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
+#include "Shader/ShaderProgram.h"
+
 #include <QGLWidget>
-#include <QGLBuffer>
-#include <QGLShaderProgram>
 
 class OpenGLWidget : public QGLWidget
 {
@@ -31,7 +31,7 @@ public:
 
 public:
   QSize	sizeHint() const;
-  void	setShader(QGLShaderProgram& prgm);
+  void	setShader(ShaderProgram& prgm);
 
 protected:
   virtual void initializeGL();
@@ -44,8 +44,8 @@ private:
   bool prepareShaderProgram( const QString& vertexShaderPath,
 			     const QString& fragmentShaderPath );
 
-  QGLShaderProgram	_shader;
-  QGLBuffer		_vertexBuffer;
+  ShaderProgram*	_shader;
+  GLuint		_vertexBuffer;
 };
 
 #endif // OPENGLWIDGET_H

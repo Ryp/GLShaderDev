@@ -8,7 +8,7 @@ qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
 qt4_automoc(MOC_SOURCES ${MOC_HEADERS})
 qt4_add_resources(GLShaderDev_RCC_SRCS ${GLShaderDev_RCCS})
 
-set("${CMAKE_CXX_FLAGS} -Wall -Wextra -ansi" CMAKE_CXX_FLAGS)
+set("${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -ansi -O" CMAKE_CXX_FLAGS)
 
 add_executable(GLShaderDev ${GLShaderDev_SRCS} ${GLShaderDev_RCC_SRCS} ${MOC_SOURCES})
 target_link_libraries(GLShaderDev ${OPENGL_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${GLEW_LIBRARY} ${QSCINTILLA_LIBRARY})

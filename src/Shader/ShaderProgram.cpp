@@ -17,7 +17,6 @@
 
 #include <vector>
 #include <iostream>
-#include <GL/glew.h>
 
 #include "ShaderProgram.h"
 #include "ShaderObject.h"

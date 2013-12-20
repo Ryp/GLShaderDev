@@ -19,7 +19,7 @@
 #define SHADEROBJECT_H
 
 #include <string>
-#include <GL/gl.h>
+#include "GLHeaders.hpp"
 
 class ShaderObject
 {

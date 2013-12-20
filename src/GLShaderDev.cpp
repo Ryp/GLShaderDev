@@ -154,40 +154,41 @@ void GLShaderDev::addRecentFile(const QString& filename)
 
 void GLShaderDev::openFile(const QString& filename)
 {
-  if (!filename.isEmpty())
-  {
-    _editor->openFile(filename);
-    addRecentFile(filename);
-  }
+  if (filename.isEmpty())
+    return;
+
+  QFileInfo	file(filename);
+
+  if (_editor->openFile(file.absoluteFilePath()))
+    addRecentFile(file.absoluteFilePath());
 }
 
 void GLShaderDev::closeEvent(QCloseEvent* event)
 {
   static_cast<void>(event);
-  // FIXME Save opened tabs for next execution
+  // TODO Save opened tabs for next execution
   _editor->closeAllTabs();
-  std::cout << "Closing app..." << std::endl;
-  // TODO
+  std::cout << "Closing app..." << std::endl; // TODO
 }
 
 void GLShaderDev::newProject()
 {
-  // TODO
+  std::cout << "newProject() not implemented yet" << std::endl; // TODO
 }
 
 void GLShaderDev::openProject()
 {
-  // TODO
+  std::cout << "newProject() not implemented yet" << std::endl; // TODO
 }
 
 void GLShaderDev::clearProjectRecent()
 {
-  // TODO
+  std::cout << "clearProjectRecent() not implemented yet" << std::endl; // TODO
 }
 
 void GLShaderDev::closeProject()
 {
-  // TODO
+  std::cout << "closeProject() not implemented yet" << std::endl; // TODO
 }
 
 void GLShaderDev::newFile()
@@ -196,11 +197,11 @@ void GLShaderDev::newFile()
   QFileInfo	info(file);
 
   if (info.exists())
-    _editor->openFile(file.fileName());
-  if (file.open(QIODevice::ReadWrite))
+    _editor->openFile(info.absoluteFilePath());
+  else if (file.open(QIODevice::ReadWrite))
   {
     file.close();
-    _editor->openFile(file.fileName());
+    _editor->openFile(info.absoluteFilePath());
   }
   else
     QMessageBox::warning(this, tr("Error"), tr("Could not create file"));
@@ -229,7 +230,7 @@ void GLShaderDev::clearFileRecent()
 
 void GLShaderDev::saveFileAs()
 {
-  // TODO
+  std::cout << "saveFileAs() not implemented yet" << std::endl; // TODO
 }
 
 void GLShaderDev::buildCurrentProject()
@@ -237,7 +238,6 @@ void GLShaderDev::buildCurrentProject()
   QMutexLocker	sl(&_buildMutex);
 
   _buildOutputDock->setVisible(true);
-  //TODO
 }
 
 void GLShaderDev::about()

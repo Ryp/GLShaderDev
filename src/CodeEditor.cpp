@@ -19,9 +19,11 @@
 
 #include <QFile>
 #include <QFileInfo>
+#include <QKeyEvent>
 #include <QMessageBox>
 
 #include "CodeEditor.h"
+#include "Exceptions/GlsdException.hpp"
 
 CodeEditor::CodeEditor(QWidget *parent)
 : QTabWidget(parent)
@@ -31,6 +33,100 @@ CodeEditor::CodeEditor(QWidget *parent)
 }
 
 CodeEditor::~CodeEditor() {}
+
+bool CodeEditor::openFile(const QString& file)
+{
+  QFile*	f = new QFile(file);
+  QFileInfo	info(*f);
+
+  for (int i = 0; i < count(); ++i)
+  {
+    if ((qobject_cast<CodeWidget*>(widget(i)))->getFilename() == file)
+    {
+      setCurrentIndex(i);
+      return (false);
+    }
+  }
+  if (!info.exists())
+  {
+    QMessageBox::warning(this, tr("Error"), tr("File does not exist: ") + file);
+    return (false);
+  }
+  if (!f->open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + f->fileName());
+    return (false);
+  }
+
+  CodeWidget* tab = new CodeWidget(info.absoluteFilePath(), this);
+
+  connect(tab, SIGNAL(SCN_SAVEPOINTLEFT()), this, SLOT(onTabCodeSavePointLeft()));
+  connect(tab, SIGNAL(SCN_SAVEPOINTREACHED()), this, SLOT(onTabCodeSavePointReached()));
+
+  tab->setText(f->readAll());
+  f->close();
+
+  tab->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
+
+  addTab(tab, info.fileName());
+  setCurrentWidget(tab);
+  return (true);
+}
+
+void CodeEditor::closeCurrentTab()
+{
+  closeTab(currentIndex());
+}
+
+void CodeEditor::closeAllTabs()
+{
+  while (count() > 0)
+    closeTab(currentIndex());
+}
+
+void CodeEditor::save()
+{
+  saveTab(currentIndex());
+}
+
+void CodeEditor::saveAll()
+{
+  for (int i = 0; i < count(); ++i)
+    saveTab(i);
+}
+
+void CodeEditor::saveTab(int index)
+{
+  CodeWidget*	tabWidget = qobject_cast<CodeWidget*>(widget(index));
+
+  if (!tabWidget)
+    return ;
+  if (!tabWidget->isModified())
+    return ;
+
+  QFile*	f = new QFile(tabWidget->getFilename());
+  QFileInfo	info(*f);
+
+  if (!info.exists())
+  {
+    QMessageBox::warning(this, tr("Error"), tr("File does not exist: ") + f->fileName());
+    return ;
+  }
+  if (!f->open(QIODevice::WriteOnly | QIODevice::Text))
+  {
+    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + f->fileName());
+    return ;
+  }
+  QString	buffer = tabWidget->text();
+  qint64	len = buffer.size();
+
+  if (f->write(buffer.toStdString().c_str(), len) == -1)
+    throw (GlsdException("QFile::write() failed"));
+  f->close();
+  std::cout << "File saved: " << tabWidget->getFilename().toStdString() << std::endl; // FIXME Remove debug
+
+  tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
+}
 
 void CodeEditor::onTabCodeSavePointLeft()
 {
@@ -70,73 +166,4 @@ void CodeEditor::closeTab(int index)
   }
   removeTab(index);
   tabItem->deleteLater();
-}
-
-void CodeEditor::closeCurrentTab()
-{
-  closeTab(currentIndex());
-}
-
-void CodeEditor::closeAllTabs()
-{
-  while (count() > 0)
-    closeTab(currentIndex());
-}
-
-void CodeEditor::save()
-{
-  saveTab(currentIndex());
-}
-
-void CodeEditor::saveAll()
-{
-  for (int i = 0; i < count(); ++i)
-    saveTab(i);
-}
-
-void CodeEditor::openFile(const QString& file)
-{
-  QFile*	f = new QFile(file);
-  QFileInfo	info(*f);
-
-  for (int i = 0; i < count(); ++i)
-  {
-    if ((qobject_cast<CodeWidget*>(widget(i)))->getFilename() == file)
-    {
-      setCurrentIndex(i);
-      return ;
-    }
-  }
-  if (!info.exists())
-  {
-    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + file);
-    return ;
-  }
-  if (!f->open(QIODevice::ReadWrite | QIODevice::Text))
-    return ;
-  CodeWidget* tab = new CodeWidget(file, this);
-
-  connect(tab, SIGNAL(SCN_SAVEPOINTLEFT()), this, SLOT(onTabCodeSavePointLeft()));
-  connect(tab, SIGNAL(SCN_SAVEPOINTREACHED()), this, SLOT(onTabCodeSavePointReached()));
-
-  tab->setText(f->readAll());
-  f->close();
-
-  tab->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
-
-  addTab(tab, info.fileName());
-  setCurrentWidget(tab);
-}
-
-void CodeEditor::saveTab(int index)
-{
-  CodeWidget*	tabWidget = qobject_cast<CodeWidget*>(widget(index));
-
-  if (!tabWidget)
-    return ;
-  if (!tabWidget->isModified())
-    return ;
-
-  std::cout << "File saved" << std::endl;
-  tabWidget->SendScintilla(QsciScintilla::SCI_SETSAVEPOINT);
 }

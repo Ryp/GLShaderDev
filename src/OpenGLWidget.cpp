@@ -15,10 +15,10 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <iostream>
 #include <QKeyEvent>
 
 #include "OpenGLWidget.h"
+#include "Exceptions/GlsdException.hpp"
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 : QGLWidget(fmt, parent)
@@ -31,50 +31,51 @@ QSize OpenGLWidget::sizeHint() const
   return (QSize(300, 300));
 }
 
-void OpenGLWidget::setShader(QGLShaderProgram& prgm)
+void OpenGLWidget::setShader(ShaderProgram& prgm)
 {
-  prgm.bind();
-  prgm.setAttributeBuffer("vertex", GL_FLOAT, 0, 4);
-  prgm.enableAttributeArray("vertex");
+  _shader = &prgm;
 }
 
 void	OpenGLWidget::initializeGL()
 {
-  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+  if (glewInit() != GLEW_OK)
+    throw (GlsdException("glewInit() failed"));
+
+  glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
   if (!prepareShaderProgram(":/simple.vert", ":/simple.frag"))
     return;
 
-  // We need us some vertex data. Start simple with a triangle ;-)
-  float points[] = { -0.5f, -0.5f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.0f, 1.0f,
-    0.0f,  0.5f, 0.0f, 1.0f };
-    _vertexBuffer.create();
-    _vertexBuffer.setUsagePattern(QGLBuffer::StaticDraw);
-    if (!_vertexBuffer.bind())
-    {
-      qWarning() << "Could not bind vertex buffer to the context";
-      return;
-    }
-    _vertexBuffer.allocate( points, 3 * 4 * sizeof( float ) );
+  GLfloat points[] =
+  { -0.5f, -0.5f, 0.0f,
+  0.5f, -0.5f, 0.0f,
+  0.0f,  0.5f, 0.0f };
 
-    // Bind the shader program so that we can associate variables from
-    // our application to the shaders
-    if (!_shader.bind())
-    {
-      qWarning() << "Could not bind shader program to context";
-      return;
-    }
-
-    // Enable the "vertex" attribute to bind it to our currently bound
-    // vertex buffer.
-    _shader.setAttributeBuffer("vertex", GL_FLOAT, 0, 4);
-    _shader.enableAttributeArray("vertex");
+  glGenBuffers(1, &_vertexBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+  glBufferData(GL_ARRAY_BUFFER, 3 * (3 * sizeof(*points)), points, GL_STATIC_DRAW);
 }
 
 void	OpenGLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  _shader->bind();
+  GLuint vertexLocation = _shader->getAttribLocation("vertex");
+
+  glEnableVertexAttribArray(vertexLocation);
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+  glVertexAttribPointer(
+    vertexLocation,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized?
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
   glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  glDisableVertexAttribArray(vertexLocation);
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)
@@ -99,21 +100,30 @@ void OpenGLWidget::configureShader()
 bool OpenGLWidget::prepareShaderProgram( const QString& vertexShaderPath,
 				     const QString& fragmentShaderPath )
 {
-  // First we load and compile the vertex shader...
-  bool result = _shader.addShaderFromSourceFile( QGLShader::Vertex, vertexShaderPath );
-  if ( !result )
-    qWarning() << _shader.log();
+  ShaderObject	v;
+  ShaderObject	f;
+  QFile		vFile(vertexShaderPath);
+  QFile		fFile(fragmentShaderPath);
 
-  // ...now the fragment shader...
-  result = _shader.addShaderFromSourceFile( QGLShader::Fragment, fragmentShaderPath );
-  if ( !result )
-    qWarning() << _shader.log();
+  vFile.open(QIODevice::ReadOnly);
+  fFile.open(QIODevice::ReadOnly);
 
-  // ...and finally we link them to resolve any references.
-  result = _shader.link();
-  if ( !result )
-    qWarning() << "Could not link shader program:" << _shader.log();
+  _shader = new ShaderProgram;
 
-  return result;
+  v.compile(std::string(vFile.readAll()), ShaderObject::VertexShader);
+  f.compile(std::string(fFile.readAll()), ShaderObject::FragmentShader);
+
+  if (!v.isCompiled())
+    throw (GlsdException("V did not compile"));
+  if (!f.isCompiled())
+    throw (GlsdException("F did not compile"));
+
+  _shader->attach(v);
+  _shader->attach(f);
+
+  if (!_shader->link())
+    throw (GlsdException("Program failed to link"));
+
+  return true;
 }
 

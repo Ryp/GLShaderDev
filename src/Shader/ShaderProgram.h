@@ -20,7 +20,6 @@
 
 #include <string>
 #include <map>
-#include <GL/gl.h>
 
 #include "ShaderObject.h"
 
