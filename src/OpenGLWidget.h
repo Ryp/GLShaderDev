@@ -40,7 +40,6 @@ protected:
   virtual void keyPressEvent(QKeyEvent* e);
 
 private:
-  void	configureShader();
   bool prepareShaderProgram( const QString& vertexShaderPath,
 			     const QString& fragmentShaderPath );
 

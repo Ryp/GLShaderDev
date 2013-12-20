@@ -46,13 +46,13 @@ void	OpenGLWidget::initializeGL()
     return;
 
   GLfloat points[] =
-  { -0.5f, -0.5f, 0.0f,
-  0.5f, -0.5f, 0.0f,
-  0.0f,  0.5f, 0.0f };
+  { -0.5f, -0.5f, 0.0f, 1.0f,
+    0.5f, -0.5f, 0.0f, 1.0f,
+    0.0f,  0.5f, 0.0f, 1.0f };
 
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, 3 * (3 * sizeof(*points)), points, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, 3 * (4 * sizeof(*points)), points, GL_STATIC_DRAW);
 }
 
 void	OpenGLWidget::paintGL()
@@ -66,7 +66,7 @@ void	OpenGLWidget::paintGL()
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
   glVertexAttribPointer(
     vertexLocation,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-    3,                  // size
+    4,                  // size
     GL_FLOAT,           // type
     GL_FALSE,           // normalized?
     0,                  // stride
@@ -90,11 +90,6 @@ void	OpenGLWidget::keyPressEvent(QKeyEvent* e)
     default:
       QGLWidget::keyPressEvent(e);
   }
-}
-
-void OpenGLWidget::configureShader()
-{
-  // FIXME
 }
 
 bool OpenGLWidget::prepareShaderProgram( const QString& vertexShaderPath,

@@ -11,4 +11,4 @@ Dependencies:
 
 ## Issues
 
-* Please report issues here: [Issue tracker](https://github.com/Ryp/GLShaderDev/issues/new)
+* Please report issues here: [Issue tracker](https://github.com/Ryp/GLShaderDev/issues)
