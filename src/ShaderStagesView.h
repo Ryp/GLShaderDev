@@ -15,36 +15,26 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef OPENGLWIDGET_H
-#define OPENGLWIDGET_H
+#ifndef SHADERSTAGESVIEW_H
+#define SHADERSTAGESVIEW_H
 
-#include "Shader/ShaderProgram.h"
+#include <list>
 
-#include <QGLWidget>
+#include <QWidget>
+#include <QTreeWidget>
 
-class OpenGLWidget : public QGLWidget
+class ShaderStagesView : public QWidget
 {
   Q_OBJECT
 public:
-  OpenGLWidget(const QGLFormat& fmt, QWidget *parent = 0);
-  ~OpenGLWidget();
+  ShaderStagesView(QWidget *parent = 0);
+  ~ShaderStagesView();
 
 public:
-  QSize	sizeHint() const;
-  void	setShader(ShaderProgram* prgm);
-
-protected:
-  virtual void initializeGL();
-  virtual void resizeGL(int w, int h);
-  virtual void paintGL();
-  virtual void keyPressEvent(QKeyEvent* e);
+  std::list< std::pair<int, QString> >	getShaderConfig() const;
 
 private:
-  bool prepareShaderProgram( const QString& vertexShaderPath,
-			     const QString& fragmentShaderPath );
-
-  ShaderProgram*	_shader;
-  GLuint		_vertexBuffer;
+  std::map<int, QTreeWidgetItem*>	_stages;
 };
 
-#endif // OPENGLWIDGET_H
+#endif // SHADERSTAGESVIEW_H

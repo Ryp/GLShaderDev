@@ -25,12 +25,15 @@
 #include <QFileDialog>
 #include <QDockWidget>
 #include <QMessageBox>
+#include <QSplitter>
 
 #include "GLShaderDev.h"
 #include "CodeEditor.h"
 #include "BuildOutput.h"
 #include "OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
+#include "ShaderStagesView.h"
+#include "Exceptions/GlsdException.hpp"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
@@ -99,6 +102,10 @@ void GLShaderDev::initializeActions()
 
   menuBar()->addMenu("|")->setEnabled(false);
 
+  QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
+  settingsMenu->setEnabled(false);
+  // TODO Make real settings menu
+
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(QIcon(":/glsd-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
   helpMenu->addAction(QIcon(":/qt-icon.png"), tr("About &Qt"), qApp, SLOT(aboutQt()));
@@ -106,9 +113,22 @@ void GLShaderDev::initializeActions()
 
 void GLShaderDev::initializeDockWidgets()
 {
+  QSplitter*		splitter = new QSplitter;
+  QTabWidget*		optionTab = new QTabWidget;
+
+  _shaderStages = new ShaderStagesView;
+
+  optionTab->setMovable(true);
+  optionTab->addTab(_shaderStages, tr("Build Stages"));
+  optionTab->addTab(new CodeWidget("caca"), tr("Input"));
+
+  splitter->setOrientation(Qt::Vertical);
+  splitter->addWidget(_glview);
+  splitter->addWidget(optionTab);
+
   QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
   dockWidget->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-  dockWidget->setWidget(_glview);
+  dockWidget->setWidget(splitter);
   addDockWidget(Qt::RightDockWidgetArea, dockWidget);
 //   dockWidget->setFloating(true); FIXME
 
@@ -235,9 +255,34 @@ void GLShaderDev::saveFileAs()
 
 void GLShaderDev::buildCurrentProject()
 {
-  QMutexLocker	sl(&_buildMutex);
+  QMutexLocker					sl(&_buildMutex);
+  ShaderProgram*				prog = new ShaderProgram;
+  std::list <std::pair <int, QString > >	stages;
 
   _buildOutputDock->setVisible(true);
+
+  stages = _shaderStages->getShaderConfig();
+  for (std::list <std::pair <int, QString > >::iterator it = stages.begin(); it != stages.end(); ++it)
+  {
+    QString str = QString("[%1]=%2").arg(it->first).arg(it->second);
+    _output->addLine(str);
+
+    QFile		file(it->second);
+    ShaderObject*	obj = new ShaderObject;
+
+    if (!file.open(QIODevice::ReadOnly))
+      throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString()));
+    obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first));
+    prog->attach(*obj);
+  }
+
+  if (!prog->link())
+    _output->addLine(tr("*** Compilation failed ***"));
+  else
+    _output->addLine(tr("*** Compilation successful ***"));
+
+  // FIXME Set shader properly, with attributes correctly bound
+  _glview->setShader(prog);
 }
 
 void GLShaderDev::about()

@@ -29,22 +29,27 @@ BuildOutput::BuildOutput(QWidget* parent)
   _layout->setSpacing(0); // FIXME
   _layout->setMargin(0);
 
-  QTreeWidget* list = new QTreeWidget(this);
-  list->header()->hide();
-  list->setRootIsDecorated(false);
+  _list = new QTreeWidget(this);
+  _list->header()->hide();
+  _list->setRootIsDecorated(false);
   QFont ft = this->font();
   ft.setFamily("Monospace");
-  list->setFont(ft);
+  _list->setFont(ft);
 
   QStringList l;
   l.append("Pute");
   l.append("Negre"); // NOTE for columns only i think
   l.append("Juif"); // NOTE for columns only i think
-  QTreeWidgetItem* a = new QTreeWidgetItem(list, l);
+  QTreeWidgetItem* a = new QTreeWidgetItem(_list, l);
   QTreeWidgetItem* b = new QTreeWidgetItem(a, l);
-  _layout->addWidget(list);
+  _layout->addWidget(_list);
 
   //   connect(list, itemDoubleClicked(QTreeWidgetItem*, int), this, onLineSensitiveItem(int, int));
 }
 
 BuildOutput::~BuildOutput() {}
+
+void BuildOutput::addLine(const QString& string)
+{
+  QTreeWidgetItem* line = new QTreeWidgetItem(_list, QStringList(string));
+}

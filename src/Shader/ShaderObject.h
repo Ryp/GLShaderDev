@@ -31,7 +31,7 @@ public:
     TesselationEvaluationShader = GL_TESS_EVALUATION_SHADER,
     GeometryShader = GL_GEOMETRY_SHADER,
     FragmentShader = GL_FRAGMENT_SHADER,
-    ComputeShader = None/* FIXME GL_COMPUTE_SHADER */
+    ComputeShader = None/* FIXME 4.3 compatible only GL_COMPUTE_SHADER */
   };
 
 public:

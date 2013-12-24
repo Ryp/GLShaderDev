@@ -21,6 +21,7 @@
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
+class QTreeWidget;
 class QHBoxLayout;
 QT_END_NAMESPACE
 
@@ -31,11 +32,15 @@ public:
   BuildOutput(QWidget* parent = 0);
   ~BuildOutput();
 
+public:
+  void	addLine(const QString& string); // FIXME For debugging purpose only
+
 signals:
   void	onLineSensitiveItem(int line, int type);
 
 private:
   QHBoxLayout*	_layout;
+  QTreeWidget*	_list;
 };
 
 #endif // BUILDOUTPUT_H

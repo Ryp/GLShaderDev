@@ -29,6 +29,7 @@ CodeEditor::CodeEditor(QWidget *parent)
 : QTabWidget(parent)
 {
   setTabsClosable(true);
+  setMovable(true);
   connect(this, SIGNAL(tabCloseRequested(int)), this, SLOT(closeTab(int)));
 }
 

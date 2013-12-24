@@ -17,11 +17,12 @@
 
 #include "CodeWidget.h"
 #include "QsciLexerGLSL.h"
+#include <Qsci/qscilexercpp.h>  // FIXME Use custom lexer instead
 
 CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
 : QsciScintilla(parent),
   _filename(filename),
-  _lexer(new QsciLexerGLSL(this))
+  _lexer(new QsciLexerCPP(this)) // FIXME Use custom lexer instead
 {
   QFont ft = this->font();
   ft.setFamily("Monospace");

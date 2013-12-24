@@ -31,9 +31,11 @@ QSize OpenGLWidget::sizeHint() const
   return (QSize(300, 300));
 }
 
-void OpenGLWidget::setShader(ShaderProgram& prgm)
+void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
-  _shader = &prgm;
+  _shader = prgm;
+
+  paintGL();
 }
 
 void	OpenGLWidget::initializeGL()
