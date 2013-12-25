@@ -36,12 +36,6 @@ BuildOutput::BuildOutput(QWidget* parent)
   ft.setFamily("Monospace");
   _list->setFont(ft);
 
-  QStringList l;
-  l.append("Pute");
-  l.append("Negre"); // NOTE for columns only i think
-  l.append("Juif"); // NOTE for columns only i think
-  QTreeWidgetItem* a = new QTreeWidgetItem(_list, l);
-  QTreeWidgetItem* b = new QTreeWidgetItem(a, l);
   _layout->addWidget(_list);
 
   //   connect(list, itemDoubleClicked(QTreeWidgetItem*, int), this, onLineSensitiveItem(int, int));
@@ -52,4 +46,5 @@ BuildOutput::~BuildOutput() {}
 void BuildOutput::addLine(const QString& string)
 {
   QTreeWidgetItem* line = new QTreeWidgetItem(_list, QStringList(string));
+  line->setTextColor(0, QColor("#006E28"));
 }

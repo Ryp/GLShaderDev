@@ -21,8 +21,11 @@
 #include "Exceptions/GlsdException.hpp"
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
-: QGLWidget(fmt, parent)
-{}
+: QGLWidget(fmt, parent),
+  _shader(0)
+{
+  _clock.start();
+}
 
 OpenGLWidget::~OpenGLWidget() {}
 
@@ -35,7 +38,30 @@ void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
   _shader = prgm;
 
-  paintGL();
+  updateGL();
+}
+
+void OpenGLWidget::changeBackgroundColor(const QColor& color)
+{
+  float	c[3];
+
+  c[0] = static_cast<float>(color.red()) / 255.0f;
+  c[1] = static_cast<float>(color.green() / 255.0f);
+  c[2] = static_cast<float>(color.blue() / 255.0f);
+
+  makeCurrent();
+  glClearColor(c[0], c[1], c[2], 1.0f);
+  updateGL();
+}
+
+int OpenGLWidget::getTime() const
+{
+  return (_clock.elapsed());
+}
+
+void OpenGLWidget::resetTime()
+{
+  _clock.start();
 }
 
 void	OpenGLWidget::initializeGL()
@@ -60,6 +86,9 @@ void	OpenGLWidget::initializeGL()
 void	OpenGLWidget::paintGL()
 {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  if (!_shader)
+    return;
 
   _shader->bind();
   GLuint vertexLocation = _shader->getAttribLocation("vertex");
@@ -109,11 +138,6 @@ bool OpenGLWidget::prepareShaderProgram( const QString& vertexShaderPath,
 
   v.compile(std::string(vFile.readAll()), ShaderObject::VertexShader);
   f.compile(std::string(fFile.readAll()), ShaderObject::FragmentShader);
-
-  if (!v.isCompiled())
-    throw (GlsdException("V did not compile"));
-  if (!f.isCompiled())
-    throw (GlsdException("F did not compile"));
 
   _shader->attach(v);
   _shader->attach(f);

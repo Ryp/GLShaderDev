@@ -21,6 +21,7 @@
 #include <QMainWindow>
 #include <QMutex>
 
+class ShaderVisualizationOptions;
 class ShaderStagesView;
 class OpenGLWidget;
 class NewFileDialog;
@@ -70,6 +71,7 @@ private:
   QDockWidget*		_buildOutputDock;
   OpenGLWidget*		_glview;
   ShaderStagesView*	_shaderStages;
+  ShaderVisualizationOptions*	_shaderVis;
   NewFileDialog*	_newFileDialog;
   QAction*		_recentFileActions[MaxRecentFiles + 2];
   QMutex		_buildMutex;

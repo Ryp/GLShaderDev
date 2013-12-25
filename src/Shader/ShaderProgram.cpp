@@ -54,6 +54,7 @@ bool ShaderProgram::link()
     {
       std::vector<GLchar> infoLog(logLength);
       glGetProgramInfoLog(_handle, logLength, &logLength, &infoLog[0]);
+      infoLog[logLength - 1] = '\0'; // Overwrite endline
       _log = &infoLog[0];
     }
     destroy();

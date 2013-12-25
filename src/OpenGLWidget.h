@@ -21,6 +21,7 @@
 #include "Shader/ShaderProgram.h"
 
 #include <QGLWidget>
+#include <QTime>
 
 class OpenGLWidget : public QGLWidget
 {
@@ -32,19 +33,25 @@ public:
 public:
   QSize	sizeHint() const;
   void	setShader(ShaderProgram* prgm);
+  int	getTime() const;
+  void	resetTime();
+
+public slots:
+  void	changeBackgroundColor(const QColor& color);
 
 protected:
-  virtual void initializeGL();
-  virtual void resizeGL(int w, int h);
-  virtual void paintGL();
-  virtual void keyPressEvent(QKeyEvent* e);
+  void	initializeGL();
+  void	resizeGL(int w, int h);
+  void	paintGL();
+  void	keyPressEvent(QKeyEvent* e);
 
 private:
   bool prepareShaderProgram( const QString& vertexShaderPath,
-			     const QString& fragmentShaderPath );
+			     const QString& fragmentShaderPath ); // FIXME deprecated
 
   ShaderProgram*	_shader;
   GLuint		_vertexBuffer;
+  QTime			_clock;
 };
 
 #endif // OPENGLWIDGET_H

@@ -34,6 +34,7 @@
 #include "Dialog/NewFileDialog.h"
 #include "ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
+#include "ShaderVisualizationOptions.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
@@ -117,10 +118,14 @@ void GLShaderDev::initializeDockWidgets()
   QTabWidget*		optionTab = new QTabWidget;
 
   _shaderStages = new ShaderStagesView;
+  _shaderVis = new ShaderVisualizationOptions;
+
+  connect(_shaderVis, SIGNAL(backgroundColorChanged(QColor)), _glview, SLOT(changeBackgroundColor(QColor)));
 
   optionTab->setMovable(true);
   optionTab->addTab(_shaderStages, tr("Build Stages"));
-  optionTab->addTab(new CodeWidget("caca"), tr("Input"));
+  optionTab->addTab(_shaderVis, tr("Visualization"));
+
 
   splitter->setOrientation(Qt::Vertical);
   splitter->addWidget(_glview);
@@ -257,29 +262,45 @@ void GLShaderDev::buildCurrentProject()
 {
   QMutexLocker					sl(&_buildMutex);
   ShaderProgram*				prog = new ShaderProgram;
+  bool						success = true;
   std::list <std::pair <int, QString > >	stages;
+  int						i = 1;
 
   _buildOutputDock->setVisible(true);
 
   stages = _shaderStages->getShaderConfig();
   for (std::list <std::pair <int, QString > >::iterator it = stages.begin(); it != stages.end(); ++it)
   {
-    QString str = QString("[%1]=%2").arg(it->first).arg(it->second);
-    _output->addLine(str);
-
     QFile		file(it->second);
+    QFileInfo		fileInfo(file);
     ShaderObject*	obj = new ShaderObject;
+    QString		str = QString("[%1/%2] Compiling %3...").arg(i).arg(stages.size()).arg(fileInfo.fileName());
 
+    _output->addLine(str);
     if (!file.open(QIODevice::ReadOnly))
       throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString()));
-    obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first));
+    if (!obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first)))
+    {
+      _output->addLine(QString(obj->getErrorLog().c_str()));
+      success = false;
+    }
     prog->attach(*obj);
+    ++i;
   }
 
+  _output->addLine("Linking shader...");
   if (!prog->link())
+  {
+    _output->addLine(QString(prog->getLog().c_str()));
+    success = false;
+  }
+
+  if (!success)
+  {
     _output->addLine(tr("*** Compilation failed ***"));
-  else
-    _output->addLine(tr("*** Compilation successful ***"));
+    return;
+  }
+  _output->addLine(tr("*** Compilation successful ***"));
 
   // FIXME Set shader properly, with attributes correctly bound
   _glview->setShader(prog);

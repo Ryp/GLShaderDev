@@ -49,7 +49,7 @@ bool ShaderObject::compile(const std::string& code, ShaderType type)
     {
       std::vector<GLchar> infoLog(logLength);
       glGetShaderInfoLog(handle, logLength, &logLength, &infoLog[0]);
-      infoLog[logLength - 1] = '\0';
+      infoLog[logLength - 2] = '\0'; // Overwrite endline
       _log = &infoLog[0];
     }
     glDeleteShader(handle);
