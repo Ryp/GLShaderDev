@@ -17,6 +17,7 @@
     <file alias="document-save-as.png">../rc/icon/16x16/document-save-as.png</file>
     <file alias="dialog-close.png">../rc/icon/16x16/dialog-close.png</file>
     <file alias="dialog-cancel.png">../rc/icon/16x16/dialog-cancel.png</file>
+    <file alias="preferences-other.png">../rc/icon/16x16/preferences-other.png</file>
     <file alias="application-exit.png">../rc/icon/16x16/application-exit.png</file>
   </qresource>
   <qresource prefix="/">

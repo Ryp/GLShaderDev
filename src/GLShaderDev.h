@@ -21,6 +21,7 @@
 #include <QMainWindow>
 #include <QMutex>
 
+class GLInfoDialog;
 class ShaderVisualizationOptions;
 class ShaderStagesView;
 class OpenGLWidget;
@@ -60,6 +61,8 @@ public slots:
 
   void	buildCurrentProject();
 
+  void	showGLInfo();
+
   void	about();
 
 private:
@@ -70,6 +73,7 @@ private:
   BuildOutput*		_output;
   QDockWidget*		_buildOutputDock;
   OpenGLWidget*		_glview;
+  GLInfoDialog*		_glinfo;
   ShaderStagesView*	_shaderStages;
   ShaderVisualizationOptions*	_shaderVis;
   NewFileDialog*	_newFileDialog;

@@ -1,7 +1,7 @@
-set(MOC_HEADERS BuildOutput.h ShaderVisualizationOptions.h ShaderStagesView.h CodeWidget.h GLShaderDev.h OpenGLWidget.h CodeEditor.h QsciLexerGLSL.h Dialog/NewFileDialog.h)
+set(MOC_HEADERS BuildOutput.h ShaderVisualizationOptions.h ShaderStagesView.h CodeWidget.h GLShaderDev.h OpenGLWidget.h CodeEditor.h QsciLexerGLSL.h Dialog/NewFileDialog.h Dialog/GLInfoDialog.h)
 set(GLShaderDev_SRCS ShaderVisualizationOptions.cpp ShaderStagesView.cpp OpenGLWidget.cpp BuildOutput.cpp QsciLexerGLSL.cpp CodeWidget.cpp CodeEditor.cpp GLShaderDev.cpp main.cpp)
 set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Shader/ShaderObject.cpp Shader/ShaderProgram.cpp Shader/ShaderManager.cpp)
-set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Dialog/NewFileDialog.cpp)
+set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Dialog/NewFileDialog.cpp Dialog/GLInfoDialog.cpp)
 set(GLShaderDev_RCCS resources.qrc)
 
 qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})

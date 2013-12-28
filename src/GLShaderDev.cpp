@@ -32,6 +32,7 @@
 #include "BuildOutput.h"
 #include "OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
+#include "Dialog/GLInfoDialog.h"
 #include "ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
 #include "ShaderVisualizationOptions.h"
@@ -39,6 +40,7 @@
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this)),
+  _glinfo(0),
   _newFileDialog(new NewFileDialog(this))
 {
   resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
@@ -102,6 +104,9 @@ void GLShaderDev::initializeActions()
   projectMenu->addAction(QIcon(":/project-development-close.png"), tr("&Close Project"), this, SLOT(closeProject()));
 
   menuBar()->addMenu("|")->setEnabled(false);
+
+  QMenu* toolsMenu = menuBar()->addMenu(tr("&Tools"));
+  toolsMenu->addAction(QIcon(":/preferences-other.png"), tr("&OpenGL Info..."), this, SLOT(showGLInfo()));
 
   QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
   settingsMenu->setEnabled(false);
@@ -304,6 +309,13 @@ void GLShaderDev::buildCurrentProject()
 
   // FIXME Set shader properly, with attributes correctly bound
   _glview->setShader(prog);
+}
+
+void GLShaderDev::showGLInfo()
+{
+  if (!_glinfo)
+    _glinfo = new GLInfoDialog(this);
+  _glinfo->show();
 }
 
 void GLShaderDev::about()
