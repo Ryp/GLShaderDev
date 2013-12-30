@@ -26,7 +26,7 @@ BuildOutput::BuildOutput(QWidget* parent)
 : QWidget(parent)
 {
   _layout = new QHBoxLayout(this);
-  _layout->setSpacing(0); // FIXME
+  _layout->setSpacing(0);
   _layout->setMargin(0);
 
   _list = new QTreeWidget(this);
@@ -47,4 +47,22 @@ void BuildOutput::addLine(const QString& string)
 {
   QTreeWidgetItem* line = new QTreeWidgetItem(_list, QStringList(string));
   line->setTextColor(0, QColor("#006E28"));
+}
+
+void BuildOutput::addErrors(const std::list<OutputParser::Error>& errors)
+{
+  QTreeWidgetItem*	line;
+  QStringList		strings;
+  QString		error;
+
+  for (std::list<OutputParser::Error>::const_iterator it = errors.begin(); it != errors.end(); ++it)
+  {
+    strings.clear();
+    error = QString("%1").arg(QString::fromStdString((*it).content));
+    if ((*it).line)
+      error.prepend(QString("[%1:%2] ").arg((*it).line).arg((*it).column));
+    strings.append(error);
+    line = new QTreeWidgetItem(_list, strings);
+    line->setTextColor(0, QColor("#BF0303"));
+  }
 }

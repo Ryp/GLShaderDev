@@ -66,6 +66,8 @@ GLInfoDialog::GLInfoDialog(QWidget *parent)
     extensionsList->addItem(QString(ext));
   }
 
+  // NOTE this could be improved using a QTreeWidget and grouping by extension class
+
   extensionslayout->addWidget(extensionsList);
   extensionsBox->setLayout(extensionslayout);
 

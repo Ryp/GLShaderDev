@@ -64,6 +64,7 @@ ShaderStagesView::ShaderStagesView(QWidget *parent)
   QTreeWidgetItem* fragment = new QTreeWidgetItem(shaderRoot, fstrings);
   _stages[ShaderObject::FragmentShader] = fragment;
 
+  vLayout->setSpacing(0);
   vLayout->setMargin(0);
   vLayout->addWidget(toolbar);
   vLayout->addWidget(tree);

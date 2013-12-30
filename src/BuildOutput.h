@@ -20,6 +20,8 @@
 
 #include <QWidget>
 
+#include "Build/OutputParser.h"
+
 QT_BEGIN_NAMESPACE
 class QTreeWidget;
 class QHBoxLayout;
@@ -34,6 +36,7 @@ public:
 
 public:
   void	addLine(const QString& string); // FIXME For debugging purpose only
+  void	addErrors(const std::list<OutputParser::Error>& errors);
 
 signals:
   void	onLineSensitiveItem(int line, int type);

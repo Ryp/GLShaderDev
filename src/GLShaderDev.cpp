@@ -36,6 +36,7 @@
 #include "ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
 #include "ShaderVisualizationOptions.h"
+#include "Build/OutputParser.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
@@ -270,6 +271,7 @@ void GLShaderDev::buildCurrentProject()
   bool						success = true;
   std::list <std::pair <int, QString > >	stages;
   int						i = 1;
+  OutputParser					parser(ATI); // FIXME properly detect hardware type
 
   _buildOutputDock->setVisible(true);
 
@@ -286,7 +288,7 @@ void GLShaderDev::buildCurrentProject()
       throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString()));
     if (!obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first)))
     {
-      _output->addLine(QString(obj->getErrorLog().c_str()));
+      _output->addErrors(parser.parse(obj->getErrorLog()));
       success = false;
     }
     prog->attach(*obj);

@@ -96,6 +96,13 @@ void CodeEditor::saveAll()
     saveTab(i);
 }
 
+void CodeEditor::gotoFile(const QString& file, int line, int column)
+{
+  static_cast<void>(file);
+  static_cast<void>(line);
+  static_cast<void>(column);
+}
+
 void CodeEditor::saveTab(int index)
 {
   CodeWidget*	tabWidget = qobject_cast<CodeWidget*>(widget(index));

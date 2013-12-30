@@ -26,7 +26,7 @@
 
 ShaderVisualizationOptions::ShaderVisualizationOptions(QWidget *parent)
 : QWidget(parent),
-  _bgrPicker(new QPushButton("Caca"))
+  _bgrPicker(new QPushButton("Choose color"))
 {
   QFormLayout*	layout = new QFormLayout;
 
