@@ -29,7 +29,7 @@
 
 #include "GLShaderDev.h"
 #include "CodeEditor.h"
-#include "BuildOutput.h"
+#include "Build/BuildOutput.h"
 #include "OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
 #include "Dialog/GLInfoDialog.h"
@@ -149,6 +149,8 @@ void GLShaderDev::initializeDockWidgets()
   _buildOutputDock->setWidget(_output);
   addDockWidget(Qt::BottomDockWidgetArea, _buildOutputDock);
   _buildOutputDock->hide();
+
+  connect(_output, SIGNAL(dereferencableItemActivated(const QString&, int, int)), _editor, SLOT(gotoFile(const QString&, int, int)));
 }
 
 void GLShaderDev::updateRecentFiles()
@@ -273,6 +275,8 @@ void GLShaderDev::buildCurrentProject()
   int						i = 1;
   OutputParser					parser(ATI); // FIXME properly detect hardware type
 
+  _editor->saveAll();
+  _output->clear();
   _buildOutputDock->setVisible(true);
 
   stages = _shaderStages->getShaderConfig();

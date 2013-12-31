@@ -33,9 +33,9 @@ NewFileDialog::NewFileDialog(QWidget *parent)
   _shaderCombo(new QComboBox),
   _folderLineEdit(new QLineEdit),
   _fileNameLineEdit(new QLineEdit),
-  _browseButton(new QPushButton(QIcon(":/document-open-folder.png"), tr("&Browse..."))),
   _newButton(new QPushButton(QIcon(":/document-new.png"), tr("&New"))),
-  _cancelButton(new QPushButton(QIcon(":/dialog-cancel.png"), tr("&Cancel")))
+  _cancelButton(new QPushButton(QIcon(":/dialog-cancel.png"), tr("&Cancel"))),
+  _browseButton(new QPushButton(QIcon(":/document-open-folder.png"), tr("&Browse...")))
 {
   QGroupBox* typeGroupBox = new QGroupBox(tr("Properties"));
   QGroupBox* locationGroupBox = new QGroupBox(tr("File Location"));

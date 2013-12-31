@@ -15,6 +15,8 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include <iostream>
+
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTreeWidgetItem>
@@ -38,7 +40,7 @@ BuildOutput::BuildOutput(QWidget* parent)
 
   _layout->addWidget(_list);
 
-  //   connect(list, itemDoubleClicked(QTreeWidgetItem*, int), this, onLineSensitiveItem(int, int));
+  connect(_list, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(onDoubleClickedItem(QTreeWidgetItem*, int)));
 }
 
 BuildOutput::~BuildOutput() {}
@@ -57,12 +59,26 @@ void BuildOutput::addErrors(const std::list<OutputParser::Error>& errors)
 
   for (std::list<OutputParser::Error>::const_iterator it = errors.begin(); it != errors.end(); ++it)
   {
-    strings.clear();
-    error = QString("%1").arg(QString::fromStdString((*it).content));
+    QString	lineString;
+
     if ((*it).line)
-      error.prepend(QString("[%1:%2] ").arg((*it).line).arg((*it).column));
+      lineString = QString(":%1:%2").arg((*it).line).arg((*it).column);
+    strings.clear();
+    error = QString("Error%1: %2 (#%3)").arg(lineString).arg(QString::fromStdString((*it).content)).arg((*it).errNo);
     strings.append(error);
     line = new QTreeWidgetItem(_list, strings);
     line->setTextColor(0, QColor("#BF0303"));
   }
+}
+
+void BuildOutput::clear()
+{
+  _list->clear();
+}
+
+void BuildOutput::onDoubleClickedItem(QTreeWidgetItem* item, int column)
+{
+  static_cast<void>(column);
+  static_cast<void>(item);
+  emit dereferencableItemActivated("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag", 5, 0); // FIXME arrange data in a model
 }

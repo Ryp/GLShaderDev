@@ -1,15 +1,45 @@
-set(MOC_HEADERS BuildOutput.h ShaderVisualizationOptions.h ShaderStagesView.h CodeWidget.h GLShaderDev.h OpenGLWidget.h CodeEditor.h QsciLexerGLSL.h Dialog/NewFileDialog.h Dialog/GLInfoDialog.h)
-set(GLShaderDev_SRCS Build/OutputParser.cpp ShaderVisualizationOptions.cpp ShaderStagesView.cpp OpenGLWidget.cpp BuildOutput.cpp QsciLexerGLSL.cpp CodeWidget.cpp CodeEditor.cpp GLShaderDev.cpp main.cpp)
-set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Shader/ShaderObject.cpp Shader/ShaderProgram.cpp Shader/ShaderManager.cpp)
-set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Dialog/NewFileDialog.cpp Dialog/GLInfoDialog.cpp)
-set(GLShaderDev_SRCS ${GLShaderDev_SRCS} Model/Model.cpp Model/ModelLoader.cpp)
-set(GLShaderDev_RCCS resources.qrc)
+set(GLShaderDev_SRCS
+  main.cpp
+  CodeEditor.cpp
+  CodeWidget.cpp
+  GLShaderDev.cpp
+  OpenGLWidget.cpp
+  QsciLexerGLSL.cpp
+  ShaderStagesView.cpp
+  ShaderVisualizationOptions.cpp
+  Build/BuildOutput.cpp
+  Build/OutputParser.cpp
+  Dialog/GLInfoDialog.cpp
+  Dialog/NewFileDialog.cpp
+  Model/Model.cpp
+  Model/ModelLoader.cpp
+  Shader/ShaderManager.cpp
+  Shader/ShaderObject.cpp
+  Shader/ShaderProgram.cpp
+)
+
+set(MOC_HEADERS
+  ShaderVisualizationOptions.h
+  ShaderStagesView.h
+  CodeWidget.h
+  GLShaderDev.h
+  OpenGLWidget.h
+  CodeEditor.h
+  QsciLexerGLSL.h
+  Build/BuildOutput.h
+  Dialog/NewFileDialog.h
+  Dialog/GLInfoDialog.h
+)
+
+set(GLShaderDev_RCCS
+  resources.qrc
+)
 
 qt4_wrap_cpp(MOC_SOURCES ${MOC_HEADERS})
 qt4_automoc(MOC_SOURCES ${MOC_HEADERS})
 qt4_add_resources(GLShaderDev_RCC_SRCS ${GLShaderDev_RCCS})
 
-set("${CMAKE_CXX_FLAGS} -Wall -Wextra -Wshadow -ansi -O" CMAKE_CXX_FLAGS) #FIXME dirty fix
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -ansi -O ${CXX11_FLAGS} ${CMAKE_CXX_FLAGS}")
 
 add_executable(GLShaderDev ${GLShaderDev_SRCS} ${GLShaderDev_RCC_SRCS} ${MOC_SOURCES})
 target_link_libraries(GLShaderDev ${OPENGL_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTOPENGL_LIBRARY} ${GLEW_LIBRARY} ${QSCINTILLA_LIBRARY})

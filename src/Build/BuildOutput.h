@@ -25,6 +25,7 @@
 QT_BEGIN_NAMESPACE
 class QTreeWidget;
 class QHBoxLayout;
+class QTreeWidgetItem;
 QT_END_NAMESPACE
 
 class BuildOutput : public QWidget
@@ -37,13 +38,17 @@ public:
 public:
   void	addLine(const QString& string); // FIXME For debugging purpose only
   void	addErrors(const std::list<OutputParser::Error>& errors);
-
-signals:
-  void	onLineSensitiveItem(int line, int type);
+  void	clear();
 
 private:
   QHBoxLayout*	_layout;
   QTreeWidget*	_list;
+
+private slots:
+  void	onDoubleClickedItem(QTreeWidgetItem* item, int column);
+
+signals:
+  void	dereferencableItemActivated(const QString& file, int line, int column);
 };
 
 #endif // BUILDOUTPUT_H

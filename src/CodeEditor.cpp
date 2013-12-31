@@ -15,7 +15,7 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <iostream>
+#include <iostream> // FIXME
 
 #include <QFile>
 #include <QFileInfo>
@@ -71,6 +71,7 @@ bool CodeEditor::openFile(const QString& file)
 
   addTab(tab, info.fileName());
   setCurrentWidget(tab);
+  setTabToolTip(currentIndex(), info.absoluteFilePath());
   return (true);
 }
 
@@ -98,9 +99,34 @@ void CodeEditor::saveAll()
 
 void CodeEditor::gotoFile(const QString& file, int line, int column)
 {
-  static_cast<void>(file);
-  static_cast<void>(line);
-  static_cast<void>(column);
+  CodeWidget*	codeWidgetTab;
+
+  if (!line)
+    return;
+  --line;
+  for (int index = 0; index < count(); ++index)
+  {
+    if (!(codeWidgetTab = qobject_cast<CodeWidget*>(widget(index))))
+      throw GlsdException("Bad widget type");
+    if (codeWidgetTab->getFilename() == file)
+    {
+      focusCode(codeWidgetTab, line, column);
+      return;
+    }
+  }
+  // At this point, no matching opened file was found, try to open file
+  if (!openFile(file))
+    return;
+  if (!(codeWidgetTab = qobject_cast<CodeWidget*>(currentWidget())))
+    throw GlsdException("Bad widget pointer");
+  focusCode(codeWidgetTab, line, column);
+}
+
+void CodeEditor::focusCode(CodeWidget* widget, int line, int column)
+{
+  setCurrentWidget(widget);
+  widget->setFocus();
+  widget->setCursorPosition(line, column);
 }
 
 void CodeEditor::saveTab(int index)

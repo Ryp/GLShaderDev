@@ -40,6 +40,7 @@ public slots:
   void	gotoFile(const QString& file, int line = 0, int column = 0); // NOTE should open file if not already opened
 
 private:
+  void	focusCode(CodeWidget* widget, int line, int column);
   void	saveTab(int index);
 
 private slots:

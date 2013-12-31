@@ -51,7 +51,7 @@ GLInfoDialog::GLInfoDialog(QWidget *parent)
 
   label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
   label->setFont(font);
-  versionLayout->addRow(tr("Version:"), label);
+  versionLayout->addRow(tr("GL Version:"), label);
 
   label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION))));
   label->setFont(font);
@@ -60,7 +60,7 @@ GLInfoDialog::GLInfoDialog(QWidget *parent)
   versionsBox->setLayout(versionLayout);
 
   glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
-  for (GLuint i = 0; i < nExtensions; ++i)
+  for (GLint i = 0; i < nExtensions; ++i)
   {
     const char* ext = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
     extensionsList->addItem(QString(ext));
