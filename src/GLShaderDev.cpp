@@ -28,7 +28,7 @@
 #include <QSplitter>
 
 #include "GLShaderDev.h"
-#include "CodeEditor.h"
+#include "Editor/CodeEditor.h"
 #include "Build/BuildOutput.h"
 #include "OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
@@ -52,8 +52,9 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile(QFile("../rc/shader/simple.vert").fileName()); // FIXME Debug only
-  openFile(QFile("../rc/shader/simple.frag").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/geopassthrough.vert").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/geopassthrough.frag").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/geopassthrough.geom").fileName()); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}

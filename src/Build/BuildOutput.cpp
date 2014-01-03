@@ -80,5 +80,5 @@ void BuildOutput::onDoubleClickedItem(QTreeWidgetItem* item, int column)
 {
   static_cast<void>(column);
   static_cast<void>(item);
-  emit dereferencableItemActivated("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag", 5, 0); // FIXME arrange data in a model
+//   emit dereferencableItemActivated("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag", 5, 0); // FIXME arrange data in a model
 }

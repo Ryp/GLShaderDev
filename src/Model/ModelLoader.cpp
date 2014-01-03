@@ -71,6 +71,7 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
   while (std::getline(src, line))
   {
     ss.clear();
+    std::replace(line.begin(), line.end(), '/', ' ');
     ss.str(line);
     ss >> line;
     if (line == "v")
@@ -92,16 +93,13 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
     {
       std::string val;
       std::size_t pos;
-      /*std::cout << "Parsing line: " << ss.str() << std::endl;
-      */for (int i = 0; i < 3; ++i)
+      for (int i = 0; i < 3; ++i)
       {
 	ss >> line;
-// 	std::cout << "Parsing token: " << line << std::endl;
 	for (int j = 0; j < 3; ++j)
 	{
 	  val = line.substr(0, line.find_first_of('/'));
-	  /*std::cout << "val=" << line << std::endl;
-	  */if (!val.empty())
+	  if (!val.empty())
 	    vIdx[j] = abs(std::stoul(val)) - 1;
 	  else
 	    vIdx[j] = 0;
@@ -109,20 +107,17 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
 	    line = line.substr(pos + 1);
 	  else
 	    line = "";
-	}/*
-	std::cout << "Parsed IDX: " << vIdx[0] << " " << vIdx[1] << " " << vIdx[2] << std::endl;*/
+	}
 	indexes.push_back(vIdx);
       }
       /*
-      if (ss.str() != "")
-      {
-	vIdx[1] = vIdx[2];
-	ss >> line;
-	line = line.substr(0, line.find_first_of('/'));
-	vIdx[2] = abs(std::stoul(line)) - 1;
-	_indexes.push_back(vIdx);
-      }
-      */
+       *   if (ss.str() != "")
+       *   {
+       *     vIdx[1] = vIdx[2];
+       *     ss >> line;
+       *     line = line.substr(0, line.find_first_of('/'));
+       *     vIdx[2] = abs(std::stoul(line)) - 1;
+       *     _indexes.push_back(vIdx);*/
     }
   }
 

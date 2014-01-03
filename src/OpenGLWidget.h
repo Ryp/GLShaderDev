@@ -19,6 +19,7 @@
 #define OPENGLWIDGET_H
 
 #include "Shader/ShaderProgram.h"
+#include "Model/Model.h" // FIXME not here
 
 #include <QGLWidget>
 #include <QTime>
@@ -52,6 +53,7 @@ private:
   ShaderProgram*	_shader;
   GLuint		_vertexBuffer;
   QTime			_clock;
+  Model*		_model; // FIXME debug
 };
 
 #endif // OPENGLWIDGET_H

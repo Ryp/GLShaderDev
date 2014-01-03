@@ -19,6 +19,7 @@
 
 #include "OpenGLWidget.h"
 #include "Exceptions/GlsdException.hpp"
+#include "Model/ModelLoader.h" // FIXME not here
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 : QGLWidget(fmt, parent),
@@ -69,18 +70,21 @@ void	OpenGLWidget::initializeGL()
   if (glewInit() != GLEW_OK)
     throw (GlsdException("glewInit() failed"));
 
+
+  glEnable(GL_DEPTH_TEST);
+//   glEnable(GL_CULL_FACE);
+  glDepthFunc(GL_LESS);
   glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
   if (!prepareShaderProgram(":/simple.vert", ":/simple.frag"))
     return;
 
-  GLfloat points[] =
-  { -0.5f, -0.5f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.0f, 1.0f,
-    0.0f,  0.5f, 0.0f, 1.0f };
+  ModelLoader	ml;
+  _model = ml.load("/home/ryp/Dev/C++/GLShaderDev/rc/model/suzanne.obj"); // FIXME
+  _model->debugDump();
 
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, 3 * (4 * sizeof(*points)), points, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, _model->getVertexBufferSize(), _model->getVertexBuffer(), GL_STATIC_DRAW);
 }
 
 void	OpenGLWidget::paintGL()
@@ -96,15 +100,15 @@ void	OpenGLWidget::paintGL()
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
   glVertexAttribPointer(
-    vertexLocation,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-    4,                  // size
+    vertexLocation,     // attribute 0. No particular reason for 0, but must match the layout in the shader.
+    3,                  // size
     GL_FLOAT,           // type
     GL_FALSE,           // normalized?
     0,                  // stride
     (void*)0            // array buffer offset
   );
 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
 
   glDisableVertexAttribArray(vertexLocation);
 }

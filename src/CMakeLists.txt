@@ -1,16 +1,16 @@
 set(GLShaderDev_SRCS
   main.cpp
-  CodeEditor.cpp
-  CodeWidget.cpp
   GLShaderDev.cpp
   OpenGLWidget.cpp
-  QsciLexerGLSL.cpp
   ShaderStagesView.cpp
   ShaderVisualizationOptions.cpp
   Build/BuildOutput.cpp
   Build/OutputParser.cpp
   Dialog/GLInfoDialog.cpp
   Dialog/NewFileDialog.cpp
+  Editor/CodeEditor.cpp
+  Editor/CodeWidget.cpp
+  Editor/QsciLexerGLSL.cpp
   Model/Model.cpp
   Model/ModelLoader.cpp
   Shader/ShaderManager.cpp
@@ -21,11 +21,11 @@ set(GLShaderDev_SRCS
 set(MOC_HEADERS
   ShaderVisualizationOptions.h
   ShaderStagesView.h
-  CodeWidget.h
   GLShaderDev.h
   OpenGLWidget.h
-  CodeEditor.h
-  QsciLexerGLSL.h
+  Editor/CodeEditor.h
+  Editor/CodeWidget.h
+  Editor/QsciLexerGLSL.h
   Build/BuildOutput.h
   Dialog/NewFileDialog.h
   Dialog/GLInfoDialog.h

@@ -35,14 +35,14 @@ void Model::debugDump()
   std::cout << "Total normals: " << _normals.size() << std::endl;
   std::cout << "Total uvs: " << _uvs.size() << std::endl;
   std::cout << "Total indexes: " << _indexes.size() << std::endl;
-  for (unsigned i = 0; i < _vertices.size(); ++i)
-    std::cout << "Vertex: " << _vertices[i][0] << " " << _vertices[i][1] << " " << _vertices[i][2] << std::endl;
-  for (unsigned i = 0; i < _normals.size(); ++i)
-    std::cout << "Normal: " << _normals[i][0] << " " << _normals[i][1] << " " << _normals[i][2] << std::endl;
-  for (unsigned i = 0; i < _uvs.size(); ++i)
-    std::cout << "UV: " << _uvs[i][0] << " " << _uvs[i][1] << std::endl;
-  for (unsigned i = 0; i < _indexes.size(); ++i)
-    std::cout << "Index: " << _indexes[i] << std::endl;
+//   for (unsigned i = 0; i < _vertices.size(); ++i)
+//     std::cout << "Vertex: " << _vertices[i][0] << " " << _vertices[i][1] << " " << _vertices[i][2] << std::endl;
+//   for (unsigned i = 0; i < _normals.size(); ++i)
+//     std::cout << "Normal: " << _normals[i][0] << " " << _normals[i][1] << " " << _normals[i][2] << std::endl;
+//   for (unsigned i = 0; i < _uvs.size(); ++i)
+//     std::cout << "UV: " << _uvs[i][0] << " " << _uvs[i][1] << std::endl;
+//   for (unsigned i = 0; i < _indexes.size(); ++i)
+//     std::cout << "Index: " << _indexes[i] << std::endl;
 }
 
 unsigned int Model::getTriangleCount()
