@@ -34,7 +34,7 @@ ModelLoader::~ModelLoader() {}
 
 Model* ModelLoader::load(std::string filename)
 {
-  Model*	model = nullptr;
+  Model*	model = 0;
   std::ifstream	file;
   std::size_t	extensionLength;
   std::string	extension;
@@ -42,8 +42,8 @@ Model* ModelLoader::load(std::string filename)
   if ((extensionLength = filename.find_last_of(".")) == std::string::npos)
     throw (ModelLoaderException("Invalid file name \'" + filename + "\'"));
   extension = filename.substr(extensionLength + 1);
-  std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-  if (_parsers[extension] == nullptr)
+  std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+  if (_parsers[extension] == 0)
     throw (ModelLoaderException("Unknown file extension \'" + extension + "\'"));
   file.open(filename);
   if (!file.good())
@@ -71,7 +71,6 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
   while (std::getline(src, line))
   {
     ss.clear();
-    std::replace(line.begin(), line.end(), '/', ' ');
     ss.str(line);
     ss >> line;
     if (line == "v")
@@ -93,14 +92,17 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
     {
       std::string val;
       std::size_t pos;
+      /*std::cout << "Parsing line: " << ss.str() << std::endl;*/
       for (int i = 0; i < 3; ++i)
       {
 	ss >> line;
+	// 	std::cout << "Parsing token: " << line << std::endl;
 	for (int j = 0; j < 3; ++j)
 	{
 	  val = line.substr(0, line.find_first_of('/'));
-	  if (!val.empty())
-	    vIdx[j] = abs(std::stoul(val)) - 1;
+	  /*std::cout << "val=" << line << std::endl;
+	  */if (!val.empty())
+	  vIdx[j] = abs(std::stoul(val)) - 1;
 	  else
 	    vIdx[j] = 0;
 	  if ((pos = line.find_first_of('/')) != std::string::npos)
@@ -110,14 +112,14 @@ Model* ModelLoader::loadOBJ(std::ifstream& src)
 	}
 	indexes.push_back(vIdx);
       }
-      /*
-       *   if (ss.str() != "")
-       *   {
-       *     vIdx[1] = vIdx[2];
-       *     ss >> line;
-       *     line = line.substr(0, line.find_first_of('/'));
-       *     vIdx[2] = abs(std::stoul(line)) - 1;
-       *     _indexes.push_back(vIdx);*/
+//       if (ss.str() != "")
+//       {
+//        vIdx[1] = vIdx[2];
+//        ss >> line;
+//        line = line.substr(0, line.find_first_of('/'));
+//        vIdx[2] = abs(std::stoul(line)) - 1;
+//        _indexes.push_back(vIdx);
+//       }
     }
   }
 

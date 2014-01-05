@@ -1,8 +1,14 @@
 #version 330
 
-in vec4 vertex;
+in vec3 vertex;
+in vec3 normal;
 
-void main( void )
+out vec3 n;
+
+uniform mat4 MVP;
+
+void main(void)
 {
-    gl_Position = vertex;
+    gl_Position = MVP * vec4(vertex, 1.0);
+		n = normal;
 }

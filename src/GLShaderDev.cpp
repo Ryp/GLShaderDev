@@ -37,6 +37,7 @@
 #include "Exceptions/GlsdException.hpp"
 #include "ShaderVisualizationOptions.h"
 #include "Build/OutputParser.h"
+#include "Shader/ShaderProgram.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
@@ -52,9 +53,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile(QFile("../rc/shader/geopassthrough.vert").fileName()); // FIXME Debug only
-  openFile(QFile("../rc/shader/geopassthrough.frag").fileName()); // FIXME Debug only
-  openFile(QFile("../rc/shader/geopassthrough.geom").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/light.v.glsl").fileName()); // FIXME Debug only
+  openFile(QFile("../rc/shader/light.f.glsl").fileName()); // FIXME Debug only
 }
 
 GLShaderDev::~GLShaderDev() {}

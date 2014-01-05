@@ -18,11 +18,13 @@
 #ifndef OPENGLWIDGET_H
 #define OPENGLWIDGET_H
 
-#include "Shader/ShaderProgram.h"
 #include "Model/Model.h" // FIXME not here
+#include "Vector.hpp"
 
 #include <QGLWidget>
 #include <QTime>
+
+class ShaderProgram;
 
 class OpenGLWidget : public QGLWidget
 {
@@ -47,13 +49,13 @@ protected:
   void	keyPressEvent(QKeyEvent* e);
 
 private:
-  bool prepareShaderProgram( const QString& vertexShaderPath,
-			     const QString& fragmentShaderPath ); // FIXME deprecated
-
+  Vect2u		_viewportSize;
   ShaderProgram*	_shader;
   GLuint		_vertexBuffer;
+  GLuint		_normalBuffer;
   QTime			_clock;
   Model*		_model; // FIXME debug
+  glm::mat4		_MVP;
 };
 
 #endif // OPENGLWIDGET_H
