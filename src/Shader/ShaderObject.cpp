@@ -21,6 +21,7 @@
 #include <GL/glew.h>
 
 #include "ShaderObject.h"
+#include "Exceptions/ShaderObjectException.hpp"
 
 ShaderObject::ShaderObject()
   : _handle(0),
@@ -60,6 +61,22 @@ bool ShaderObject::compile(const std::string& code, ShaderType type)
   _type = type;
   _log = std::string();
   return (_isCompiled);
+}
+
+bool ShaderObject::compileFromFile(const std::string& fileName, ShaderObject::ShaderType type)
+{
+  std::string	code;
+  std::ifstream	file(fileName, std::ios::in);
+
+  if (!file.is_open())
+    throw (ShaderObjectException("Could not open file \'" + fileName + "\'"));
+
+  file.seekg(0, std::ios::end);
+  code.resize(file.tellg());
+  file.seekg(0, std::ios::beg);
+  file.read(&code[0], code.size());
+  file.close();
+  return (compile(code, type));
 }
 
 void ShaderObject::destroy()
