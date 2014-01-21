@@ -16,26 +16,32 @@
  */
 
 #include <QKeyEvent>
+#include <QDebug>
 
 #include "OpenGLWidget.h"
+#include "Math.hpp"
 #include "Shader/ShaderProgram.h"
 #include "Exceptions/GlsdException.hpp"
 #include "Model/ModelLoader.h" // FIXME not here
 #include <glm/gtc/matrix_transform.hpp>
 
+const float OpenGLWidget::NearPlane = 0.1f;
+const float OpenGLWidget::FarPlane = 1000.0f;
+const float OpenGLWidget::VerticalDeadAngle = 0.01f;
+
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 : QGLWidget(fmt, parent),
   _viewportSize(size().width(), size().height()),
-  _shader(0)
+  _shader(0),
+  _ModelMatrix(glm::mat4(1.0f)),
+  _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
+  _ProjectionMatrix(glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f)),
+  _MVP(_ProjectionMatrix * _ViewMatrix * _ModelMatrix),
+  _pitch(0.0f),
+  _yaw(0.0f),
+  _isDraggingMouse(false)
 {
   _clock.start();
-
-  glm::mat4 Projection	= glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f);
-  glm::mat4 View	= glm::mat4(1.0f);
-  glm::mat4 Model	= glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f));
-  glm::mat4 MV		= View * Model;
-  _MVP			= Projection * MV;
-  // glm::mat4 Viewport   = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(_viewportSize[0] / 2.0f, _viewportSize[1] / 2.0f, 1.0f)), glm::vec3(1.0f, 1.0f, 0.0f));
 }
 
 OpenGLWidget::~OpenGLWidget() {}
@@ -48,7 +54,6 @@ QSize OpenGLWidget::sizeHint() const
 void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
   _shader = prgm;
-
   updateGL();
 }
 
@@ -83,7 +88,7 @@ void	OpenGLWidget::initializeGL()
   glEnable(GL_DEPTH_TEST);
 //   glEnable(GL_CULL_FACE);
   glDepthFunc(GL_LESS);
-  glClearColor(0.0f, 0.2f, 0.8f, 1.0f);
+  glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
   _model = ml.load("/home/ryp/Dev/C++/GLShaderDev/rc/model/suzanne.obj"); // FIXME
@@ -114,7 +119,7 @@ void	OpenGLWidget::paintGL()
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
   glVertexAttribPointer(
-    vertexLocation,     // attribute 0. No particular reason for 0, but must match the layout in the shader.
+    vertexLocation,
     3,                  // size
     GL_FLOAT,           // type
     GL_FALSE,           // normalized
@@ -125,7 +130,7 @@ void	OpenGLWidget::paintGL()
   glEnableVertexAttribArray(normalLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
   glVertexAttribPointer(
-    normalLocation,     // attribute 0. No particular reason for 0, but must match the layout in the shader.
+    normalLocation,
     3,                  // size
     GL_FLOAT,           // type
     GL_FALSE,           // normalized
@@ -145,20 +150,43 @@ void	OpenGLWidget::resizeGL(int w, int h)
   _viewportSize[0] = w;
   _viewportSize[1] = h;
 
-  //FIXME Bullshit-o-meter overflowed
-  glm::mat4 Projection	= glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f);
-  glm::mat4 View	= glm::mat4(1.0f);
-  glm::mat4 Model	= glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f));
-  glm::mat4 MV		= View * Model;
-  _MVP			= Projection * MV;
+  _ProjectionMatrix = glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f);
+  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
 }
 
-void	OpenGLWidget::keyPressEvent(QKeyEvent* e)
+void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
 {
-  switch (e->key())
-  {
-    default:
-      QGLWidget::keyPressEvent(e);
-  }
+  QPoint newPos = event->pos();
+
+  if (!_isDraggingMouse)
+    _isDraggingMouse = true;
+  else
+    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ShiftModifier) > 0);
+  _cursorPos = newPos;
 }
 
+void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
+{
+  if (event->button() == Qt::LeftButton)
+    _isDraggingMouse = false;
+  QWidget::mousePressEvent(event);
+}
+
+void OpenGLWidget::mouseMoved(const QPoint& offset, bool shift)
+{
+  float	yawAmount = (static_cast<float>(offset.x()) / static_cast<float>(size().width() / 2)) * 1.5f * ((shift) ? (0.2f) : (1.0f));
+  float	pitchAmount = (static_cast<float>(offset.y()) / static_cast<float>(size().height() / 2)) * 1.5f * ((shift) ? (0.2f) : (1.0f));
+
+  _yaw = fmod(_yaw + yawAmount, 2.0f * M_PI);
+  _pitch += pitchAmount;
+  if (_pitch > (M_PI / 2.0f - VerticalDeadAngle))
+    _pitch = (M_PI / 2.0f - VerticalDeadAngle);
+  if (_pitch < (VerticalDeadAngle - M_PI / 2.0f))
+    _pitch = (VerticalDeadAngle - M_PI / 2.0f);
+
+  _ModelMatrix = glm::mat4(1.0f);
+  _ModelMatrix = glm::rotate(_ModelMatrix, RadToDeg(_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+  _ModelMatrix = glm::rotate(_ModelMatrix, RadToDeg(_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
+  updateGL();
+}

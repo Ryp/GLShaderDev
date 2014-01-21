@@ -66,6 +66,7 @@ void GLShaderDev::initializeOpenGL()
   glFormat.setVersion(4, 2);
   glFormat.setProfile(QGLFormat::CoreProfile);
   glFormat.setSampleBuffers(true);
+  glFormat.setDoubleBuffer(true);
   _glview = new OpenGLWidget(glFormat, this);
 }
 

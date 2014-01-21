@@ -13,8 +13,8 @@ void main(void)
   gl_Position = MVP * vec4(vertex, 1.0);
 	
 	d = abs(gl_Position);
-  d = d / 3;
+  d = d / 8;
   d[3] = 1.0;
 
-  n = normal;
+  n = vec4(MVP * vec4(normal, 1.0)).xyz;
 }

@@ -29,6 +29,12 @@ class ShaderProgram;
 class OpenGLWidget : public QGLWidget
 {
   Q_OBJECT
+
+private:
+  static const float NearPlane;
+  static const float FarPlane;
+  static const float VerticalDeadAngle;
+
 public:
   OpenGLWidget(const QGLFormat& fmt, QWidget *parent = 0);
   ~OpenGLWidget();
@@ -46,7 +52,11 @@ protected:
   void	initializeGL();
   void	resizeGL(int w, int h);
   void	paintGL();
-  void	keyPressEvent(QKeyEvent* e);
+  void	mouseMoveEvent(QMouseEvent* event);
+  void	mouseReleaseEvent(QMouseEvent* event);
+
+private:
+  void	mouseMoved(const QPoint& offset, bool shift);
 
 private:
   Vect2u		_viewportSize;
@@ -55,7 +65,14 @@ private:
   GLuint		_normalBuffer;
   QTime			_clock;
   Model*		_model; // FIXME debug
+  glm::mat4		_ModelMatrix;
+  glm::mat4		_ViewMatrix;
+  glm::mat4		_ProjectionMatrix;
   glm::mat4		_MVP;
+  float			_pitch;
+  float			_yaw;
+  bool			_isDraggingMouse;
+  QPoint		_cursorPos;
 };
 
 #endif // OPENGLWIDGET_H
