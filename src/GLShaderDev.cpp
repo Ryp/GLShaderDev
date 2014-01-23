@@ -42,14 +42,14 @@
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this)),
-  _glinfo(0),
+  _glInfoDialog(0),
   _newFileDialog(new NewFileDialog(this))
 {
   resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
   setWindowIcon(QIcon(":/glsd-icon.png"));
   setCentralWidget(_editor);
 
-  initializeOpenGL();
+  initializeContext();
   initializeActions();
   initializeDockWidgets();
 
@@ -59,7 +59,7 @@ GLShaderDev::GLShaderDev()
 
 GLShaderDev::~GLShaderDev() {}
 
-void GLShaderDev::initializeOpenGL()
+void GLShaderDev::initializeContext()
 {
   QGLFormat	glFormat;
 
@@ -68,6 +68,8 @@ void GLShaderDev::initializeOpenGL()
   glFormat.setSampleBuffers(true);
   glFormat.setDoubleBuffer(true);
   _glview = new OpenGLWidget(glFormat, this);
+
+  connect(_glview, SIGNAL(glInitialized()), this, SLOT(initGLInfo()));
 }
 
 void GLShaderDev::initializeActions()
@@ -270,7 +272,6 @@ void GLShaderDev::saveFileAs()
 
 void GLShaderDev::buildCurrentProject()
 {
-  QMutexLocker					sl(&_buildMutex);
   ShaderProgram*				prog = new ShaderProgram;
   bool						success = true;
   std::list <std::pair <int, QString > >	stages;
@@ -319,11 +320,16 @@ void GLShaderDev::buildCurrentProject()
   _glview->setShader(prog);
 }
 
+void GLShaderDev::initGLInfo()
+{
+  _glInfo.updateInfos();
+  _glInfoDialog = new GLInfoDialog(_glInfo, this);
+}
+
 void GLShaderDev::showGLInfo()
 {
-  if (!_glinfo)
-    _glinfo = new GLInfoDialog(this);
-  _glinfo->show();
+  if (_glInfoDialog)
+    _glInfoDialog->show();
 }
 
 void GLShaderDev::about()

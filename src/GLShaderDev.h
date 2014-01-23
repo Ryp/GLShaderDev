@@ -19,7 +19,7 @@
 #define GLSHADERDEV_H
 
 #include <QMainWindow>
-#include <QMutex>
+#include "GLInfo.h"
 
 class GLInfoDialog;
 class ShaderVisualizationOptions;
@@ -37,7 +37,7 @@ public:
   ~GLShaderDev();
 
 private:
-  void	initializeOpenGL();
+  void	initializeContext();
   void	initializeActions();
   void	initializeDockWidgets();
 
@@ -61,6 +61,7 @@ public slots:
 
   void	buildCurrentProject();
 
+  void	initGLInfo();
   void	showGLInfo();
 
   void	about();
@@ -73,12 +74,12 @@ private:
   BuildOutput*		_output;
   QDockWidget*		_buildOutputDock;
   OpenGLWidget*		_glview;
-  GLInfoDialog*		_glinfo;
+  GLInfoDialog*		_glInfoDialog;
   ShaderStagesView*	_shaderStages;
   ShaderVisualizationOptions*	_shaderVis;
   NewFileDialog*	_newFileDialog;
   QAction*		_recentFileActions[MaxRecentFiles + 2];
-  QMutex		_buildMutex;
+  GLInfo		_glInfo;
 };
 
 #endif // GLSHADERDEV_H

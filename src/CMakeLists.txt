@@ -1,5 +1,6 @@
 set(GLShaderDev_SRCS
   main.cpp
+  GLInfo.cpp
   GLShaderDev.cpp
   OpenGLWidget.cpp
   ShaderStagesView.cpp

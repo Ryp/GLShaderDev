@@ -58,6 +58,9 @@ protected:
 private:
   void	mouseMoved(const QPoint& offset, bool shift);
 
+signals:
+  void	glInitialized();
+
 private:
   Vect2u		_viewportSize;
   ShaderProgram*	_shader;

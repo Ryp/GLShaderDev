@@ -91,7 +91,7 @@ void	OpenGLWidget::initializeGL()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
-  _model = ml.load("/home/ryp/Dev/C++/GLShaderDev/rc/model/suzanne.obj"); // FIXME
+  _model = ml.load("../rc/model/suzanne.obj"); // FIXME
   _model->debugDump();
 
   glGenBuffers(1, &_vertexBuffer);
@@ -101,6 +101,8 @@ void	OpenGLWidget::initializeGL()
   glGenBuffers(1, &_normalBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getNormalBufferSize(), _model->getNormalBuffer(), GL_STATIC_DRAW);
+
+  emit glInitialized();
 }
 
 void	OpenGLWidget::paintGL()

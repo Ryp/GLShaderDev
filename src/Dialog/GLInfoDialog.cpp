@@ -24,10 +24,10 @@
 #include <QLabel>
 
 #include "GLInfoDialog.h"
-#include "GLHeaders.hpp"
 
-GLInfoDialog::GLInfoDialog(QWidget *parent)
-: QDialog(parent)
+GLInfoDialog::GLInfoDialog(GLInfo& glInfos, QWidget *parent)
+: QDialog(parent),
+  _glInfo(glInfos)
 {
   QVBoxLayout*	layout = new QVBoxLayout;
   QFormLayout*	versionLayout = new QFormLayout;
@@ -36,38 +36,33 @@ GLInfoDialog::GLInfoDialog(QWidget *parent)
   QVBoxLayout*	extensionslayout = new QVBoxLayout;
   QGroupBox*	extensionsBox = new QGroupBox(tr("Extensions supported"));
   QLabel*	label;
-  GLint		nExtensions;
 
   QFont font = this->font();
   font.setBold(true);
 
-  label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_VENDOR))));
+  label = new QLabel(_glInfo.getVendor().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("Vendor:"), label);
 
-  label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_RENDERER))));
+  label = new QLabel(_glInfo.getRenderer().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("Renderer:"), label);
 
-  label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_VERSION))));
+  label = new QLabel(_glInfo.getOpenGLVersion().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("GL Version:"), label);
 
-  label = new QLabel(QString(reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION))));
+  label = new QLabel(_glInfo.getGLSLVersion().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("GLSL Version:"), label);
 
   versionsBox->setLayout(versionLayout);
 
-  glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
-  for (GLint i = 0; i < nExtensions; ++i)
+  const std::vector< std::string >& ext = _glInfo.getExtensions();
+  for (std::vector<std::string>::const_iterator it = ext.begin(); it != ext.end(); ++it)
   {
-    const char* ext = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
-    extensionsList->addItem(QString(ext));
+    extensionsList->addItem((*it).c_str());
   }
-
-  // NOTE this could be improved using a QTreeWidget and grouping by extension class
-
   extensionslayout->addWidget(extensionsList);
   extensionsBox->setLayout(extensionslayout);
 

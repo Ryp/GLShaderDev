@@ -15,22 +15,34 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef GLINFODIALOG_H
-#define GLINFODIALOG_H
+#ifndef GLINFO_H
+#define GLINFO_H
 
-#include <QDialog>
+#include <string>
+#include <vector>
 
-#include "GLInfo.h"
-
-class GLInfoDialog : public QDialog
+class GLInfo
 {
-  Q_OBJECT
 public:
-  GLInfoDialog(GLInfo& glInfos, QWidget *parent = 0);
-  ~GLInfoDialog();
+  GLInfo();
+  ~GLInfo();
+
+public:
+  void	updateInfos();
+
+public:
+  const std::string&			getVendor() const;
+  const std::string&			getRenderer() const;
+  const std::string&			getOpenGLVersion() const;
+  const std::string&			getGLSLVersion() const;
+  const std::vector<std::string>&	getExtensions() const;
 
 private:
-  GLInfo&	_glInfo;
+  std::string			_vendor;
+  std::string			_renderer;
+  std::string			_glVersion;
+  std::string			_glslVersion;
+  std::vector<std::string>	_extensions;
 };
 
-#endif // GLINFODIALOG_H
+#endif // GLINFO_H
