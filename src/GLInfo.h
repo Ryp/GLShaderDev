@@ -20,9 +20,18 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 class GLInfo
 {
+public:
+  enum Vendor {
+    Unknown = 0,
+    ATI,
+    Nvidia,
+    SGI
+  };
+
 public:
   GLInfo();
   ~GLInfo();
@@ -31,18 +40,21 @@ public:
   void	updateInfos();
 
 public:
-  const std::string&			getVendor() const;
+  Vendor				getVendor() const;
+  const std::string&			getVendorString() const;
   const std::string&			getRenderer() const;
   const std::string&			getOpenGLVersion() const;
   const std::string&			getGLSLVersion() const;
   const std::vector<std::string>&	getExtensions() const;
 
 private:
-  std::string			_vendor;
+  Vendor			_vendor;
+  std::string			_vendorString;
   std::string			_renderer;
   std::string			_glVersion;
   std::string			_glslVersion;
   std::vector<std::string>	_extensions;
+  std::map<std::string, Vendor>	_vendorID;
 };
 
 #endif // GLINFO_H

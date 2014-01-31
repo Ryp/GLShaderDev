@@ -40,7 +40,7 @@ GLInfoDialog::GLInfoDialog(GLInfo& glInfos, QWidget *parent)
   QFont font = this->font();
   font.setBold(true);
 
-  label = new QLabel(_glInfo.getVendor().c_str());
+  label = new QLabel(_glInfo.getVendorString().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("Vendor:"), label);
 

@@ -22,11 +22,7 @@
 #include <string>
 #include <map>
 
-enum Vendor {
-  Unknown = 0,
-  ATI,
-  Nvidia
-};
+#include "GLInfo.h"
 
 class OutputParser
 {
@@ -39,7 +35,7 @@ public:
   } Error;
 
 public:
-  OutputParser(Vendor vendor = Unknown);
+  OutputParser(GLInfo::Vendor vendor = GLInfo::Unknown);
   ~OutputParser();
 
 public:
@@ -53,9 +49,9 @@ private:
   void	parseNvidia(const std::string& output);
 
 private:
-  std::list<Error>						_errors;
-  Vendor							_vendor;
-  std::map<Vendor, void (OutputParser::*)(const std::string&)>	_parsers;
+  std::list<Error>							_errors;
+  GLInfo::Vendor							_vendor;
+  std::map<GLInfo::Vendor, void (OutputParser::*)(const std::string&)>	_parsers;
 };
 
 #endif // OUTPUTPARSER_H

@@ -20,12 +20,12 @@
 
 #include "OutputParser.h"
 
-OutputParser::OutputParser(Vendor vendor)
+OutputParser::OutputParser(GLInfo::Vendor vendor)
 : _vendor(vendor)
 {
-  _parsers[Unknown] = &OutputParser::parseUnknown;
-  _parsers[ATI] = &OutputParser::parseATI;
-  _parsers[Nvidia] = &OutputParser::parseNvidia;
+  _parsers[GLInfo::Unknown] = &OutputParser::parseUnknown;
+  _parsers[GLInfo::ATI] = &OutputParser::parseATI;
+  _parsers[GLInfo::Nvidia] = &OutputParser::parseNvidia;
 }
 
 OutputParser::~OutputParser() {}

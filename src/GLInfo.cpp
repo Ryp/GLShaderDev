@@ -15,15 +15,23 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include <sstream>
+
 #include "GLHeaders.hpp"
 #include "GLInfo.h"
 
 GLInfo::GLInfo()
-: _vendor("N/A"),
+: _vendor(Unknown),
+  _vendorString("N/A"),
   _renderer("N/A"),
   _glVersion("N/A"),
   _glslVersion("N/A")
-{}
+{
+  // TODO Complete the enum list
+  _vendorID["ATI"] = ATI;
+  _vendorID["NVIDIA"] = Nvidia;
+  _vendorID["SGI"] = SGI;
+}
 
 GLInfo::~GLInfo() {}
 
@@ -31,7 +39,7 @@ void GLInfo::updateInfos()
 {
   GLint		nExtensions = 0;
 
-  _vendor = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
+  _vendorString = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
   _renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
   _glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
   _glslVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -40,11 +48,22 @@ void GLInfo::updateInfos()
   _extensions = std::vector<std::string>(nExtensions);
   for (GLint i = 0; i < nExtensions; ++i)
     _extensions[i] = reinterpret_cast<const char*>(glGetStringi(GL_EXTENSIONS, i));
+
+  std::stringstream	ss(_vendorString);
+  std::string		vendorSubstring;
+
+  ss >> vendorSubstring;
+  _vendor = _vendorID[vendorSubstring];
 }
 
-const std::string& GLInfo::getVendor() const
+GLInfo::Vendor GLInfo::getVendor() const
 {
   return (_vendor);
+}
+
+const std::string& GLInfo::getVendorString() const
+{
+  return (_vendorString);
 }
 
 const std::string& GLInfo::getRenderer() const

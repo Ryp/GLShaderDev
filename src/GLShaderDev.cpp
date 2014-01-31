@@ -276,7 +276,7 @@ void GLShaderDev::buildCurrentProject()
   bool						success = true;
   std::list <std::pair <int, QString > >	stages;
   int						i = 1;
-  OutputParser					parser(ATI); // FIXME properly detect hardware type
+  OutputParser					parser(_glInfo.getVendor()); // FIXME properly detect hardware type
 
   _editor->saveAll();
   _output->clear();
