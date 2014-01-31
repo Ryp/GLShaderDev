@@ -34,6 +34,10 @@ private:
   static const float NearPlane;
   static const float FarPlane;
   static const float VerticalDeadAngle;
+  static const float DefaultFov;
+  static const float MinFov;
+  static const float MaxFov;
+  static const float MouseWheelSpeed;
 
 public:
   OpenGLWidget(const QGLFormat& fmt, QWidget *parent = 0);
@@ -52,11 +56,13 @@ protected:
   void	initializeGL();
   void	resizeGL(int w, int h);
   void	paintGL();
+  void	wheelEvent(QWheelEvent* event);
   void	mouseMoveEvent(QMouseEvent* event);
   void	mouseReleaseEvent(QMouseEvent* event);
 
 private:
-  void	mouseMoved(const QPoint& offset, bool shift);
+  void	mouseMoved(const QPoint& offset, bool slow);
+  void	updateProjectionMatrix();
 
 signals:
   void	glInitialized();
@@ -68,6 +74,7 @@ private:
   GLuint		_normalBuffer;
   QTime			_clock;
   Model*		_model; // FIXME debug
+  float			_fov;
   glm::mat4		_ModelMatrix;
   glm::mat4		_ViewMatrix;
   glm::mat4		_ProjectionMatrix;

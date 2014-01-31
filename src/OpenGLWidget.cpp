@@ -16,6 +16,7 @@
  */
 
 #include <QKeyEvent>
+#include <QWheelEvent>
 #include <QDebug>
 
 #include "OpenGLWidget.h"
@@ -28,19 +29,24 @@
 const float OpenGLWidget::NearPlane = 0.1f;
 const float OpenGLWidget::FarPlane = 1000.0f;
 const float OpenGLWidget::VerticalDeadAngle = 0.01f;
+const float OpenGLWidget::DefaultFov = 80.0f;
+const float OpenGLWidget::MinFov = 20.0f;
+const float OpenGLWidget::MaxFov = 140.0f;
+const float OpenGLWidget::MouseWheelSpeed = 0.10f;
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 : QGLWidget(fmt, parent),
   _viewportSize(size().width(), size().height()),
   _shader(0),
+  _fov(DefaultFov),
   _ModelMatrix(glm::mat4(1.0f)),
   _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
-  _ProjectionMatrix(glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f)),
   _MVP(_ProjectionMatrix * _ViewMatrix * _ModelMatrix),
   _pitch(0.0f),
   _yaw(0.0f),
   _isDraggingMouse(false)
 {
+  updateProjectionMatrix();
   _clock.start();
 }
 
@@ -92,7 +98,6 @@ void	OpenGLWidget::initializeGL()
 
   ModelLoader	ml;
   _model = ml.load("../rc/model/suzanne.obj"); // FIXME
-  _model->debugDump();
 
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -152,8 +157,23 @@ void	OpenGLWidget::resizeGL(int w, int h)
   _viewportSize[0] = w;
   _viewportSize[1] = h;
 
-  _ProjectionMatrix = glm::perspective(45.0f, static_cast<float>(_viewportSize.ratio()), 0.1f, 100.0f);
-  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
+  updateProjectionMatrix();
+}
+
+void OpenGLWidget::wheelEvent(QWheelEvent* event)
+{
+  float	delta = - static_cast<float>(event->delta()) * MouseWheelSpeed; // NOTE delta() deprecated in next versions of Qt
+
+  if ((event->modifiers() & Qt::ControlModifier) > 0)
+    delta *= 0.2f;
+  _fov += delta;
+  if (_fov > MaxFov)
+    _fov = MaxFov;
+  if (_fov < MinFov)
+    _fov = MinFov;
+
+  updateProjectionMatrix();
+  updateGL();
 }
 
 void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
@@ -163,7 +183,7 @@ void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
   if (!_isDraggingMouse)
     _isDraggingMouse = true;
   else
-    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ShiftModifier) > 0);
+    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ControlModifier) > 0);
   _cursorPos = newPos;
 }
 
@@ -174,10 +194,10 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
   QWidget::mousePressEvent(event);
 }
 
-void OpenGLWidget::mouseMoved(const QPoint& offset, bool shift)
+void OpenGLWidget::mouseMoved(const QPoint& offset, bool slow)
 {
-  float	yawAmount = (static_cast<float>(offset.x()) / static_cast<float>(size().width() / 2)) * 1.5f * ((shift) ? (0.2f) : (1.0f));
-  float	pitchAmount = (static_cast<float>(offset.y()) / static_cast<float>(size().height() / 2)) * 1.5f * ((shift) ? (0.2f) : (1.0f));
+  float	yawAmount = (static_cast<float>(offset.x()) / static_cast<float>(size().width() / 2)) * 1.5f * ((slow) ? (0.2f) : (1.0f));
+  float	pitchAmount = (static_cast<float>(offset.y()) / static_cast<float>(size().height() / 2)) * 1.5f * ((slow) ? (0.2f) : (1.0f));
 
   _yaw = fmod(_yaw + yawAmount, 2.0f * M_PI);
   _pitch += pitchAmount;
@@ -191,4 +211,10 @@ void OpenGLWidget::mouseMoved(const QPoint& offset, bool shift)
   _ModelMatrix = glm::rotate(_ModelMatrix, RadToDeg(_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
   _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
   updateGL();
+}
+
+void OpenGLWidget::updateProjectionMatrix()
+{
+  _ProjectionMatrix = glm::perspective(_fov, static_cast<float>(_viewportSize.ratio()), NearPlane, FarPlane);
+  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
 }
