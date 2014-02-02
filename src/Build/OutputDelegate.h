@@ -15,41 +15,19 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BUILDOUTPUT_H
-#define BUILDOUTPUT_H
+#ifndef OUTPUTDELEGATE_H
+#define OUTPUTDELEGATE_H
 
-#include <QWidget>
-#include <QAbstractListModel>
+#include <QtGui/QItemDelegate>
 
-#include "Build/OutputParser.h"
-
-class OutputDelegate;
-class OutputModel;
-
-QT_BEGIN_NAMESPACE
-class QTreeView;
-QT_END_NAMESPACE
-
-class BuildOutput : public QWidget
+class OutputDelegate : public QItemDelegate
 {
   Q_OBJECT
 public:
-  BuildOutput(QWidget* parent = 0);
-  ~BuildOutput();
+  OutputDelegate(QObject* parent = 0);
+  ~OutputDelegate();
 
-public:
-  OutputModel*	getModel();
-
-private slots:
-  void	activate(const QModelIndex& index);
-
-signals:
-  void	dereferencableItemActivated(const QString& file, int line, int column);
-
-private:
-  QTreeView*		_outputView;
-  OutputModel*		_outputModel;
-  OutputDelegate*	_outputDelegate;
+  void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 };
 
-#endif // BUILDOUTPUT_H
+#endif // OUTPUTDELEGATE_H

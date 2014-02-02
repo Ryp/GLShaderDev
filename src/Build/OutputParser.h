@@ -23,35 +23,30 @@
 #include <map>
 
 #include "GLInfo.h"
+#include "OutputItem.h"
 
 class OutputParser
 {
 public:
-  typedef struct {
-    int		line;
-    int		column;
-    int		errNo;
-    std::string	content;
-  } Error;
-
-public:
   OutputParser(GLInfo::Vendor vendor = GLInfo::Unknown);
   ~OutputParser();
 
+  typedef void (OutputParser::*OutputParserFunc)(const std::string&, const std::string&);
+
 public:
-  const std::list<Error>&	parse(const std::string& output);
+  const std::list<OutputItem>&	parse(const std::string& output, const std::string& fileAbsPath);
 
 private:
-  void	parseUnknown(const std::string& output);
-  void	parseATI(const std::string& output);
+  void	parseUnknown(const std::string& output, const std::string& fileAbsPath);
+  void	parseATI(const std::string& output, const std::string& fileAbsPath);
   void	parseATIErrorLocation(std::string string, int *line, int *col);
   void	parseATIErrNo(std::string& string, int *errNo);
-  void	parseNvidia(const std::string& output);
+  void	parseNvidia(const std::string& output, const std::string& fileAbsPath);
 
 private:
-  std::list<Error>							_errors;
-  GLInfo::Vendor							_vendor;
-  std::map<GLInfo::Vendor, void (OutputParser::*)(const std::string&)>	_parsers;
+  std::list<OutputItem>				_errors;
+  GLInfo::Vendor				_vendor;
+  std::map<GLInfo::Vendor, OutputParserFunc>	_parsers;
 };
 
 #endif // OUTPUTPARSER_H

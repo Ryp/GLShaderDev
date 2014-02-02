@@ -37,6 +37,7 @@
 #include "Exceptions/GlsdException.hpp"
 #include "ShaderVisualizationOptions.h"
 #include "Build/OutputParser.h"
+#include "Build/OutputModel.h"
 #include "Shader/ShaderProgram.h"
 
 GLShaderDev::GLShaderDev()
@@ -276,10 +277,10 @@ void GLShaderDev::buildCurrentProject()
   bool						success = true;
   std::list <std::pair <int, QString > >	stages;
   int						i = 1;
-  OutputParser					parser(_glInfo.getVendor()); // FIXME properly detect hardware type
+  OutputParser					parser(_glInfo.getVendor());
 
   _editor->saveAll();
-  _output->clear();
+  _output->getModel()->clear();
   _buildOutputDock->setVisible(true);
 
   stages = _shaderStages->getShaderConfig();
@@ -290,32 +291,31 @@ void GLShaderDev::buildCurrentProject()
     ShaderObject*	obj = new ShaderObject;
     QString		str = QString("[%1/%2] Compiling %3...").arg(i).arg(stages.size()).arg(fileInfo.fileName());
 
-    _output->addLine(str);
+    _output->getModel()->addItem(OutputItem(str, OutputItem::InformationItem));
     if (!file.open(QIODevice::ReadOnly))
       throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString()));
     if (!obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first)))
     {
-      _output->addErrors(parser.parse(obj->getErrorLog()));
+      _output->getModel()->addItems(parser.parse(obj->getErrorLog(), fileInfo.absoluteFilePath().toStdString()));
       success = false;
     }
     prog->attach(*obj);
     ++i;
   }
 
-  _output->addLine("Linking shader...");
+  _output->getModel()->addItem(OutputItem("Linking shader...", OutputItem::InformationItem));
   if (!prog->link())
   {
-    _output->addLine(QString(prog->getLog().c_str()));
+    _output->getModel()->addItem(OutputItem(prog->getLog().c_str(), OutputItem::ErrorItem));
     success = false;
   }
 
   if (!success)
   {
-    _output->addLine(tr("*** Compilation failed ***"));
+    _output->getModel()->addItem(OutputItem("*** Compilation failed ***", OutputItem::InformationItem));
     return;
   }
-  _output->addLine(tr("*** Compilation successful ***"));
-
+  _output->getModel()->addItem(OutputItem("*** Compilation successful ***", OutputItem::InformationItem));
   // FIXME Set shader properly, with attributes correctly bound
   _glview->setShader(prog);
 }

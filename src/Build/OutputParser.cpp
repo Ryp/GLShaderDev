@@ -30,52 +30,53 @@ OutputParser::OutputParser(GLInfo::Vendor vendor)
 
 OutputParser::~OutputParser() {}
 
-const std::list<OutputParser::Error>& OutputParser::parse(const std::string& output)
+const std::list<OutputItem>& OutputParser::parse(const std::string& output, const std::string& fileAbsPath)
 {
   _errors.clear();
-  (*this.*(_parsers[_vendor]))(output);
+  (*this.*(_parsers[_vendor]))(output, fileAbsPath);
   return (_errors);
 }
 
-void OutputParser::parseUnknown(const std::string& output)
+void OutputParser::parseUnknown(const std::string& output, const std::string& fileAbsPath)
 {
   std::stringstream	ss(output);
   std::string		line;
-  Error			error;
 
-  error.line = 0;
-  error.column = 0;
-  error.errNo = 0;
   while (std::getline(ss, line))
   {
-    error.content = line;
+    OutputItem	error(line.c_str(), OutputItem::StandardItem);
+
+    error.file = fileAbsPath.c_str();
     _errors.push_back(error);
   }
 }
 
-void OutputParser::parseATI(const std::string& output)
+void OutputParser::parseATI(const std::string& output, const std::string& fileAbsPath)
 {
   std::stringstream	ss(output);
   std::string		line;
   std::size_t		pos;
-  Error			error;
 
   std::getline(ss, line); // Skip first line saying "following errors.."
   while (std::getline(ss, line))
   {
-    error.line = 0;
-    error.column = 0;
-    error.errNo = 0;
+    OutputItem	error(line.c_str(), OutputItem::ErrorItem);
+    QString	lineString;
 
     line = line.substr(7); // Remove "ERROR: "
     if ((pos = line.find("error(")) != 0 && pos != std::string::npos)
     {
-      parseATIErrorLocation(line.substr(0, pos), &error.line, &error.column);
+      parseATIErrorLocation(line.substr(0, pos), &error.lineNo, &error.lineNo);
       line = line.substr(pos);
     }
     line = line.substr(7); // Remove "error(#"
     parseATIErrNo(line, &error.errNo);
-    error.content = line;
+
+    if (error.lineNo)
+      lineString = QString(":%1:%2").arg(error.lineNo).arg(error.columnNo);
+    error.shortenedString = QString("Error%1: %2 (#%3)").arg(lineString).arg(QString::fromStdString(line)).arg(error.errNo);
+    error.isDeferencable = true;
+    error.file = fileAbsPath.c_str();
     _errors.push_back(error);
   }
   _errors.pop_back(); // Remove GLSL error saying "X compilation errors, no code generated"
@@ -102,8 +103,10 @@ void OutputParser::parseATIErrNo(std::string& string, int* errNo)
   string = string.substr(pos + 2);
 }
 
-void OutputParser::parseNvidia(const std::string& output)
+void OutputParser::parseNvidia(const std::string& output, const std::string& fileAbsPath)
 {
   static_cast<void>(output);
-  // TODO Nvidia shader parser
+  static_cast<void>(fileAbsPath);
+
+  parseUnknown(output, fileAbsPath); // TODO NVidia parser
 }

@@ -15,41 +15,39 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef BUILDOUTPUT_H
-#define BUILDOUTPUT_H
+#ifndef OUTPUTMODEL_H
+#define OUTPUTMODEL_H
 
-#include <QWidget>
-#include <QAbstractListModel>
+#include <list>
+#include <QtCore/QAbstractListModel>
 
-#include "Build/OutputParser.h"
+#include "OutputItem.h"
 
-class OutputDelegate;
-class OutputModel;
-
-QT_BEGIN_NAMESPACE
-class QTreeView;
-QT_END_NAMESPACE
-
-class BuildOutput : public QWidget
+class OutputModel : public QAbstractListModel
 {
   Q_OBJECT
 public:
-  BuildOutput(QWidget* parent = 0);
-  ~BuildOutput();
+  enum CustomRoles {
+    OutputItemTypeRole = Qt::UserRole + 1
+  };
 
 public:
-  OutputModel*	getModel();
+  OutputModel(QObject* parent = 0);
+  ~OutputModel();
 
-private slots:
-  void	activate(const QModelIndex& index);
+public:
+  void	addItem(const OutputItem& item);
+  void	addItems(const std::list<OutputItem>& items);
+  void	clear();
 
-signals:
-  void	dereferencableItemActivated(const QString& file, int line, int column);
+  const OutputItem&	getItem(int idx) const;
+
+  // QAbstractListModel
+  QVariant	data(const QModelIndex& index, int role) const;
+  int		rowCount(const QModelIndex& parent = QModelIndex()) const;
 
 private:
-  QTreeView*		_outputView;
-  OutputModel*		_outputModel;
-  OutputDelegate*	_outputDelegate;
+  std::vector<OutputItem>	_outputItems;
 };
 
-#endif // BUILDOUTPUT_H
+#endif // OUTPUTMODEL_H

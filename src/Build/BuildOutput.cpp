@@ -18,67 +18,50 @@
 #include <iostream>
 
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QTreeWidget>
-#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QTreeView>
 #include <QtGui/QHeaderView>
 
 #include "BuildOutput.h"
+#include "OutputModel.h"
+#include "OutputDelegate.h"
 
 BuildOutput::BuildOutput(QWidget* parent)
-: QWidget(parent)
+: QWidget(parent),
+  _outputModel(new OutputModel(this)),
+  _outputDelegate(new OutputDelegate(this))
 {
-  _layout = new QHBoxLayout(this);
-  _layout->setSpacing(0);
-  _layout->setMargin(0);
+  QHBoxLayout* layout = new QHBoxLayout(this);
+  layout->setSpacing(0);
+  layout->setMargin(0);
 
-  _list = new QTreeWidget(this);
-  _list->header()->hide();
-  _list->setRootIsDecorated(false);
+  _outputView = new QTreeView(this);
+  _outputView->header()->hide();
+  _outputView->setRootIsDecorated(false);
   QFont ft = this->font();
   ft.setFamily("Monospace");
-  _list->setFont(ft);
+  _outputView->setFont(ft);
+  _outputView->setModel(_outputModel);
+  _outputView->setItemDelegate(_outputDelegate);
 
-  _layout->addWidget(_list);
+  layout->addWidget(_outputView);
 
-  connect(_list, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(onDoubleClickedItem(QTreeWidgetItem*, int)));
+  connect(_outputView, SIGNAL(clicked(const QModelIndex&)), this, SLOT(activate(const QModelIndex&)));
 }
 
 BuildOutput::~BuildOutput() {}
 
-void BuildOutput::addLine(const QString& string)
+OutputModel* BuildOutput::getModel()
 {
-  QTreeWidgetItem* line = new QTreeWidgetItem(_list, QStringList(string));
-  line->setTextColor(0, QColor("#006E28"));
+  return (_outputModel);
 }
 
-void BuildOutput::addErrors(const std::list<OutputParser::Error>& errors)
+void BuildOutput::activate(const QModelIndex& index)
 {
-  QTreeWidgetItem*	line;
-  QStringList		strings;
-  QString		error;
-
-  for (std::list<OutputParser::Error>::const_iterator it = errors.begin(); it != errors.end(); ++it)
+  if (index.isValid() && index.row() < _outputModel->rowCount())
   {
-    QString	lineString;
-
-    if ((*it).line)
-      lineString = QString(":%1:%2").arg((*it).line).arg((*it).column);
-    strings.clear();
-    error = QString("Error%1: %2 (#%3)").arg(lineString).arg(QString::fromStdString((*it).content)).arg((*it).errNo);
-    strings.append(error);
-    line = new QTreeWidgetItem(_list, strings);
-    line->setTextColor(0, QColor("#BF0303"));
+    OutputItem item = _outputModel->getItem(index.row());
+    if (!item.isDeferencable)
+      return;
+    emit dereferencableItemActivated(item.file, item.lineNo, item.columnNo);
   }
-}
-
-void BuildOutput::clear()
-{
-  _list->clear();
-}
-
-void BuildOutput::onDoubleClickedItem(QTreeWidgetItem* item, int column)
-{
-  static_cast<void>(column);
-  static_cast<void>(item);
-//   emit dereferencableItemActivated("/home/ryp/Dev/C++/GLShaderDev/rc/shader/simple.frag", 5, 0); // FIXME arrange data in a model
 }

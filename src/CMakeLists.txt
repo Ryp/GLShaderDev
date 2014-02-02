@@ -6,6 +6,9 @@ set(GLShaderDev_SRCS
   ShaderStagesView.cpp
   ShaderVisualizationOptions.cpp
   Build/BuildOutput.cpp
+  Build/OutputDelegate.cpp
+  Build/OutputItem.cpp
+  Build/OutputModel.cpp
   Build/OutputParser.cpp
   Dialog/GLInfoDialog.cpp
   Dialog/NewFileDialog.cpp
@@ -24,10 +27,12 @@ set(MOC_HEADERS
   ShaderStagesView.h
   GLShaderDev.h
   OpenGLWidget.h
+  Build/BuildOutput.h
+  Build/OutputDelegate.h
+  Build/OutputModel.h
   Editor/CodeEditor.h
   Editor/CodeWidget.h
   Editor/QsciLexerGLSL.h
-  Build/BuildOutput.h
   Dialog/NewFileDialog.h
   Dialog/GLInfoDialog.h
 )
