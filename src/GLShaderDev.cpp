@@ -293,7 +293,7 @@ void GLShaderDev::buildCurrentProject()
 
     _output->getModel()->addItem(OutputItem(str, OutputItem::InformationItem));
     if (!file.open(QIODevice::ReadOnly))
-      throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString()));
+      throw (GlsdException(std::string("Could not open shader file") + it->second.toStdString())); // TODO proper exception handling
     if (!obj->compile(QString(file.readAll()).toStdString(), static_cast<ShaderObject::ShaderType>(it->first)))
     {
       _output->getModel()->addItems(parser.parse(obj->getErrorLog(), fileInfo.absoluteFilePath().toStdString()));
@@ -312,10 +312,10 @@ void GLShaderDev::buildCurrentProject()
 
   if (!success)
   {
-    _output->getModel()->addItem(OutputItem("*** Compilation failed ***", OutputItem::InformationItem));
+    _output->getModel()->addItem(OutputItem("*** Compilation failed ***", OutputItem::StandardItem));
     return;
   }
-  _output->getModel()->addItem(OutputItem("*** Compilation successful ***", OutputItem::InformationItem));
+  _output->getModel()->addItem(OutputItem("*** Compilation successful ***", OutputItem::StandardItem));
   // FIXME Set shader properly, with attributes correctly bound
   _glview->setShader(prog);
 }

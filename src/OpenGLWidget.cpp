@@ -98,7 +98,7 @@ void	OpenGLWidget::initializeGL()
 
   ModelLoader	ml;
   _model = ml.load("../rc/model/suzanne.obj");
-  
+
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getVertexBufferSize(), _model->getVertexBuffer(), GL_STATIC_DRAW);

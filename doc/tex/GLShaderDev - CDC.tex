@@ -8,6 +8,7 @@
 \usepackage{float} % Allows putting an [H] in \begin{figure} to specify the exact location of the figure
 \usepackage{wrapfig} % Allows in-line images such as the example fish picture
 \usepackage{lmodern}
+\usepackage{caption}
 
 \linespread{1.2} % Line spacing
 %\setlength\parindent{0pt} % Uncomment to remove all indentation from paragraphs
@@ -34,7 +35,8 @@
 \begin{flushleft} \large
 \emph{Auteurs:}\\
 Thibault \textsc{Schueller} \\ % Your name
-Stéphane \textsc{Nguyen} % Your name
+Stéphane \textsc{Nguyen} \\
+Maxime \textsc{Grandjean}
 \end{flushleft}
 \end{minipage}
 ~
@@ -43,13 +45,32 @@ Stéphane \textsc{Nguyen} % Your name
 \end{flushright}
 \end{minipage}\\[2cm]
 
-{\large \today}\\[2cm] % Date, change the \today to a set date if you want to be precise
+{\large \today}\\[1cm] % Date, change the \today to a set date if you want to be precise
 
 \includegraphics{epismall}\\[1cm] % Include a department/university logo - this will require the graphicx package
 
 \vfill % Fill the rest of the page with whitespace
 
 \end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	VERSION HISTORY
+%----------------------------------------------------------------------------------------
+
+\begin{table}[ht]
+\caption*{\large \bfseries Historique des versions} % title of Table8
+\centering % used for centering table
+\begin{tabular}{c c c c c} % centered columns (4 columns)
+\hline\hline %inserts double horizontal lines
+Date & Version & Auteur & Section & Commentaire \\ [0.5ex] \hline
+2013/10/06 & 1 & Thibault Schueller & - & Version initiale \\
+2013/10/17 & 2 & Thibault Schueller & - & Correction orthographique \\
+2014/02/03 & 3 & Thibault Schueller & 1.2.2 & Suppression des flags de texturing
+\\ [1ex] % [1ex] adds vertical space
+\hline %inserts single line
+\end{tabular}
+\label{table:nonlin} % is used to refer this table in the text
+\end{table}
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS
@@ -77,7 +98,7 @@ Comme tout IDE qui se respecte, ce programme proposera une colorisation du langu
 \label{fig:colorisation}
 \end{figure}
 
-\subsubsection{Completion} 
+\subsubsection{Completion}
 
 Pour être efficace dans l'écriture du code, une completion sera aussi intégrée à l'IDE, avec au minimum le support des fonctions de base GLSL.
 
@@ -116,9 +137,7 @@ En voici une liste de base:
 \subsubsection{Contrôle sur la scène}
 
 En sus de pouvoir afficher une variété de scènes à l'écran, maximiser le contrôle du développeur sur le rendu est important. \\
-Il sera donc possible de tourner le rendu autour de son origine avec la souris, de zoomer avec la molette, voir même se deplacer librement dans la scène à la manière d'une caméra flottante. \\
-Un panel de gestion de la configuration d'OpenGL sera aussi intégré pour activer certains flags pendant l'exécution. (activer/désactiver le texturing par exemple).
-
+Il sera donc possible de tourner le rendu autour de son origine avec la souris, de zoomer avec la molette, voir même se deplacer librement dans la scène à la manière d'une caméra flottante.
 \subsubsection{Historique}
 
 Pour facilement comparer le travail en cours, l'utilisateur pourra pousser dans un historique sa version courante.
