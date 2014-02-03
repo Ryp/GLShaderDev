@@ -19,7 +19,7 @@
 #define SHADERMANAGER_H
 
 #include <list>
-#include "Shader/ShaderProgram.h"
+#include "GL/Shader/ShaderProgram.h"
 
 class ShaderManager
 {

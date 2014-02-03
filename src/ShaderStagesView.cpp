@@ -23,7 +23,7 @@
 
 #include "ShaderStagesView.h"
 #include "Editor/CodeWidget.h"
-#include "Shader/ShaderObject.h"
+#include "GL/Shader/ShaderObject.h"
 
 ShaderStagesView::ShaderStagesView(QWidget *parent)
 : QWidget(parent)

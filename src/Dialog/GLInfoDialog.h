@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-#include "GLInfo.h"
+#include "GL/GLInfo.h"
 
 class GLInfoDialog : public QDialog
 {

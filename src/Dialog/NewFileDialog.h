@@ -20,7 +20,7 @@
 
 #include <QDialog>
 
-#include "Shader/ShaderObject.h"
+#include "GL/Shader/ShaderObject.h"
 
 QT_BEGIN_NAMESPACE
 class QComboBox;

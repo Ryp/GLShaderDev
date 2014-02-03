@@ -26,7 +26,7 @@
 #include <QMessageBox>
 
 #include "NewFileDialog.h"
-#include "Shader/ShaderObject.h"
+#include "GL/Shader/ShaderObject.h"
 
 NewFileDialog::NewFileDialog(QWidget *parent)
 : QDialog(parent),

@@ -22,7 +22,7 @@
 
 #include <glm/glm.hpp>
 
-#include "GLHeaders.hpp"
+#include "GL/GLHeaders.hpp"
 
 class Model
 {

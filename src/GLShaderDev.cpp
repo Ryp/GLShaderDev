@@ -30,7 +30,7 @@
 #include "GLShaderDev.h"
 #include "Editor/CodeEditor.h"
 #include "Build/BuildOutput.h"
-#include "OpenGLWidget.h"
+#include "GL/OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
 #include "Dialog/GLInfoDialog.h"
 #include "ShaderStagesView.h"
@@ -38,7 +38,7 @@
 #include "ShaderVisualizationOptions.h"
 #include "Build/OutputParser.h"
 #include "Build/OutputModel.h"
-#include "Shader/ShaderProgram.h"
+#include "GL/Shader/ShaderProgram.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),

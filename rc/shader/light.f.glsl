@@ -7,5 +7,5 @@ in vec4 d;
 
 void main(void)
 {
-    fragColor = d * dot(vec3(1.0, -1.0, 1.0), n);
+    fragColor = d * dot(vec3(1.0, 1.0, 1.0), n);
 }

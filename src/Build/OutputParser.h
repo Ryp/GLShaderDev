@@ -22,7 +22,7 @@
 #include <string>
 #include <map>
 
-#include "GLInfo.h"
+#include "GL/GLInfo.h"
 #include "OutputItem.h"
 
 class OutputParser

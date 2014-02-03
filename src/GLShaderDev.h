@@ -19,7 +19,7 @@
 #define GLSHADERDEV_H
 
 #include <QMainWindow>
-#include "GLInfo.h"
+#include "GL/GLInfo.h"
 
 class GLInfoDialog;
 class ShaderVisualizationOptions;
