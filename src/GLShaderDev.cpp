@@ -66,7 +66,7 @@ void GLShaderDev::initializeContext()
 
   glFormat.setVersion(4, 2);
   glFormat.setProfile(QGLFormat::CoreProfile);
-  glFormat.setSampleBuffers(true);
+  glFormat.setSampleBuffers(true); // NOTE this option activates MSAA
   glFormat.setDoubleBuffer(true);
   _glview = new OpenGLWidget(glFormat, this);
 
