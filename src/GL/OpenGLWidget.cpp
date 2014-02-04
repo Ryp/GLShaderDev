@@ -17,6 +17,7 @@
 
 #include <QKeyEvent>
 #include <QWheelEvent>
+#include <QFileDialog>
 #include <QDebug>
 
 #include "OpenGLWidget.h"
@@ -74,6 +75,21 @@ void OpenGLWidget::changeBackgroundColor(const QColor& color)
   makeCurrent();
   glClearColor(c[0], c[1], c[2], 1.0f);
   updateGL();
+}
+
+void OpenGLWidget::takeScreenshot() // FIXME Open FileDialog
+{
+  QFileDialog	dialog(this);
+
+  dialog.setFileMode(QFileDialog::AnyFile);
+  dialog.setNameFilter("Images (*.png)");
+  dialog.setNameFilterDetailsVisible(true);
+
+  paintGL();
+  glFlush();
+  QImage img = grabFrameBuffer();
+
+//   img.save();
 }
 
 int OpenGLWidget::getTime() const
@@ -176,22 +192,30 @@ void OpenGLWidget::wheelEvent(QWheelEvent* event)
   updateGL();
 }
 
-void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 {
-  QPoint newPos = event->pos();
-
-  if (!_isDraggingMouse)
+  if (event->button() == Qt::LeftButton)
+  {
     _isDraggingMouse = true;
-  else
-    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ControlModifier) > 0);
-  _cursorPos = newPos;
+    _cursorPos = event->pos();
+  }
+  QWidget::mousePressEvent(event);
 }
 
 void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
   if (event->button() == Qt::LeftButton)
     _isDraggingMouse = false;
-  QWidget::mousePressEvent(event);
+  QWidget::mouseReleaseEvent(event);
+}
+
+void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  QPoint newPos = event->pos();
+
+  if (_isDraggingMouse)
+    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ControlModifier) > 0);
+  _cursorPos = newPos;
 }
 
 void OpenGLWidget::mouseMoved(const QPoint& offset, bool slow)

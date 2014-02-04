@@ -29,7 +29,6 @@ class ShaderProgram;
 class OpenGLWidget : public QGLWidget
 {
   Q_OBJECT
-
 private:
   static const float NearPlane;
   static const float FarPlane;
@@ -51,14 +50,16 @@ public:
 
 public slots:
   void	changeBackgroundColor(const QColor& color);
+  void	takeScreenshot();
 
 protected:
   void	initializeGL();
   void	resizeGL(int w, int h);
   void	paintGL();
   void	wheelEvent(QWheelEvent* event);
-  void	mouseMoveEvent(QMouseEvent* event);
+  void	mousePressEvent(QMouseEvent* event);
   void	mouseReleaseEvent(QMouseEvent* event);
+  void	mouseMoveEvent(QMouseEvent* event);
 
 private:
   void	mouseMoved(const QPoint& offset, bool slow);
