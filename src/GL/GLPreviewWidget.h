@@ -15,26 +15,30 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADERSTAGESVIEW_H
-#define SHADERSTAGESVIEW_H
-
-#include <list>
+#ifndef GLPREVIEWWIDGET_H
+#define GLPREVIEWWIDGET_H
 
 #include <QWidget>
-#include <QTreeWidget>
+#include <QGLWidget>
 
-class ShaderStagesView : public QWidget
+class OpenGLWidget;
+
+class GLPreviewWidget : public QWidget
 {
   Q_OBJECT
 public:
-  ShaderStagesView(QWidget* parent = 0);
-  ~ShaderStagesView();
+  GLPreviewWidget(const QGLFormat& format, QWidget* parent = 0);
+  ~GLPreviewWidget();
 
 public:
-  std::list< std::pair<int, QString> >	getShaderConfig() const;
+  OpenGLWidget*	getGLWidget();
+
+public slots:
+  void	backgroundColorButtonClicked();
+  void	takeScreenshot();
 
 private:
-  std::map<int, QTreeWidgetItem*>	_stages;
+  OpenGLWidget*	_glWigdet;
 };
 
-#endif // SHADERSTAGESVIEW_H
+#endif // GLPREVIEWWIDGET_H

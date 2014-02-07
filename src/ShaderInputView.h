@@ -15,28 +15,19 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADERVISUALIZATIONOPTIONS_H
-#define SHADERVISUALIZATIONOPTIONS_H
+#ifndef SHADERINPUTVIEW_H
+#define SHADERINPUTVIEW_H
 
 #include <QWidget>
 
 class QPushButton;
 
-class ShaderVisualizationOptions : public QWidget
+class ShaderInputView : public QWidget
 {
   Q_OBJECT
 public:
-  ShaderVisualizationOptions(QWidget *parent = 0);
-  ~ShaderVisualizationOptions();
-
-signals:
-  void	backgroundColorChanged(QColor color);
-
-private slots:
-  void	backgroundColorButtonClicked();
-
-private:
-  QPushButton*	_bgrPicker;
+  ShaderInputView(QWidget* parent = 0);
+  ~ShaderInputView();
 };
 
-#endif // SHADERVISUALIZATIONOPTIONS_H
+#endif // SHADERINPUTVIEW_H

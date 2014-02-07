@@ -25,7 +25,7 @@
 #include "Editor/CodeWidget.h"
 #include "GL/Shader/ShaderObject.h"
 
-ShaderStagesView::ShaderStagesView(QWidget *parent)
+ShaderStagesView::ShaderStagesView(QWidget* parent)
 : QWidget(parent)
 {
   QVBoxLayout*	vLayout = new QVBoxLayout;

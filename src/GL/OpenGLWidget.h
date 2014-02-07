@@ -29,7 +29,6 @@ class ShaderProgram;
 class OpenGLWidget : public QGLWidget
 {
   Q_OBJECT
-
 private:
   static const float NearPlane;
   static const float FarPlane;
@@ -44,21 +43,24 @@ public:
   ~OpenGLWidget();
 
 public:
-  QSize	sizeHint() const;
-  void	setShader(ShaderProgram* prgm);
-  int	getTime() const;
-  void	resetTime();
+  void		setShader(ShaderProgram* prgm);
+  const QColor&	getBgrColor() const;
+  int		getTime() const;
+  void		resetTime();
 
 public slots:
   void	changeBackgroundColor(const QColor& color);
 
+public:
+  void	paintGL();
+
 protected:
   void	initializeGL();
   void	resizeGL(int w, int h);
-  void	paintGL();
   void	wheelEvent(QWheelEvent* event);
-  void	mouseMoveEvent(QMouseEvent* event);
+  void	mousePressEvent(QMouseEvent* event);
   void	mouseReleaseEvent(QMouseEvent* event);
+  void	mouseMoveEvent(QMouseEvent* event);
 
 private:
   void	mouseMoved(const QPoint& offset, bool slow);
@@ -73,6 +75,7 @@ private:
   GLuint		_vertexBuffer;
   GLuint		_normalBuffer;
   QTime			_clock;
+  QColor		_bgrColor;
   Model*		_model; // FIXME debug
   float			_fov;
   glm::mat4		_ModelMatrix;

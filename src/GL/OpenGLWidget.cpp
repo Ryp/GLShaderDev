@@ -17,6 +17,7 @@
 
 #include <QKeyEvent>
 #include <QWheelEvent>
+#include <QFileDialog>
 #include <QDebug>
 
 #include "OpenGLWidget.h"
@@ -48,14 +49,11 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 {
   updateProjectionMatrix();
   _clock.start();
+  setMinimumHeight(200);
+  setMinimumWidth(200);
 }
 
 OpenGLWidget::~OpenGLWidget() {}
-
-QSize OpenGLWidget::sizeHint() const
-{
-  return (QSize(300, 300)); // FIXME
-}
 
 void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
@@ -63,17 +61,9 @@ void OpenGLWidget::setShader(ShaderProgram* prgm)
   updateGL();
 }
 
-void OpenGLWidget::changeBackgroundColor(const QColor& color)
+const QColor& OpenGLWidget::getBgrColor() const
 {
-  float	c[3];
-
-  c[0] = static_cast<float>(color.red()) / 255.0f;
-  c[1] = static_cast<float>(color.green() / 255.0f);
-  c[2] = static_cast<float>(color.blue() / 255.0f);
-
-  makeCurrent();
-  glClearColor(c[0], c[1], c[2], 1.0f);
-  updateGL();
+  return (_bgrColor);
 }
 
 int OpenGLWidget::getTime() const
@@ -84,6 +74,21 @@ int OpenGLWidget::getTime() const
 void OpenGLWidget::resetTime()
 {
   _clock.start();
+}
+
+void OpenGLWidget::changeBackgroundColor(const QColor& color)
+{
+  float	c[3];
+
+  c[0] = static_cast<float>(color.red()) / 255.0f;
+  c[1] = static_cast<float>(color.green() / 255.0f);
+  c[2] = static_cast<float>(color.blue() / 255.0f);
+
+  _bgrColor = color;
+
+  makeCurrent();
+  glClearColor(c[0], c[1], c[2], 1.0f);
+  updateGL();
 }
 
 void	OpenGLWidget::initializeGL()
@@ -176,22 +181,30 @@ void OpenGLWidget::wheelEvent(QWheelEvent* event)
   updateGL();
 }
 
-void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+void OpenGLWidget::mousePressEvent(QMouseEvent* event)
 {
-  QPoint newPos = event->pos();
-
-  if (!_isDraggingMouse)
+  if (event->button() == Qt::LeftButton)
+  {
     _isDraggingMouse = true;
-  else
-    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ControlModifier) > 0);
-  _cursorPos = newPos;
+    _cursorPos = event->pos();
+  }
+  QWidget::mousePressEvent(event);
 }
 
 void OpenGLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
   if (event->button() == Qt::LeftButton)
     _isDraggingMouse = false;
-  QWidget::mousePressEvent(event);
+  QWidget::mouseReleaseEvent(event);
+}
+
+void	OpenGLWidget::mouseMoveEvent(QMouseEvent* event)
+{
+  QPoint newPos = event->pos();
+
+  if (_isDraggingMouse)
+    mouseMoved(newPos - _cursorPos, (event->modifiers() & Qt::ControlModifier) > 0);
+  _cursorPos = newPos;
 }
 
 void OpenGLWidget::mouseMoved(const QPoint& offset, bool slow)

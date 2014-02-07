@@ -35,10 +35,11 @@
 #include "Dialog/GLInfoDialog.h"
 #include "ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
-#include "ShaderVisualizationOptions.h"
+#include "ShaderInputView.h"
 #include "Build/OutputParser.h"
 #include "Build/OutputModel.h"
 #include "GL/Shader/ShaderProgram.h"
+#include "GL/GLPreviewWidget.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
@@ -68,9 +69,11 @@ void GLShaderDev::initializeContext()
   glFormat.setProfile(QGLFormat::CoreProfile);
   glFormat.setSampleBuffers(true); // NOTE this option activates MSAA
   glFormat.setDoubleBuffer(true);
-  _glview = new OpenGLWidget(glFormat, this);
 
-  connect(_glview, SIGNAL(glInitialized()), this, SLOT(initGLInfo()));
+  _glpreview = new GLPreviewWidget(glFormat);
+  _glwidget = _glpreview->getGLWidget();
+
+  connect(_glwidget, SIGNAL(glInitialized()), this, SLOT(initGLInfo()));
 }
 
 void GLShaderDev::initializeActions()
@@ -128,17 +131,14 @@ void GLShaderDev::initializeDockWidgets()
   QTabWidget*		optionTab = new QTabWidget;
 
   _shaderStages = new ShaderStagesView;
-  _shaderVis = new ShaderVisualizationOptions;
-
-  connect(_shaderVis, SIGNAL(backgroundColorChanged(QColor)), _glview, SLOT(changeBackgroundColor(QColor)));
+  _shaderInput = new ShaderInputView;
 
   optionTab->setMovable(true);
   optionTab->addTab(_shaderStages, tr("Build Stages"));
-  optionTab->addTab(_shaderVis, tr("Visualization"));
-
+  optionTab->addTab(_shaderInput, tr("Shader Input"));
 
   splitter->setOrientation(Qt::Vertical);
-  splitter->addWidget(_glview);
+  splitter->addWidget(_glpreview);
   splitter->addWidget(optionTab);
 
   QDockWidget *dockWidget = new QDockWidget(tr("OpenGL View"), this);
@@ -316,7 +316,7 @@ void GLShaderDev::buildCurrentProject()
   }
   _output->getModel()->addItem(OutputItem("*** Compilation successful ***", OutputItem::StandardItem));
   // FIXME Set shader properly, with attributes correctly bound
-  _glview->setShader(prog);
+  _glwidget->setShader(prog);
 }
 
 void GLShaderDev::initGLInfo()

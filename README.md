@@ -5,7 +5,6 @@ GLShaderDev is an IDE for modern GLSL Shaders.
 Dependencies:
 - OpenGL (> 3.0)
 - Qt 4.8
-- QtOpenGL
 - QScintilla
 - GLEW
 
