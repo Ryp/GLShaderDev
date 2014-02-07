@@ -20,6 +20,7 @@ set(GLShaderDev_SRCS
   ShaderStagesView.cpp
   Model/Model.cpp
   Model/ModelLoader.cpp
+  Preferences/PreferencesWidget.cpp
 )
 
 set(MOC_HEADERS
@@ -35,6 +36,7 @@ set(MOC_HEADERS
   Dialog/NewFileDialog.h
   Dialog/GLInfoDialog.h
   GL/OpenGLWidget.h
+  Preferences/PreferencesWidget.h
 )
 
 set(GLShaderDev_RCCS

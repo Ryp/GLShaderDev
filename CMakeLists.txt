@@ -9,6 +9,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(CXX11 REQUIRED)
 
+add_definitions(${QT_DEFINITIONS})
 include_directories(${QT_INCLUDES} ${QSCINTILLA_INCLUDE_DIR} ${GLEW_INCLUDE_PATH} include src)
 
 set(QT_MIN_VERSION 4.8.0)

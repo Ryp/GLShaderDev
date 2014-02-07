@@ -115,8 +115,7 @@ void GLShaderDev::initializeActions()
   toolsMenu->addAction(QIcon(":/preferences-other.png"), tr("&OpenGL Info..."), this, SLOT(showGLInfo()));
 
   QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
-  settingsMenu->setEnabled(false);
-  // TODO Make real settings menu
+  settingsMenu->addAction(QIcon(":/preferences-other.png"), tr("&Preferences"), this, SLOT(showPreferences()));
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(QIcon(":/glsd-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
@@ -330,6 +329,11 @@ void GLShaderDev::showGLInfo()
 {
   if (_glInfoDialog)
     _glInfoDialog->show();
+}
+
+void GLShaderDev::showPreferences()
+{
+    _preferencesWidget.show();
 }
 
 void GLShaderDev::about()
