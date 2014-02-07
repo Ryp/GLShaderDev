@@ -49,14 +49,11 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
 {
   updateProjectionMatrix();
   _clock.start();
+  setMinimumHeight(200);
+  setMinimumWidth(200);
 }
 
 OpenGLWidget::~OpenGLWidget() {}
-
-QSize OpenGLWidget::sizeHint() const
-{
-  return (QSize(300, 300)); // FIXME
-}
 
 void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
@@ -64,32 +61,9 @@ void OpenGLWidget::setShader(ShaderProgram* prgm)
   updateGL();
 }
 
-void OpenGLWidget::changeBackgroundColor(const QColor& color)
+const QColor& OpenGLWidget::getBgrColor() const
 {
-  float	c[3];
-
-  c[0] = static_cast<float>(color.red()) / 255.0f;
-  c[1] = static_cast<float>(color.green() / 255.0f);
-  c[2] = static_cast<float>(color.blue() / 255.0f);
-
-  makeCurrent();
-  glClearColor(c[0], c[1], c[2], 1.0f);
-  updateGL();
-}
-
-void OpenGLWidget::takeScreenshot() // FIXME Open FileDialog
-{
-  QFileDialog	dialog(this);
-
-  dialog.setFileMode(QFileDialog::AnyFile);
-  dialog.setNameFilter("Images (*.png)");
-  dialog.setNameFilterDetailsVisible(true);
-
-  paintGL();
-  glFlush();
-  QImage img = grabFrameBuffer();
-
-//   img.save();
+  return (_bgrColor);
 }
 
 int OpenGLWidget::getTime() const
@@ -100,6 +74,21 @@ int OpenGLWidget::getTime() const
 void OpenGLWidget::resetTime()
 {
   _clock.start();
+}
+
+void OpenGLWidget::changeBackgroundColor(const QColor& color)
+{
+  float	c[3];
+
+  c[0] = static_cast<float>(color.red()) / 255.0f;
+  c[1] = static_cast<float>(color.green() / 255.0f);
+  c[2] = static_cast<float>(color.blue() / 255.0f);
+
+  _bgrColor = color;
+
+  makeCurrent();
+  glClearColor(c[0], c[1], c[2], 1.0f);
+  updateGL();
 }
 
 void	OpenGLWidget::initializeGL()

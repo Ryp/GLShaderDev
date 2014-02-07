@@ -15,26 +15,17 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADERSTAGESVIEW_H
-#define SHADERSTAGESVIEW_H
+#include <iostream> // FIXME
+#include "ShaderInputView.h"
+#include <QFormLayout>
+#include <QPushButton>
+#include <QLabel>
+#include <QColorDialog>
+#include <QMessageBox>
+#include <QPalette>
 
-#include <list>
+ShaderInputView::ShaderInputView(QWidget* parent)
+: QWidget(parent)
+{}
 
-#include <QWidget>
-#include <QTreeWidget>
-
-class ShaderStagesView : public QWidget
-{
-  Q_OBJECT
-public:
-  ShaderStagesView(QWidget* parent = 0);
-  ~ShaderStagesView();
-
-public:
-  std::list< std::pair<int, QString> >	getShaderConfig() const;
-
-private:
-  std::map<int, QTreeWidgetItem*>	_stages;
-};
-
-#endif // SHADERSTAGESVIEW_H
+ShaderInputView::~ShaderInputView() {}

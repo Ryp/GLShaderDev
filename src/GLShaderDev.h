@@ -21,8 +21,9 @@
 #include <QMainWindow>
 #include "GL/GLInfo.h"
 
+class GLPreviewWidget;
 class GLInfoDialog;
-class ShaderVisualizationOptions;
+class ShaderInputView;
 class ShaderStagesView;
 class OpenGLWidget;
 class NewFileDialog;
@@ -73,10 +74,11 @@ private:
   CodeEditor*		_editor;
   BuildOutput*		_output;
   QDockWidget*		_buildOutputDock;
-  OpenGLWidget*		_glview;
+  OpenGLWidget*		_glwidget;
+  GLPreviewWidget*	_glpreview;
   GLInfoDialog*		_glInfoDialog;
   ShaderStagesView*	_shaderStages;
-  ShaderVisualizationOptions*	_shaderVis;
+  ShaderInputView*	_shaderInput;
   NewFileDialog*	_newFileDialog;
   QAction*		_recentFileActions[MaxRecentFiles + 2];
   GLInfo		_glInfo;
