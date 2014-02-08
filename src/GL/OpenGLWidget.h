@@ -39,7 +39,7 @@ private:
   static const float MouseWheelSpeed;
 
 public:
-  OpenGLWidget(const QGLFormat& fmt, QWidget *parent = 0);
+  OpenGLWidget(const QGLFormat& fmt, QWidget* parent = 0);
   ~OpenGLWidget();
 
 public:
@@ -74,6 +74,8 @@ private:
   ShaderProgram*	_shader;
   GLuint		_vertexBuffer;
   GLuint		_normalBuffer;
+  GLuint		_uvBuffer;
+  GLuint		_textureHandle;
   QTime			_clock;
   QColor		_bgrColor;
   Model*		_model; // FIXME debug

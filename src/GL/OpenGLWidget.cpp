@@ -20,12 +20,15 @@
 #include <QFileDialog>
 #include <QDebug>
 
+#include <gli/core/load_dds.hpp>
+#include <gli/gli.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 #include "OpenGLWidget.h"
 #include "Math.hpp"
 #include "Shader/ShaderProgram.h"
 #include "Exceptions/GlsdException.hpp"
 #include "Model/ModelLoader.h" // FIXME not here
-#include <glm/gtc/matrix_transform.hpp>
 
 const float OpenGLWidget::NearPlane = 0.1f;
 const float OpenGLWidget::FarPlane = 1000.0f;
@@ -35,7 +38,7 @@ const float OpenGLWidget::MinFov = 20.0f;
 const float OpenGLWidget::MaxFov = 140.0f;
 const float OpenGLWidget::MouseWheelSpeed = 0.10f;
 
-OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget *parent)
+OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
 : QGLWidget(fmt, parent),
   _viewportSize(size().width(), size().height()),
   _shader(0),
@@ -112,6 +115,49 @@ void	OpenGLWidget::initializeGL()
   glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getNormalBufferSize(), _model->getNormalBuffer(), GL_STATIC_DRAW);
 
+  glGenBuffers(1, &_uvBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+  glBufferData(GL_ARRAY_BUFFER, _model->getUVBufferSize(), _model->getUVBuffer(), GL_STATIC_DRAW);
+
+  gli::texture2D texture(gli::load_dds("../rc/texture/uvchecker.dds"));
+  if (texture.empty())
+    throw (GlsdException("Could not load texture"));
+
+  glGenTextures(1, &_textureHandle);
+  glBindTexture(GL_TEXTURE_2D, _textureHandle);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, GLint(texture.levels() - 1));
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
+  glTexStorage2D(GL_TEXTURE_2D,
+		 GLint(texture.levels()),
+		 GLenum(gli::internal_format(texture.format())),
+		 GLsizei(texture.dimensions().x),
+		 GLsizei(texture.dimensions().y));
+  for (gli::texture2D::size_type Level = 0; Level < texture.levels(); ++Level)
+  {
+    if (gli::is_compressed(texture.format()))
+      glCompressedTexSubImage2D(GL_TEXTURE_2D,
+				GLint(Level),
+				0, 0,
+				GLsizei(texture[Level].dimensions().x),
+				GLsizei(texture[Level].dimensions().y),
+				GLenum(gli::internal_format(texture.format())),
+				GLsizei(texture[Level].size()),
+				texture[Level].data());
+      else
+	glTexSubImage2D(GL_TEXTURE_2D,
+			GLint(Level),
+			0, 0,
+		 GLsizei(texture[Level].dimensions().x),
+			GLsizei(texture[Level].dimensions().y),
+			GLenum(gli::external_format(texture.format())),
+			GLenum(gli::type_format(texture.format())),
+			texture[Level].data());
+  }
+
   emit glInitialized();
 }
 
@@ -125,8 +171,13 @@ void	OpenGLWidget::paintGL()
   _shader->bind();
   GLuint vertexLocation = _shader->getAttribLocation("vertex");
   GLuint normalLocation = _shader->getAttribLocation("normal");
+  GLuint uvLocation = _shader->getAttribLocation("uv");
 
   glUniformMatrix4fv(_shader->getUniformLocation("MVP"), 1, GL_FALSE, &_MVP[0][0]);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _textureHandle);
+  glUniform1i(_shader->getUniformLocation("texture"), 0);
 
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -150,10 +201,22 @@ void	OpenGLWidget::paintGL()
     (void*)0            // array buffer offset
   );
 
+  glEnableVertexAttribArray(uvLocation);
+  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+  glVertexAttribPointer(
+    uvLocation,
+    2,                  // size
+    GL_FLOAT,           // type
+    GL_FALSE,           // normalized
+    0,                  // stride
+    (void*)0            // array buffer offset
+  );
+
   glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
 
   glDisableVertexAttribArray(vertexLocation);
   glDisableVertexAttribArray(normalLocation);
+  glDisableVertexAttribArray(uvLocation);
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)
