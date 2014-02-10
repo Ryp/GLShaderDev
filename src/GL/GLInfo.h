@@ -42,17 +42,24 @@ public:
 public:
   Vendor				getVendor() const;
   const std::string&			getVendorString() const;
-  const std::string&			getRenderer() const;
-  const std::string&			getOpenGLVersion() const;
-  const std::string&			getGLSLVersion() const;
+  const std::string&			getRendererString() const;
+  const std::string&			getOpenGLVersionString() const;
+  const std::string&			getGLSLVersionString() const;
+  int					getGLSLMajorVersion() const;
+  int					getGLSLMinorVersion() const;
   const std::vector<std::string>&	getExtensions() const;
+
+private:
+  void					parseGLSLVersion(std::string glslVersionString);
 
 private:
   Vendor			_vendor;
   std::string			_vendorString;
-  std::string			_renderer;
-  std::string			_glVersion;
-  std::string			_glslVersion;
+  std::string			_rendererString;
+  std::string			_glVersionString;
+  std::string			_glslVersionString;
+  int				_glslMajorVersion;
+  int				_glslMinorVersion;
   std::vector<std::string>	_extensions;
   std::map<std::string, Vendor>	_vendorID;
 };

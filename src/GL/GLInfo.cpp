@@ -15,6 +15,8 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include <iostream> // FIXME
+#include <algorithm>
 #include <sstream>
 
 #include "GLHeaders.hpp"
@@ -23,9 +25,11 @@
 GLInfo::GLInfo()
 : _vendor(Unknown),
   _vendorString("N/A"),
-  _renderer("N/A"),
-  _glVersion("N/A"),
-  _glslVersion("N/A")
+  _rendererString("N/A"),
+  _glVersionString("N/A"),
+  _glslVersionString("N/A"),
+  _glslMajorVersion(0),
+  _glslMinorVersion(0)
 {
   // TODO Complete the enum list
   _vendorID["ATI"] = ATI;
@@ -40,9 +44,10 @@ void GLInfo::updateInfos()
   GLint		nExtensions = 0;
 
   _vendorString = reinterpret_cast<const char*>(glGetString(GL_VENDOR));
-  _renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
-  _glVersion = reinterpret_cast<const char*>(glGetString(GL_VERSION));
-  _glslVersion = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+  _rendererString = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
+  _glVersionString = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+  _glslVersionString = reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
+  parseGLSLVersion(_glslVersionString);
 
   glGetIntegerv(GL_NUM_EXTENSIONS, &nExtensions);
   _extensions = std::vector<std::string>(nExtensions);
@@ -66,22 +71,44 @@ const std::string& GLInfo::getVendorString() const
   return (_vendorString);
 }
 
-const std::string& GLInfo::getRenderer() const
+const std::string& GLInfo::getRendererString() const
 {
-  return (_renderer);
+  return (_rendererString);
 }
 
-const std::string& GLInfo::getOpenGLVersion() const
+const std::string& GLInfo::getOpenGLVersionString() const
 {
-  return (_glVersion);
+  return (_glVersionString);
 }
 
-const std::string& GLInfo::getGLSLVersion() const
+const std::string& GLInfo::getGLSLVersionString() const
 {
-  return (_glslVersion);
+  return (_glslVersionString);
+}
+
+int GLInfo::getGLSLMajorVersion() const
+{
+  return (_glslMajorVersion);
+}
+
+int GLInfo::getGLSLMinorVersion() const
+{
+  return (_glslMinorVersion);
 }
 
 const std::vector< std::string >& GLInfo::getExtensions() const
 {
   return (_extensions);
+}
+
+void GLInfo::parseGLSLVersion(std::string glslVersionString)
+{
+  std::stringstream	ss;
+
+  std::replace(glslVersionString.begin(), glslVersionString.end(), '.', ' ');
+  ss.str(glslVersionString);
+  ss >> _glslMajorVersion;
+  ss >> _glslMinorVersion;
+
+  std::cout << _glslMajorVersion << " " << _glslMinorVersion << std::endl; // FIXME Debug
 }

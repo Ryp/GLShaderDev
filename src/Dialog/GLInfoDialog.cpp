@@ -44,15 +44,15 @@ GLInfoDialog::GLInfoDialog(GLInfo& glInfos, QWidget *parent)
   label->setFont(font);
   versionLayout->addRow(tr("Vendor:"), label);
 
-  label = new QLabel(_glInfo.getRenderer().c_str());
+  label = new QLabel(_glInfo.getRendererString().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("Renderer:"), label);
 
-  label = new QLabel(_glInfo.getOpenGLVersion().c_str());
+  label = new QLabel(_glInfo.getOpenGLVersionString().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("GL Version:"), label);
 
-  label = new QLabel(_glInfo.getGLSLVersion().c_str());
+  label = new QLabel(_glInfo.getGLSLVersionString().c_str());
   label->setFont(font);
   versionLayout->addRow(tr("GLSL Version:"), label);
 
