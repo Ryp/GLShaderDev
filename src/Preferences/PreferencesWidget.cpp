@@ -26,7 +26,7 @@
 
 #include "PreferencesWidget.h"
 #include "Dialog/GLInfoDialog.h"
-#include "Preferences/PreferenceListItemDeleagte.h"
+#include "Preferences/PreferenceListItemDelegate.h"
 
 
 PreferencesWidget::PreferencesWidget()

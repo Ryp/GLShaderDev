@@ -38,7 +38,7 @@ set(MOC_HEADERS
   Dialog/GLInfoDialog.h
   GL/OpenGLWidget.h
   Preferences/PreferencesWidget.h
-  Preferences/PreferenceListItemDeleagte.h
+  Preferences/PreferenceListItemDelegate.h
   GL/GLPreviewWidget.h
 )
 
