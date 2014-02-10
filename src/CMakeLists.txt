@@ -1,4 +1,4 @@
-set(GLShaderDev_SRCS
+set(GLShaderDev_SRCS 
   main.cpp
   GLShaderDev.cpp
   ShaderInputView.cpp
@@ -38,6 +38,7 @@ set(MOC_HEADERS
   Dialog/GLInfoDialog.h
   GL/OpenGLWidget.h
   Preferences/PreferencesWidget.h
+  Preferences/PreferenceListItemDeleagte.h
   GL/GLPreviewWidget.h
 )
 

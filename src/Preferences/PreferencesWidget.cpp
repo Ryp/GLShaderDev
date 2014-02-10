@@ -26,12 +26,13 @@
 
 #include "PreferencesWidget.h"
 #include "Dialog/GLInfoDialog.h"
+#include "Preferences/PreferenceListItemDeleagte.h"
+
 
 PreferencesWidget::PreferencesWidget()
 {
   setWindowIcon(QIcon(":/preferences-other.png"));
   setWindowTitle("Preferences");
-  setMinimumSize(1000, 800);
   setModal(true);
 
   _buttons = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Ok | QDialogButtonBox::Apply);
@@ -40,22 +41,26 @@ PreferencesWidget::PreferencesWidget()
   connect(_buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(apply(QAbstractButton*)));
 
   _listView = new QListView;
-  _listView->setFixedSize(200, 200);
+  _listView->setFixedWidth(205);
+  _listView->setMinimumHeight(3 * 100);
 
   _panel = new QStackedWidget;
 
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
-  QStandardItem*	item1 = new QStandardItem(QIcon(":/preferences-other.png"), "test1");
+  QStandardItem*	item1 = new QStandardItem(QIcon(":/test-icon.png"), "test1");
   item1->setEditable(false);
   QStandardItem*	item2 = new QStandardItem(QIcon(":/preferences-other.png"), "test2");
   item2->setEditable(false);
+  QStandardItem*	item3 = new QStandardItem(QIcon(":/preferences-other.png"), "test2");
+  item3->setEditable(false);
 
   itemModel->appendRow(item1);
   itemModel->appendRow(item2);
+  itemModel->appendRow(item3);
 
   _listView->setModel(itemModel);
-
-  QSplitter*	splitter = new QSplitter;
+  _listView->setItemDelegate(new PreferenceListItemDelegate(_listView));
+  _listView->setAutoScroll(false);
 
   QWidget*	menuList = new QWidget;
   QVBoxLayout*	menuLayout = new QVBoxLayout;
@@ -67,6 +72,7 @@ PreferencesWidget::PreferencesWidget()
   _layouts[1] = new QVBoxLayout;
   _w[0] = new QWidget;
   _w[1] = new QWidget;
+  
   //---->
 
   QLabel*	label1 = new QLabel(this);
@@ -86,19 +92,18 @@ PreferencesWidget::PreferencesWidget()
 
   _panel->addWidget(_w[0]);
   _panel->addWidget(_w[1]);
-//   _panel->setCurrentWidget(0);
-  _panel->setMinimumSize(700, 700);
+  _panel->setCurrentIndex(0);
   QPalette pal(palette());
   _panel->setAutoFillBackground(true);
   pal.setColor(QPalette::Background, Qt::white);
   _panel->setPalette(pal);
 
-  splitter->setOrientation(Qt::Horizontal);
-  splitter->addWidget(menuList);
-  splitter->addWidget(_panel);
-  QVBoxLayout*		settingLayout = new QVBoxLayout;
-  settingLayout->addWidget(splitter);
-  settingLayout->addWidget(_buttons);
+  QGridLayout*		settingLayout = new QGridLayout;
+  
+  settingLayout->addWidget(menuList, 0, 0);
+  settingLayout->addWidget(_panel, 0, 1);
+  settingLayout->addWidget(_buttons, 1, 1);
+  settingLayout->setColumnStretch(1, 1);
 
   setLayout(settingLayout);
 
