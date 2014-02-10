@@ -47,11 +47,11 @@ PreferencesWidget::PreferencesWidget()
   _panel = new QStackedWidget;
 
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
-  QStandardItem*	item1 = new QStandardItem(QIcon(":/test-icon.png"), "test1");
+  QStandardItem*	item1 = new QStandardItem(QIcon(":/preferences-other.png"), "test1");
   item1->setEditable(false);
   QStandardItem*	item2 = new QStandardItem(QIcon(":/preferences-other.png"), "test2");
   item2->setEditable(false);
-  QStandardItem*	item3 = new QStandardItem(QIcon(":/preferences-other.png"), "test2");
+  QStandardItem*	item3 = new QStandardItem(QIcon(":/preferences-other.png"), "test3");
   item3->setEditable(false);
 
   itemModel->appendRow(item1);

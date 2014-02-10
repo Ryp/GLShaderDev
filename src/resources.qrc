@@ -21,7 +21,6 @@
     <file alias="preferences-desktop-screensaver.png">../rc/icon/16x16/preferences-desktop-screensaver.png</file>
     <file alias="application-exit.png">../rc/icon/16x16/application-exit.png</file>
     <file alias="fill-color.png">../rc/icon/16x16/fill-color.png</file>
-    <file alias="test-icon.png">../rc/icon/icon_test.png</file>
   </qresource>
   <qresource prefix="/">
     <file alias="run-build.png">../rc/icon/16x16/run-build.png</file>
