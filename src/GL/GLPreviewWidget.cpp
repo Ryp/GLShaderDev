@@ -22,6 +22,7 @@
 #include <QtGui/QIcon>
 #include <QtGui/QColorDialog>
 #include <QtGui/QFileDialog>
+#include <QMessageBox>
 
 #include "OpenGLWidget.h"
 #include "GLPreviewWidget.h"
@@ -66,9 +67,15 @@ void GLPreviewWidget::takeScreenshot() // FIXME Open FileDialog
   glFlush();
   QImage img = _glWigdet->grabFrameBuffer();
 
-  QString fileName = QFileDialog::getSaveFileName(this, "Save Screenshot");
+  QFileDialog	dialogFile(this);
+  dialogFile.setDefaultSuffix("png");
+  QString fileName = dialogFile.getSaveFileName(this, QString::fromUtf8("Save Screenshot"), tr("screenshot.png"), tr(".png"));
+  
   if (fileName.isEmpty())
     return;
-
-  qDebug() << "*** Screenshot took *** > " << fileName;
+  
+  if (!img.save(fileName))
+  {
+    QMessageBox::warning(this, tr("Error"), tr("Failed to save: ") + fileName);
+  }
 }

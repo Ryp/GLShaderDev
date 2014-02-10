@@ -41,6 +41,8 @@ PreferencesWidget::PreferencesWidget()
   _listView = new QListView;
   _listView->setFixedWidth(205);
   _listView->setMinimumHeight(3 * 100);
+  _listView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  _listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   _panel = new QStackedWidget;
 
