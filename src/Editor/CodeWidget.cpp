@@ -29,7 +29,6 @@ CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
   QFont ft = this->font();
   ft.setFamily("Monospace");
 
-
   setFont(ft);
   setMarginsFont(ft);
   setMarginLineNumbers(0, true);
@@ -42,6 +41,7 @@ CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
   setFolding(QsciScintilla::PlainFoldStyle);
 
   setAutoCompletionThreshold(2);
+  setAutoCompletionCaseSensitivity(false);
   setAutoCompletionSource(QsciScintilla::AcsAPIs);
 
   QsciAPIs* apis = new QsciAPIs(_lexer);

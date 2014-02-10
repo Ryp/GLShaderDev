@@ -47,7 +47,7 @@ PreferencesWidget::PreferencesWidget()
   _panel = new QStackedWidget;
 
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
-  QStandardItem*	item1 = new QStandardItem(QIcon(":/preferences-other.png"), "test1");
+  QStandardItem*	item1 = new QStandardItem(QIcon(":/preferences-desktop-theme.png"), "test1");
   item1->setEditable(false);
   QStandardItem*	item2 = new QStandardItem(QIcon(":/preferences-other.png"), "test2");
   item2->setEditable(false);
@@ -72,7 +72,7 @@ PreferencesWidget::PreferencesWidget()
   _layouts[1] = new QVBoxLayout;
   _w[0] = new QWidget;
   _w[1] = new QWidget;
-  
+
   //---->
 
   QLabel*	label1 = new QLabel(this);
@@ -99,7 +99,7 @@ PreferencesWidget::PreferencesWidget()
   _panel->setPalette(pal);
 
   QGridLayout*		settingLayout = new QGridLayout;
-  
+
   settingLayout->addWidget(menuList, 0, 0);
   settingLayout->addWidget(_panel, 0, 1);
   settingLayout->addWidget(_buttons, 1, 1);

@@ -15,7 +15,6 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <iostream> // FIXME
 #include <algorithm>
 #include <sstream>
 
@@ -109,6 +108,4 @@ void GLInfo::parseGLSLVersion(std::string glslVersionString)
   ss.str(glslVersionString);
   ss >> _glslMajorVersion;
   ss >> _glslMinorVersion;
-
-  std::cout << _glslMajorVersion << " " << _glslMinorVersion << std::endl; // FIXME Debug
 }
