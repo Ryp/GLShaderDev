@@ -54,19 +54,19 @@ ShaderStagesView::ShaderStagesView(QWidget* parent)
 
   QStringList vstrings;
   vstrings.append("Vertex");
-  vstrings.append("/home/ryp/Dev/C++/GLShaderDev/rc/shader/light.v.glsl");
+  vstrings.append("../rc/shader/light.v.glsl");
   QTreeWidgetItem* vertex = new QTreeWidgetItem(shaderRoot, vstrings);
   _stages[ShaderObject::VertexShader] = vertex;
 
 //   QStringList gstrings;
 //   gstrings.append("Geometry");
-//   gstrings.append("/home/ryp/Dev/C++/GLShaderDev/rc/shader/geopassthrough.geom");
+//   gstrings.append("../rc/shader/geopassthrough.geom");
 //   QTreeWidgetItem* geometry = new QTreeWidgetItem(shaderRoot, gstrings);
 //   _stages[ShaderObject::GeometryShader] = geometry;
 
   QStringList fstrings;
   fstrings.append("Fragment");
-  fstrings.append("/home/ryp/Dev/C++/GLShaderDev/rc/shader/light.f.glsl");
+  fstrings.append("../rc/shader/light.f.glsl");
   QTreeWidgetItem* fragment = new QTreeWidgetItem(shaderRoot, fstrings);
   _stages[ShaderObject::FragmentShader] = fragment;
 
