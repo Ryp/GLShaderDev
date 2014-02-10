@@ -62,17 +62,13 @@ void GLPreviewWidget::backgroundColorButtonClicked()
 
 void GLPreviewWidget::takeScreenshot() // FIXME Open FileDialog
 {
-  QFileDialog	dialog(this);
-
-  dialog.setFileMode(QFileDialog::AnyFile);
-  dialog.setNameFilter("Images (*.png)");
-  dialog.setNameFilterDetailsVisible(true);
-
   _glWigdet->paintGL();
   glFlush();
   QImage img = _glWigdet->grabFrameBuffer();
 
-  qDebug() << "*** Screenshot took ***";
-  dialog.exec();
-  //   img.save();
+  QString fileName = QFileDialog::getSaveFileName(this, "Save Screenshot");
+  if (fileName.isEmpty())
+    return;
+
+  qDebug() << "*** Screenshot took *** > " << fileName;
 }

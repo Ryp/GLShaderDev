@@ -181,36 +181,15 @@ void	OpenGLWidget::paintGL()
 
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-  glVertexAttribPointer(
-    vertexLocation,
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
+  glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   glEnableVertexAttribArray(normalLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
-  glVertexAttribPointer(
-    normalLocation,
-    3,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
+  glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   glEnableVertexAttribArray(uvLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
-  glVertexAttribPointer(
-    uvLocation,
-    2,                  // size
-    GL_FLOAT,           // type
-    GL_FALSE,           // normalized
-    0,                  // stride
-    (void*)0            // array buffer offset
-  );
+  glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
   glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
 

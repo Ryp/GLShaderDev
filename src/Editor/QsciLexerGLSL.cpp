@@ -40,6 +40,7 @@ QsciLexerGLSL::QsciLexerGLSL(QObject *parent)
 
   _styles[Keyword] = QsciStyle(Keyword);
   _styles[Keyword].setDescription("Keyword");
+  _styles[Keyword].setColor("#22ff55");
   _styles[Keyword].setFont(ft);
 
   _styles[Operator] = QsciStyle(Operator);
@@ -55,11 +56,6 @@ const char* QsciLexerGLSL::language() const
 {
   return ("GLSL");
 }
-
-// const char* QsciLexerGLSL::lexer() const
-// {
-//   return ("cpp");
-// }
 
 QStringList QsciLexerGLSL::autoCompletionWordSeparators() const
 {
@@ -103,24 +99,12 @@ void QsciLexerGLSL::styleText(int start, int end)
   delete range;
 
   startStyling(start);
-
-  QStringList list = text.split("\n");
-
-  for (int i = 0; i < list.size(); i++)
+  QStringList lines = text.split('\n');
+  for (int i = 0; i < lines.size(); i++)
   {
-    QString	line = list.at(i);
-    int		len = line.size();
-    int		style;
-
-    if (line.startsWith("//"))
-      style = Comment;
-    else
-      style = Default;
-
-//     qDebug() << "Styling" << len << "bytes" << description(style);
-    setStyling(len, style);
-    if (i < list.size() - 1)
-      setStyling(1, Default); // Newline char style
+    styleLine(lines.at(i), lines.at(i).size());
+    if (i < lines.size() - 1)
+      setStyling(1, Default);
   }
 }
 
@@ -157,8 +141,9 @@ bool QsciLexerGLSL::defaultEolFill(int style) const
 
 const char* QsciLexerGLSL::keywords(int set) const
 {
-  static_cast<void>(set);
-  return ("in out varying uniform");
+  if (set == 1)
+    return ("in out varying uniform");
+  return (0);
 }
 
 const char* QsciLexerGLSL::wordCharacters() const
@@ -166,3 +151,8 @@ const char* QsciLexerGLSL::wordCharacters() const
   return ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
 }
 
+void QsciLexerGLSL::styleLine(const QString& line, int size)
+{
+  setStyling(size, Default);
+  qDebug() << line;
+}

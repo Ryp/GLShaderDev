@@ -30,7 +30,6 @@ public:
 
 public:
   const char*	language() const;
-//   const char	*lexer() const;
   QStringList	autoCompletionWordSeparators() const;
   const char*	blockStartKeyword(int *style = 0) const;
   const char*	blockStart(int *style = 0) const;
@@ -48,6 +47,8 @@ public:
 private:
   QsciLexerGLSL(const QsciLexerGLSL& other);
   QsciLexerGLSL& operator=(const QsciLexerGLSL& other);
+
+  void	styleLine(const QString& line, int size);
 
 private:
   enum StyleType {
