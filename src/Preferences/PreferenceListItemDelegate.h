@@ -21,13 +21,15 @@
 #include <QStyledItemDelegate>
 #include <QPainter>
 
+class PreferenceListItemDelegate : public QStyledItemDelegate
+{
+  Q_OBJECT
+public:
+  PreferenceListItemDelegate(QObject* parent = 0);
+  ~PreferenceListItemDelegate();
 
-class PreferenceListItemDelegate : public QStyledItemDelegate  {
-    public:
-	PreferenceListItemDelegate(QObject *parent=0);
-
-	void paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
-	QSize sizeHint ( const QStyleOptionViewItem &, const QModelIndex &) const;
+  void	paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  QSize	sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 #endif // PREFERENCELISTITEMDELEAGTE_H
