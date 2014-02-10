@@ -22,6 +22,7 @@ set(GLShaderDev_SRCS
   Model/Model.cpp
   Model/ModelLoader.cpp
   Preferences/PreferencesWidget.cpp
+  Preferences/PreferenceListItemDelegate.cpp
 )
 
 set(MOC_HEADERS
