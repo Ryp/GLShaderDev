@@ -15,8 +15,8 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PREFERENCELISTITEMDELEAGTE_H
-#define PREFERENCELISTITEMDELEAGTE_H
+#ifndef PREFERENCELISTITEMDELEGATE_H
+#define PREFERENCELISTITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
 #include <QPainter>
@@ -30,4 +30,4 @@ class PreferenceListItemDelegate : public QStyledItemDelegate  {
 	QSize sizeHint ( const QStyleOptionViewItem &, const QModelIndex &) const;
 };
 
-#endif // PREFERENCELISTITEMDELEAGTE_H
+#endif // PREFERENCELISTITEMDELEGATE_H

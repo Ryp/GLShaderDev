@@ -23,6 +23,8 @@ set(GLShaderDev_SRCS
   Model/ModelLoader.cpp
   Preferences/PreferencesWidget.cpp
   Preferences/PreferenceListItemDelegate.cpp
+  Preferences/Panels/APreferencePanel.cpp 
+  Preferences/Panels/GeneralPanel.cpp 
 )
 
 set(MOC_HEADERS
@@ -40,6 +42,8 @@ set(MOC_HEADERS
   GL/OpenGLWidget.h
   Preferences/PreferencesWidget.h
   Preferences/PreferenceListItemDelegate.h
+  Preferences/Panels/APreferencePanel.h
+  Preferences/Panels/GeneralPanel.h
   GL/GLPreviewWidget.h
 )
 

@@ -21,11 +21,11 @@
 
 #include <QDialog>
 #include <QListView>
-#include <QVBoxLayout>
-#include <QWidget>
 #include <QStackedWidget>
 #include <QAbstractButton>
 #include <QDialogButtonBox>
+
+#include "Preferences/Panels/APreferencePanel.h"
 
 class OpenGLWidget;
 
@@ -43,12 +43,17 @@ public slots:
   void 	cancel();
   void 	apply(QAbstractButton*);
   
+public:
+  enum		PanelList
+  {
+    General = 0
+  };
+  
 private:
-  QListView*		_listView;
-  QStackedWidget*	_panel;
-  QVBoxLayout*		_layouts[2];
-  QWidget*		_w[2];
-  QDialogButtonBox*	_buttons;
+  QListView*				_listView;
+  QStackedWidget*			_panel;
+  std::vector<APreferencePanel*>	_panels;	
+  QDialogButtonBox*			_buttons;
 };
 
 #endif // PREFERENCESWIDGET_H
