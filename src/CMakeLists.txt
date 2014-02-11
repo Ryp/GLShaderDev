@@ -23,6 +23,7 @@ set(GLShaderDev_SRCS
   Model/ModelLoader.cpp
   Preferences/PreferencesWidget.cpp
   Preferences/PreferenceListItemDelegate.cpp
+  Preferences/SettingsList.cpp 
   Preferences/Panels/APreferencePanel.cpp 
   Preferences/Panels/GeneralPanel.cpp 
 )

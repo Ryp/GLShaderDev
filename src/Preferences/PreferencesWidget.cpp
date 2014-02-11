@@ -23,6 +23,9 @@
 #include <QDockWidget>
 #include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QSettings>
+#include <QVariant>
 
 #include "PreferencesWidget.h"
 #include "Dialog/GLInfoDialog.h"
@@ -35,11 +38,16 @@ PreferencesWidget::PreferencesWidget()
   setWindowIcon(QIcon(":/preferences-other.png"));
   setWindowTitle("Preferences");
   setModal(true);
+  
+  _panels.push_back(new GeneralPanel(this));
+  
+  initPreferences();
 
   _buttons = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Ok | QDialogButtonBox::Apply);
   connect(_buttons, SIGNAL(accepted()), this, SLOT(accept()));
   connect(_buttons, SIGNAL(rejected()), this, SLOT(cancel()));
   connect(_buttons, SIGNAL(clicked(QAbstractButton*)), this, SLOT(apply(QAbstractButton*)));
+  _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
 
   _listView = new QListView;
   _listView->setFixedWidth(205);
@@ -48,8 +56,7 @@ PreferencesWidget::PreferencesWidget()
   _listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   _panel = new QStackedWidget;
-  _panels.push_back(new GeneralPanel);
-
+  
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
   itemModel->appendRow(_panels.at(General)->getItem());
 
@@ -63,7 +70,7 @@ PreferencesWidget::PreferencesWidget()
   menuLayout->setContentsMargins(5, 5, 5, 5);
   menuList->setLayout(menuLayout);
 
-  _panel->addWidget(_panels.at(General)->getWidget());
+  _panel->addWidget(_panels.at(General));
   _panel->setCurrentIndex(0);
   QPalette pal(palette());
   _panel->setAutoFillBackground(true);
@@ -84,6 +91,55 @@ PreferencesWidget::PreferencesWidget()
 
 PreferencesWidget::~PreferencesWidget() {}
 
+void PreferencesWidget::enableApply()
+{
+  _buttons->button(QDialogButtonBox::Apply)->setEnabled(true);
+}
+
+void PreferencesWidget::initPreferences()
+{
+  QSettings 		settings;
+  
+  //-->[START]-->GENERAL
+  int 			maxRecentFiles = settings.value("maxRecentFiles").toInt();
+  if (maxRecentFiles == 0)
+  {
+     settings.setValue("maxRecentFiles", 9);
+     maxRecentFiles = 9;
+  }
+ _panels.at(General)->getSettings().setSetting("maxRecentFiles", new QVariant(maxRecentFiles));
+ //-->[END]-->GENERAL
+ 
+ //-->ADD HERE OTHERS SETTINGS
+ 
+ //--> INIT OF ALL SETTING FOR PREFERENCES
+ for (std::vector<APreferencePanel*>::iterator it = _panels.begin();
+      it != _panels.end(); ++it)
+  (*it)->init();
+}
+
+void PreferencesWidget::modifyPreferences(bool condition)
+{
+  QSettings		settings;
+
+  for (std::vector<APreferencePanel*>::iterator it = _panels.begin();
+  it != _panels.end(); ++it)
+      {
+	if ((*it)->isChanged())
+	{
+	  for (std::map<QString, QVariant*>::const_iterator i_it = (*it)->getSettings().getList().begin();
+		i_it != (*it)->getSettings().getList().end(); ++i_it)
+		{
+		  if (condition)
+		    settings.setValue((*i_it).first, *(*i_it).second);
+		  else
+		    (*it)->getSettings().setSetting((*i_it).first, new QVariant(settings.value((*i_it).first)));
+		}
+	  (*it)->refresh();
+	}
+      }
+}
+
 void PreferencesWidget::onSelectionChanged(QItemSelection item)
 {
   if (item.indexes().count() < 2)
@@ -92,11 +148,15 @@ void PreferencesWidget::onSelectionChanged(QItemSelection item)
 
 void PreferencesWidget::accept()
 {
+  modifyPreferences(true);
+  _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
   QDialog::accept();
 }
 
 void PreferencesWidget::cancel()
 {
+  modifyPreferences(false);
+  _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
   QDialog::reject();
 }
 
@@ -104,7 +164,8 @@ void PreferencesWidget::apply(QAbstractButton* button)
 {
   if (_buttons->standardButton(button) == QDialogButtonBox::Apply)
   {
-      QMessageBox::about(this, tr("Preferences"), tr("Are you sure ?"));
+    modifyPreferences(true);
+    _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
   }
 }
 

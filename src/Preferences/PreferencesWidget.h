@@ -35,6 +35,13 @@ class PreferencesWidget : public QDialog
 public:
   PreferencesWidget();
   ~PreferencesWidget();
+  
+  void 	enableApply();
+  
+private:
+  void 	initPreferences();
+  
+  void 	modifyPreferences(bool);
 
 public slots: 
   void 	onSelectionChanged(QItemSelection);
