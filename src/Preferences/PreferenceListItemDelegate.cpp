@@ -17,33 +17,40 @@
 
 #include "PreferenceListItemDelegate.h"
 
-PreferenceListItemDelegate::PreferenceListItemDelegate(QObject *parent) : QStyledItemDelegate (parent){}
+PreferenceListItemDelegate::PreferenceListItemDelegate(QObject* parent)
+: QStyledItemDelegate(parent)
+{}
 
-void PreferenceListItemDelegate::paint ( QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index ) const{
-	painter->save();
-	
-	QRect		r;
-	if(option.state & QStyle::State_Selected){
-		painter->fillRect(option.rect, option.palette.color(QPalette::Highlight));
-	}
+PreferenceListItemDelegate::~PreferenceListItemDelegate() {}
 
-	QString title = index.data(Qt::DisplayRole).toString();
-	QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
-	
-	QFont    font = painter->font();
-	font.setBold(true);
-	painter->setFont(font);
-	
-	r = option.rect.adjusted((200 - painter->fontMetrics().width(title)) / 2, 0, 0, -10);
-	painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom|Qt::AlignLeft|Qt::TextWordWrap, title, &r);
-	
-	QSize 		iconsize = icon.actualSize(option.decorationSize);
-	r = option.rect.adjusted((200 - iconsize.width()) / 2, (37 - iconsize.height()) / 2, 0, 0);
-	painter->drawPixmap(QPoint(r.left(),r.top()),icon.pixmap(iconsize.width(),iconsize.height()));
-	
-	painter->restore();
+void PreferenceListItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+  painter->save();
+
+  QRect r;
+  if (option.state & QStyle::State_Selected)
+    painter->fillRect(option.rect, option.palette.color(QPalette::Highlight));
+
+  QString title = index.data(Qt::DisplayRole).toString();
+  QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
+
+  QFont    font = painter->font();
+  font.setBold(true);
+  painter->setFont(font);
+
+  r = option.rect.adjusted((200 - painter->fontMetrics().width(title)) / 2, 0, 0, -10);
+  painter->drawText(r.left(), r.top(), r.width(), r.height(), Qt::AlignBottom|Qt::AlignLeft|Qt::TextWordWrap, title, &r);
+
+  QSize iconsize = icon.actualSize(option.decorationSize);
+  r = option.rect.adjusted((200 - iconsize.width()) / 2, (37 - iconsize.height()) / 2, 0, 0);
+  painter->drawPixmap(QPoint(r.left(),r.top()),icon.pixmap(iconsize.width(),iconsize.height()));
+  painter->restore();
 }
-	
-QSize PreferenceListItemDelegate::sizeHint ( const QStyleOptionViewItem &, const QModelIndex &) const{
-	return QSize(200, 75);
+
+QSize PreferenceListItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const
+{
+  static_cast<void>(option);
+  static_cast<void>(index);
+
+  return QSize(200, 75);
 }

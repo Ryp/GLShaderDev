@@ -51,7 +51,6 @@ PreferencesWidget::PreferencesWidget()
   _panels.push_back(new GeneralPanel);
 
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
-  
   itemModel->appendRow(_panels.at(General)->getItem());
 
   _listView->setModel(itemModel);
@@ -72,7 +71,7 @@ PreferencesWidget::PreferencesWidget()
   _panel->setPalette(pal);
 
   QGridLayout*		settingLayout = new QGridLayout;
-  
+
   settingLayout->addWidget(menuList, 0, 0);
   settingLayout->addWidget(_panel, 0, 1);
   settingLayout->addWidget(_buttons, 1, 1);

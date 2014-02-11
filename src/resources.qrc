@@ -21,11 +21,12 @@
     <file alias="preferences-desktop-screensaver.png">../rc/icon/16x16/preferences-desktop-screensaver.png</file>
     <file alias="application-exit.png">../rc/icon/16x16/application-exit.png</file>
     <file alias="fill-color.png">../rc/icon/16x16/fill-color.png</file>
-  </qresource>
-  <qresource prefix="/">
     <file alias="run-build.png">../rc/icon/16x16/run-build.png</file>
     <file alias="list-add.png">../rc/icon/16x16/list-add.png</file>
     <file alias="list-remove.png">../rc/icon/16x16/list-remove.png</file>
+  </qresource>
+  <qresource prefix="/">
+    <file alias="preferences-desktop-theme.png">../rc/icon/32x32/preferences-desktop-theme.png</file>
   </qresource>
   <qresource prefix="/">
     <file alias="simple.vert">../rc/shader/simple.vert</file>
