@@ -15,30 +15,18 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QtGui/QApplication>
-#include <QtCore/QResource>
-#include <iostream>
+#ifndef PROJECTEXCEPTION_HPP
+#define PROJECTEXCEPTION_HPP
 
-#include "GLShaderDev.h"
-#include "Exceptions/GlsdException.hpp"
+#include <string>
 
-int	main(int argc, char** argv)
+#include "GlsdException.hpp"
+
+class ProjectException : public GlsdException
 {
-  int	ret = 0;
+public:
+  ProjectException(const std::string& message) : GlsdException("Project::" + message) {};
+  virtual ~ProjectException() throw() {};
+};
 
-  try
-  {
-    QCoreApplication::setApplicationName("GLShaderDev");
-    QCoreApplication::setApplicationVersion("0.9.1");
-    QCoreApplication::setOrganizationName("Epitech");
-    QApplication app(argc, argv);
-    GLShaderDev ide;
-    ide.show();
-    ret = app.exec();
-  }
-  catch (const GlsdException& e)
-  {
-    std::cerr << "GlsdException caught: " << e.what() << std::endl;
-  }
-  return (ret);
-}
+#endif // PROJECTEXCEPTION_HPP

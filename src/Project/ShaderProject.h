@@ -15,30 +15,29 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QtGui/QApplication>
-#include <QtCore/QResource>
-#include <iostream>
+#ifndef SHADERPROJECT_H
+#define SHADERPROJECT_H
 
-#include "GLShaderDev.h"
-#include "Exceptions/GlsdException.hpp"
+#include <QString>
+#include <map>
 
-int	main(int argc, char** argv)
+#include "GL/Shader/ShaderObject.h"
+
+class ShaderProject
 {
-  int	ret = 0;
+  static const QString ShaderProjectExtension;
+public:
+  explicit ShaderProject(); // NOTE may throw ProjectException
+  ShaderProject(const QString& fileName); // NOTE may throw ProjectException
+  ~ShaderProject();
 
-  try
-  {
-    QCoreApplication::setApplicationName("GLShaderDev");
-    QCoreApplication::setApplicationVersion("0.9.1");
-    QCoreApplication::setOrganizationName("Epitech");
-    QApplication app(argc, argv);
-    GLShaderDev ide;
-    ide.show();
-    ret = app.exec();
-  }
-  catch (const GlsdException& e)
-  {
-    std::cerr << "GlsdException caught: " << e.what() << std::endl;
-  }
-  return (ret);
-}
+public:
+  static QString	parseProjectName(const QString& projectFile);
+
+private:
+  QString					_file;
+  QString					_name;
+  std::map<ShaderObject::ShaderType, QString>	_shaderObjects;
+};
+
+#endif // SHADERPROJECT_H

@@ -23,10 +23,11 @@ set(GLShaderDev_SRCS
   Model/ModelLoader.cpp
   Preferences/PreferencesWidget.cpp
   Preferences/PreferenceListItemDelegate.cpp
-  Preferences/SettingsList.cpp 
-  Preferences/Panels/APreferencePanel.cpp 
-  Preferences/Panels/GeneralPanel.cpp 
-  Preferences/Panels/ShaderExtansionsPanel.cpp 
+  Preferences/SettingsList.cpp
+  Preferences/Panels/APreferencePanel.cpp
+  Preferences/Panels/GeneralPanel.cpp
+  Preferences/Panels/ShaderExtansionsPanel.cpp
+  Project/ShaderProject.cpp
 )
 
 set(MOC_HEADERS

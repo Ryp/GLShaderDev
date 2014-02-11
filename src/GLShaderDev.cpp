@@ -79,7 +79,7 @@ void GLShaderDev::initializeContext()
 void GLShaderDev::initializeActions()
 {
   QSettings	settings;
-  
+
   QMenu* recent;
   QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
   fileMenu->addAction(QIcon(":/document-new.png"), tr("&New..."), _newFileDialog, SLOT(exec()), QKeySequence::New);
