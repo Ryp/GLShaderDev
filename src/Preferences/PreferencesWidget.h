@@ -53,7 +53,8 @@ public slots:
 public:
   enum		PanelList
   {
-    General = 0
+    General = 0,
+    ShaderExtansions
   };
   
 private:

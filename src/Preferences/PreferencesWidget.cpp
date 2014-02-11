@@ -26,11 +26,13 @@
 #include <QPushButton>
 #include <QSettings>
 #include <QVariant>
+#include <QString>
 
 #include "PreferencesWidget.h"
 #include "Dialog/GLInfoDialog.h"
 #include "Preferences/PreferenceListItemDelegate.h"
 #include "Preferences/Panels/GeneralPanel.h"
+#include "Preferences/Panels/ShaderExtansionsPanel.h"
 
 
 PreferencesWidget::PreferencesWidget()
@@ -40,6 +42,7 @@ PreferencesWidget::PreferencesWidget()
   setModal(true);
   
   _panels.push_back(new GeneralPanel(this));
+  _panels.push_back(new ShaderExtansionsPanel(this));
   
   initPreferences();
 
@@ -59,6 +62,7 @@ PreferencesWidget::PreferencesWidget()
   
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
   itemModel->appendRow(_panels.at(General)->getItem());
+  itemModel->appendRow(_panels.at(ShaderExtansions)->getItem());
 
   _listView->setModel(itemModel);
   _listView->setItemDelegate(new PreferenceListItemDelegate(_listView));
@@ -71,6 +75,7 @@ PreferencesWidget::PreferencesWidget()
   menuList->setLayout(menuLayout);
 
   _panel->addWidget(_panels.at(General));
+  _panel->addWidget(_panels.at(ShaderExtansions));
   _panel->setCurrentIndex(0);
   QPalette pal(palette());
   _panel->setAutoFillBackground(true);
@@ -109,6 +114,56 @@ void PreferencesWidget::initPreferences()
   }
  _panels.at(General)->getSettings().setSetting("maxRecentFiles", new QVariant(maxRecentFiles));
  //-->[END]-->GENERAL
+ 
+ //-->[START]-->SHADEREXTANSIONS
+  QString 		vertexShaderPath(settings.value("vertexShaderPath").toString());
+  if (vertexShaderPath.isEmpty())
+  {
+     settings.setValue("vertexShaderPath", QString("nowhere"));
+     vertexShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("vertexShaderPath", new QVariant(vertexShaderPath));
+ 
+  QString 		tesselationControlShaderPath(settings.value("tesselationControlShaderPath").toString());
+  if (tesselationControlShaderPath.isEmpty())
+  {
+     settings.setValue("tesselationControlShaderPath", QString("nowhere"));
+     tesselationControlShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("tesselationControlShaderPath", new QVariant(tesselationControlShaderPath));
+ 
+  QString 		tesselationEvaluationShaderPath(settings.value("tesselationEvaluationShaderPath").toString());
+  if (tesselationEvaluationShaderPath.isEmpty())
+  {
+     settings.setValue("tesselationEvaluationShaderPath", QString("nowhere"));
+     tesselationEvaluationShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("tesselationEvaluationShaderPath", new QVariant(tesselationEvaluationShaderPath));
+ 
+  QString 		geometryShaderPath(settings.value("geometryShaderPath").toString());
+  if (geometryShaderPath.isEmpty())
+  {
+     settings.setValue("geometryShaderPath", QString("nowhere"));
+     geometryShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("geometryShaderPath", new QVariant(geometryShaderPath));
+ 
+  QString 		fragmentShaderPath(settings.value("fragmentShaderPath").toString());
+  if (fragmentShaderPath.isEmpty())
+  {
+     settings.setValue("fragmentShaderPath", QString("nowhere"));
+     fragmentShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("fragmentShaderPath", new QVariant(fragmentShaderPath));
+ 
+  QString 		computeShaderPath(settings.value("computeShaderPath").toString());
+  if (computeShaderPath.isEmpty())
+  {
+     settings.setValue("computeShaderPath", QString("nowhere"));
+     computeShaderPath = QString("nowhere");
+  }
+ _panels.at(ShaderExtansions)->getSettings().setSetting("computeShaderPath", new QVariant(computeShaderPath));
+ //-->[END]-->SHADEREXTANSIONS
  
  //-->ADD HERE OTHERS SETTINGS
  

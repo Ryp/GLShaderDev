@@ -21,6 +21,7 @@
 APreferencePanel::APreferencePanel(PreferencesWidget* parent, const QIcon& icon, const QString& name) : 
   _parent(parent), _layout(new QVBoxLayout), _item(new QStandardItem(icon, name)), _changed(false)
 {
+  _item->setEditable(false);
   setLayout(_layout);
 }
 

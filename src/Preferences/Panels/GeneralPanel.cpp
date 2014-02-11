@@ -25,7 +25,6 @@
 
 GeneralPanel::GeneralPanel(PreferencesWidget* parent): APreferencePanel(parent, QIcon(":/preferences-other.png"), "General")
 {  
-  _item->setEditable(false);
 }
 
 GeneralPanel::~GeneralPanel()
