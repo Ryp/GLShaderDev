@@ -26,7 +26,7 @@ set(GLShaderDev_SRCS
   Preferences/SettingsList.cpp
   Preferences/Panels/APreferencePanel.cpp
   Preferences/Panels/GeneralPanel.cpp
-  Preferences/Panels/ShaderExtansionsPanel.cpp
+  Preferences/Panels/ShaderExtensionsPanel.cpp
   Project/ShaderProject.cpp
 )
 
@@ -47,7 +47,7 @@ set(MOC_HEADERS
   Preferences/PreferenceListItemDelegate.h
   Preferences/Panels/APreferencePanel.h
   Preferences/Panels/GeneralPanel.h
-  Preferences/Panels/ShaderExtansionsPanel.h
+  Preferences/Panels/ShaderExtensionsPanel.h
   GL/GLPreviewWidget.h
 )
 

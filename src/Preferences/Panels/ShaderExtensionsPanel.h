@@ -15,22 +15,22 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADEREXTANSIONSPANEL_H
-#define SHADEREXTANSIONSPANEL_H
+#ifndef SHADEREXTENSIONSPANEL_H
+#define SHADEREXTENSIONSPANEL_H
 
 #include <Preferences/Panels/APreferencePanel.h>
 
-class ShaderExtansionsPanel : public APreferencePanel
+class ShaderExtensionsPanel : public APreferencePanel
 {
 Q_OBJECT
 
 public:
-  ShaderExtansionsPanel(PreferencesWidget*);
-  virtual ~ShaderExtansionsPanel();
+  ShaderExtensionsPanel(PreferencesWidget*);
+  virtual ~ShaderExtensionsPanel();
 
   virtual void init();
   
-public slots:
+public slots:  
   void 		vertexShaderHasChanged(QString);
   void 		tesselationControlShaderHasChanged(QString);
   void 		tesselationEvaluationShaderHasChanged(QString);
@@ -39,4 +39,4 @@ public slots:
   void 		computeShaderHasChanged(QString);
 };
 
-#endif // SHADEREXTANSIONSPANEL_H
+#endif // SHADEREXTENSIONSPANEL_H

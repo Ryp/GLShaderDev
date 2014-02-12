@@ -54,7 +54,7 @@ public:
   enum		PanelList
   {
     General = 0,
-    ShaderExtansions
+    ShaderExtensions
   };
   
 private:
