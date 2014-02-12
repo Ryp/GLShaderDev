@@ -21,6 +21,7 @@
 #include <QSettings>
 
 #include "ShaderExtensionsPanel.h"
+#include "ExtensionValidator.h"
 #include "../PreferencesWidget.h"
 
 ShaderExtensionsPanel::ShaderExtensionsPanel(PreferencesWidget* parent) : APreferencePanel(parent, QIcon(":/preferences-other.png"), "Shader Extansions")
@@ -35,6 +36,8 @@ ShaderExtensionsPanel::~ShaderExtensionsPanel()
 
 void ShaderExtensionsPanel::init()
 {
+  ExtensionValidator*		validator = new ExtensionValidator;
+  
   //->VertexShader
   QHBoxLayout*	vertexShaderLayout = new QHBoxLayout;
   QLabel*	vertexShaderLabel = new QLabel();
@@ -43,6 +46,7 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	vertexShaderEditBox = new QLineEdit;
   vertexShaderEditBox->setText(_settings.getSetting("vertexShaderExt")->toString());
+  vertexShaderEditBox->setValidator(validator);
   vertexShaderLayout->addWidget(vertexShaderEditBox);
   connect(vertexShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(vertexShaderHasChanged(QString)));
   _layout->addLayout(vertexShaderLayout);

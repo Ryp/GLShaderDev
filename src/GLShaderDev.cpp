@@ -87,10 +87,10 @@ void GLShaderDev::initializeActions()
   fileMenu->addAction(QIcon(":/document-open.png"), tr("&Open..."), this, SLOT(openFileDialog()), QKeySequence::Open);
   recent = fileMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
 
-  for (int i = 0; i < settings.value("maxRecentFiles").toInt(); ++i)
+  for (int i = 0; i < MaxRecentFiles; ++i)
     (_recentFileActions[i] = recent->addAction(tr("<Empty>"), this, SLOT(openRecentFile())))->setVisible(true);
-  (_recentFileActions[settings.value("maxRecentFiles").toInt()] = recent->addSeparator())->setVisible(true);
-  (_recentFileActions[settings.value("maxRecentFiles").toInt() + 1] = recent->addAction(tr("&Clear List"), this, SLOT(clearFileRecent())))->setEnabled(false);
+  (_recentFileActions[MaxRecentFiles] = recent->addSeparator())->setVisible(true);
+  (_recentFileActions[MaxRecentFiles + 1] = recent->addAction(tr("&Clear List"), this, SLOT(clearFileRecent())))->setEnabled(false);
   updateRecentFiles();
 
   fileMenu->addSeparator();
@@ -163,9 +163,9 @@ void GLShaderDev::updateRecentFiles()
 {
   QSettings	settings;
   QStringList	recentFiles = settings.value("recentFiles").toStringList();
-  int		listLength = std::min(recentFiles.count(), static_cast<int>(settings.value("maxRecentFiles").toInt()));
+  int		listLength = std::min(recentFiles.count(), static_cast<int>(MaxRecentFiles));
 
-  for (int i = 0; i < settings.value("maxRecentFiles").toInt(); ++i)
+  for (int i = 0; i < MaxRecentFiles; ++i)
   {
     if (i < listLength)
     {
@@ -174,8 +174,8 @@ void GLShaderDev::updateRecentFiles()
     }
     _recentFileActions[i]->setVisible((i < listLength));
   }
-  _recentFileActions[settings.value("maxRecentFiles").toInt()]->setVisible((listLength > 0));
-  _recentFileActions[settings.value("maxRecentFiles").toInt() + 1]->setEnabled((listLength > 0));
+  _recentFileActions[MaxRecentFiles]->setVisible((listLength > 0));
+  _recentFileActions[MaxRecentFiles + 1]->setEnabled((listLength > 0));
 }
 
 void GLShaderDev::addRecentFile(const QString& filename)
@@ -185,7 +185,7 @@ void GLShaderDev::addRecentFile(const QString& filename)
 
   recentFiles.removeAll(filename);
   recentFiles.prepend(filename);
-  while (recentFiles.size() > settings.value("maxRecentFiles").toInt())
+  while (recentFiles.size() > MaxRecentFiles)
     recentFiles.removeLast();
   settings.setValue("recentFiles", recentFiles);
   updateRecentFiles();
