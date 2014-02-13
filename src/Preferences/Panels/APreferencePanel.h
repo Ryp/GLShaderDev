@@ -40,6 +40,7 @@ public:
   bool 			isChanged() const;
   
   void 			refresh();
+  bool 			apply(bool);
   
   virtual void 		init() = 0;
   
@@ -48,6 +49,8 @@ protected:
   QVBoxLayout*		_layout;
   QStandardItem*	_item;
   bool 			_changed;
+  bool 			_valid;
+  QString 		_errorMsg;
   SettingsList		_settings;
 };
 

@@ -15,11 +15,14 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include <QSettings>
+#include <QMessageBox>
+
 #include "APreferencePanel.h"
 #include "../PreferencesWidget.h"
 
 APreferencePanel::APreferencePanel(PreferencesWidget* parent, const QIcon& icon, const QString& name) : 
-  _parent(parent), _layout(new QVBoxLayout), _item(new QStandardItem(icon, name)), _changed(false)
+  _parent(parent), _layout(new QVBoxLayout), _item(new QStandardItem(icon, name)), _changed(false), _valid(true)
 {
   _item->setEditable(false);
   setLayout(_layout);
@@ -57,6 +60,8 @@ bool APreferencePanel::isChanged() const
 void APreferencePanel::refresh()
 {
   _changed = false;
+  _valid = true;
+  _errorMsg = "";
   if ( _layout != NULL )
   {
       QLayoutItem* item;
@@ -67,4 +72,26 @@ void APreferencePanel::refresh()
       }
   }
   init();
+}
+
+bool APreferencePanel::apply(bool condition)
+{
+  QSettings		settings;
+
+  if (!_valid && condition)
+  {
+    QMessageBox::warning(this, tr("Error"), tr(_errorMsg.toStdString().c_str()));
+    return _valid;
+  }
+  
+  for (std::map<QString, QVariant*>::const_iterator i_it = _settings.getList().begin();
+	i_it != _settings.getList().end(); ++i_it)
+	{
+	  if (condition && _valid)
+	    settings.setValue((*i_it).first, *(*i_it).second);
+	  else
+	    _settings.setSetting((*i_it).first, new QVariant(settings.value((*i_it).first)));
+	}
+      
+  return _valid;
 }

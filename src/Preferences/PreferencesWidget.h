@@ -41,7 +41,7 @@ public:
 private:
   void 	initPreferences();
   
-  void 	modifyPreferences(bool);
+  bool 	modifyPreferences(bool);
 
 public slots: 
   void 	onSelectionChanged(QItemSelection);

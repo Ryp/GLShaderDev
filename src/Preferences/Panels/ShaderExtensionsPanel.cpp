@@ -174,10 +174,42 @@ void ShaderExtensionsPanel::computeShaderHasChanged(QString value)
 
 void ShaderExtensionsPanel::duplicatorz()
 {
-  _settings.setSetting("vertexShaderExt", delDuplicate(_settings.getSetting("vertexShaderExt")));
-  _settings.setSetting("tesselationControlShaderExt", delDuplicate(_settings.getSetting("tesselationControlShaderExt")));
-  _settings.setSetting("tesselationEvaluationShaderExt", delDuplicate(_settings.getSetting("tesselationEvaluationShaderExt")));
-  _settings.setSetting("geometryShaderExt", delDuplicate(_settings.getSetting("geometryShaderExt")));
-  _settings.setSetting("fragmentShaderExt", delDuplicate(_settings.getSetting("fragmentShaderExt")));
-  _settings.setSetting("computeShaderExt", delDuplicate(_settings.getSetting("computeShaderExt")));
+  QStringList		boxes = {	"vertexShaderExt",
+					"tesselationControlShaderExt",
+					"tesselationEvaluationShaderExt",
+					"geometryShaderExt",
+					"fragmentShaderExt",
+					"computeShaderExt"
+				};
+				
+  // Remove duplicates from same editBox.
+  for (int i = 0; i < boxes.size(); ++i)
+    _settings.setSetting(boxes[i], delDuplicate(_settings.getSetting(boxes[i])));
+			
+  // Pop errorBox if there is duplicates in different editBoxes.
+  for (int i = 0; i < boxes.size(); ++i)
+  {
+    QString 		current = _settings.getSetting(boxes[i])->toString();
+    QStringList		currentTab = current.split(";");
+    
+    for (int j = 0; j < boxes.size(); ++j)
+    {
+      if (i != j)
+      {
+	QString		inTest = _settings.getSetting(boxes[j])->toString();
+	QStringList	inTab = inTest.split(";");
+	
+	for (int k = 0; k < currentTab.size(); ++k)
+	{
+	  if (inTab.contains(currentTab.at(k)))
+	  {
+	    _valid = false;
+	    _errorMsg = "There is some duplicates. Check your synthax in " + boxes[i] + " and " + boxes[j] + ".";
+	  }
+	}
+      }
+    }
+  }
+  
+
 }

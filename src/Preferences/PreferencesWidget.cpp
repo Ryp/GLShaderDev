@@ -173,26 +173,24 @@ void PreferencesWidget::initPreferences()
   (*it)->init();
 }
 
-void PreferencesWidget::modifyPreferences(bool condition)
+bool PreferencesWidget::modifyPreferences(bool condition)
 {
   QSettings		settings;
 
   for (std::vector<APreferencePanel*>::iterator it = _panels.begin();
   it != _panels.end(); ++it)
       {
+	bool 			retValue = true;
+	
 	if ((*it)->isChanged())
 	{
-	  for (std::map<QString, QVariant*>::const_iterator i_it = (*it)->getSettings().getList().begin();
-		i_it != (*it)->getSettings().getList().end(); ++i_it)
-		{
-		  if (condition)
-		    settings.setValue((*i_it).first, *(*i_it).second);
-		  else
-		    (*it)->getSettings().setSetting((*i_it).first, new QVariant(settings.value((*i_it).first)));
-		}
+	  retValue = (*it)->apply(condition);
+	  if (!retValue && condition)
+	    return false;
 	  (*it)->refresh();
 	}
       }
+  return true;
 }
 
 void PreferencesWidget::onSelectionChanged(QItemSelection item)
@@ -203,9 +201,11 @@ void PreferencesWidget::onSelectionChanged(QItemSelection item)
 
 void PreferencesWidget::accept()
 {
-  modifyPreferences(true);
-  _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
-  QDialog::accept();
+  if (modifyPreferences(true))
+  {
+    _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
+    QDialog::accept();
+  }
 }
 
 void PreferencesWidget::cancel()
@@ -219,8 +219,10 @@ void PreferencesWidget::apply(QAbstractButton* button)
 {
   if (_buttons->standardButton(button) == QDialogButtonBox::Apply)
   {
-    modifyPreferences(true);
-    _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
+    if (modifyPreferences(true))
+    {
+      _buttons->button(QDialogButtonBox::Apply)->setEnabled(false);
+    }
   }
 }
 
