@@ -30,6 +30,9 @@ public:
 
   virtual void init();
   
+private:
+  QVariant*	delDuplicate(QVariant*);
+  
 public slots:  
   void 		vertexShaderHasChanged(QString);
   void 		tesselationControlShaderHasChanged(QString);
@@ -37,6 +40,8 @@ public slots:
   void 		geometryShaderHasChanged(QString);
   void 		fragmentShaderHasChanged(QString);
   void 		computeShaderHasChanged(QString);
+  
+  void		duplicatorz();
 };
 
 #endif // SHADEREXTENSIONSPANEL_H

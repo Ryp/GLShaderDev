@@ -40,16 +40,5 @@ QValidator::State ExtensionValidator::validate(QString& input, int&) const
     if (!_validChars.contains(input.at(i)))
       return QValidator::Invalid;
   }
-  
-  QStringList		splited = input.split(";");
-  splited.removeDuplicates();
-  QString 		newStr;
-  for (int i = 0; i < splited.size(); ++i)
-  {
-    newStr += splited.at(i);
-    if (i + 1 < splited.size())
-      newStr += ";";
-  }
-  input = newStr;
   return QValidator::Acceptable;
 }

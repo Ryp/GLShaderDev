@@ -49,6 +49,7 @@ void ShaderExtensionsPanel::init()
   vertexShaderEditBox->setValidator(validator);
   vertexShaderLayout->addWidget(vertexShaderEditBox);
   connect(vertexShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(vertexShaderHasChanged(QString)));
+  connect(vertexShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(vertexShaderLayout);
   
   //->TesselationControlShader
@@ -59,8 +60,10 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	tesselationControlShaderEditBox = new QLineEdit;
   tesselationControlShaderEditBox->setText(_settings.getSetting("tesselationControlShaderExt")->toString());
+  tesselationControlShaderEditBox->setValidator(validator);
   tesselationControlShaderLayout->addWidget(tesselationControlShaderEditBox);
   connect(tesselationControlShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationControlShaderHasChanged(QString)));
+  connect(tesselationControlShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(tesselationControlShaderLayout);
   
   //->TesselationEvaluationShader
@@ -71,8 +74,10 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	tesselationEvaluationShaderEditBox = new QLineEdit;
   tesselationEvaluationShaderEditBox->setText(_settings.getSetting("tesselationEvaluationShaderExt")->toString());
+  tesselationEvaluationShaderEditBox->setValidator(validator);
   tesselationEvaluationShaderLayout->addWidget(tesselationEvaluationShaderEditBox);
   connect(tesselationEvaluationShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationEvaluationShaderHasChanged(QString)));
+  connect(tesselationEvaluationShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(tesselationEvaluationShaderLayout);
   
   //->GeometryShader
@@ -83,8 +88,10 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	geometryShaderEditBox = new QLineEdit;
   geometryShaderEditBox->setText(_settings.getSetting("geometryShaderExt")->toString());
+  geometryShaderEditBox->setValidator(validator);
   geometryShaderLayout->addWidget(geometryShaderEditBox);
   connect(geometryShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(geometryShaderHasChanged(QString)));
+  connect(geometryShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(geometryShaderLayout);
   
   //->FragmentShader
@@ -95,8 +102,10 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	fragmentShaderPathEditBox = new QLineEdit;
   fragmentShaderPathEditBox->setText(_settings.getSetting("fragmentShaderExt")->toString());
+  fragmentShaderPathEditBox->setValidator(validator);
   fragmentShaderLayout->addWidget(fragmentShaderPathEditBox);
   connect(fragmentShaderPathEditBox, SIGNAL(textEdited(QString)), this, SLOT(fragmentShaderHasChanged(QString)));
+  connect(fragmentShaderPathEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(fragmentShaderLayout);
   
   //->ComputeShader
@@ -107,9 +116,18 @@ void ShaderExtensionsPanel::init()
   
   QLineEdit*	computeShaderEditBox = new QLineEdit;
   computeShaderEditBox->setText(_settings.getSetting("computeShaderExt")->toString());
+  computeShaderEditBox->setValidator(validator);
   computeShaderLayout->addWidget(computeShaderEditBox);
   connect(computeShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(computeShaderHasChanged(QString)));
+  connect(computeShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
   _layout->addLayout(computeShaderLayout);
+}
+
+QVariant* ShaderExtensionsPanel::delDuplicate(QVariant* varToChange)
+{
+  QStringList		splited = varToChange->toString().split(";");
+  splited.removeDuplicates();
+  return new QVariant(splited.join(";"));
 }
 
 void ShaderExtensionsPanel::vertexShaderHasChanged(QString value)
@@ -154,3 +172,12 @@ void ShaderExtensionsPanel::computeShaderHasChanged(QString value)
   _changed = true;
 }
 
+void ShaderExtensionsPanel::duplicatorz()
+{
+  _settings.setSetting("vertexShaderExt", delDuplicate(_settings.getSetting("vertexShaderExt")));
+  _settings.setSetting("tesselationControlShaderExt", delDuplicate(_settings.getSetting("tesselationControlShaderExt")));
+  _settings.setSetting("tesselationEvaluationShaderExt", delDuplicate(_settings.getSetting("tesselationEvaluationShaderExt")));
+  _settings.setSetting("geometryShaderExt", delDuplicate(_settings.getSetting("geometryShaderExt")));
+  _settings.setSetting("fragmentShaderExt", delDuplicate(_settings.getSetting("fragmentShaderExt")));
+  _settings.setSetting("computeShaderExt", delDuplicate(_settings.getSetting("computeShaderExt")));
+}
