@@ -28,13 +28,7 @@ APreferencePanel::APreferencePanel(PreferencesWidget* parent, const QIcon& icon,
   setLayout(_layout);
 }
 
-APreferencePanel::~APreferencePanel()
-{
-  if (_layout)
-    delete (_layout);
-  if (_item)
-    delete (_item);
-}
+APreferencePanel::~APreferencePanel() {}
 
 
 QVBoxLayout* APreferencePanel::getLayout() const
