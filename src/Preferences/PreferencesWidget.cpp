@@ -35,15 +35,16 @@
 #include "Preferences/Panels/ShaderExtensionsPanel.h"
 
 
-PreferencesWidget::PreferencesWidget()
+PreferencesWidget::PreferencesWidget(QWidget* parent)
+: QDialog(parent)
 {
   setWindowIcon(QIcon(":/preferences-other.png"));
   setWindowTitle("Preferences");
   setModal(true);
-  
+
   _panels.push_back(new GeneralPanel(this));
   _panels.push_back(new ShaderExtensionsPanel(this));
-  
+
   initPreferences();
 
   _buttons = new QDialogButtonBox(QDialogButtonBox::Close | QDialogButtonBox::Ok | QDialogButtonBox::Apply);
@@ -59,7 +60,7 @@ PreferencesWidget::PreferencesWidget()
   _listView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
   _panel = new QStackedWidget;
-  
+
   QStandardItemModel*	itemModel = new QStandardItemModel(_listView);
   itemModel->appendRow(_panels.at(General)->getItem());
   itemModel->appendRow(_panels.at(ShaderExtensions)->getItem());
@@ -104,7 +105,7 @@ void PreferencesWidget::enableApply()
 void PreferencesWidget::initPreferences()
 {
   QSettings 		settings;
-  
+
   //-->[START]-->GENERAL
   int 			maxRecentFiles = settings.value("maxRecentFiles").toInt();
   if (maxRecentFiles == 0)
@@ -114,7 +115,7 @@ void PreferencesWidget::initPreferences()
   }
  _panels.at(General)->getSettings().setSetting("maxRecentFiles", new QVariant(maxRecentFiles));
  //-->[END]-->GENERAL
- 
+
  //-->[START]-->SHADEREXTANSIONS
   QString 		vertexShaderExt(settings.value("vertexShaderExt").toString());
   if (vertexShaderExt.isEmpty())
@@ -123,7 +124,7 @@ void PreferencesWidget::initPreferences()
      vertexShaderExt = QString("nowhere");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("vertexShaderExt", new QVariant(vertexShaderExt));
- 
+
   QString 		tesselationControlShaderExt(settings.value("tesselationControlShaderExt").toString());
   if (tesselationControlShaderExt.isEmpty())
   {
@@ -131,7 +132,7 @@ void PreferencesWidget::initPreferences()
      tesselationControlShaderExt = QString("nowhere");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("tesselationControlShaderExt", new QVariant(tesselationControlShaderExt));
- 
+
   QString 		tesselationEvaluationShaderExt(settings.value("tesselationEvaluationShaderExt").toString());
   if (tesselationEvaluationShaderExt.isEmpty())
   {
@@ -139,7 +140,7 @@ void PreferencesWidget::initPreferences()
      tesselationEvaluationShaderExt = QString("nowhere");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("tesselationEvaluationShaderExt", new QVariant(tesselationEvaluationShaderExt));
- 
+
   QString 		geometryShaderExt(settings.value("geometryShaderExt").toString());
   if (geometryShaderExt.isEmpty())
   {
@@ -147,7 +148,7 @@ void PreferencesWidget::initPreferences()
      geometryShaderExt = QString("nowhere");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("geometryShaderExt", new QVariant(geometryShaderExt));
- 
+
   QString 		fragmentShaderExt(settings.value("fragmentShaderExt").toString());
   if (fragmentShaderExt.isEmpty())
   {
@@ -155,7 +156,7 @@ void PreferencesWidget::initPreferences()
      fragmentShaderExt = QString("nowhere");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("fragmentShaderExt", new QVariant(fragmentShaderExt));
- 
+
   QString 		computeShaderExt(settings.value("computeShaderExt").toString());
   if (computeShaderExt.isEmpty())
   {
@@ -164,9 +165,9 @@ void PreferencesWidget::initPreferences()
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("computeShaderExt", new QVariant(computeShaderExt));
  //-->[END]-->SHADEREXTANSIONS
- 
+
  //-->ADD HERE OTHERS SETTINGS
- 
+
  //--> INIT OF ALL SETTING FOR PREFERENCES
  for (std::vector<APreferencePanel*>::iterator it = _panels.begin();
       it != _panels.end(); ++it)
@@ -181,7 +182,7 @@ bool PreferencesWidget::modifyPreferences(bool condition)
   it != _panels.end(); ++it)
       {
 	bool 			retValue = true;
-	
+
 	if ((*it)->isChanged())
 	{
 	  retValue = (*it)->apply(condition);

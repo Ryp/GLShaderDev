@@ -20,7 +20,6 @@
 
 #include <QMainWindow>
 #include "GL/GLInfo.h"
-#include "Preferences/PreferencesWidget.h"
 
 class GLPreviewWidget;
 class GLInfoDialog;
@@ -30,6 +29,7 @@ class OpenGLWidget;
 class NewFileDialog;
 class BuildOutput;
 class CodeEditor;
+class PreferencesWidget;
 
 class GLShaderDev : public QMainWindow
 {
@@ -65,7 +65,7 @@ public slots:
 
   void	initGLInfo();
   void	showGLInfo();
-  
+
   void 	showPreferences();
 
   void	about();
@@ -84,8 +84,8 @@ private:
   ShaderInputView*	_shaderInput;
   NewFileDialog*	_newFileDialog;
   QAction*		_recentFileActions[MaxRecentFiles + 2];
+  PreferencesWidget*	_preferencesWidget;
   GLInfo		_glInfo;
-  PreferencesWidget	_preferencesWidget;
 };
 
 #endif // GLSHADERDEV_H

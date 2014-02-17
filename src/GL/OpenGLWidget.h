@@ -49,6 +49,7 @@ public:
   void		resetTime();
 
 public slots:
+//   void	setRealtime(bool enable);
   void	changeBackgroundColor(const QColor& color);
 
 public:

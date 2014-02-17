@@ -24,6 +24,8 @@
 #include <QtGui/QFileDialog>
 #include <QMessageBox>
 
+#include <QPushButton> // FIXME DEBUG
+
 #include "OpenGLWidget.h"
 #include "GLPreviewWidget.h"
 
@@ -33,12 +35,18 @@ GLPreviewWidget::GLPreviewWidget(const QGLFormat& format, QWidget* parent)
 {
   QGridLayout*	layout = new QGridLayout;
   QToolBar*	toolbar = new QToolBar;
+  QPushButton*	bt = new QPushButton(tr("Refresh"));
+
+  bt->setCheckable(true);
 
   toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
   toolbar->setIconSize(QSize(16, 16));
   toolbar->addAction(QIcon(":/preferences-desktop-screensaver.png"), tr("&Take Screenshot"), this, SLOT(takeScreenshot()));
   toolbar->addAction(QIcon(":/fill-color.png"), tr("&Background color"), this, SLOT(backgroundColorButtonClicked()));
   toolbar->addSeparator();
+
+  toolbar->addWidget(bt);
+
 
   layout->addWidget(_glWigdet);
   layout->addWidget(toolbar);
@@ -70,10 +78,10 @@ void GLPreviewWidget::takeScreenshot() // FIXME Open FileDialog
   QFileDialog	dialogFile(this);
   dialogFile.setDefaultSuffix("png");
   QString fileName = dialogFile.getSaveFileName(this, QString::fromUtf8("Save Screenshot"), tr("screenshot.png"), tr(".png"));
-  
+
   if (fileName.isEmpty())
     return;
-  
+
   if (!img.save(fileName))
   {
     QMessageBox::warning(this, tr("Error"), tr("Failed to save: ") + fileName);

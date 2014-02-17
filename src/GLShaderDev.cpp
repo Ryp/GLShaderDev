@@ -40,12 +40,14 @@
 #include "Build/OutputModel.h"
 #include "GL/Shader/ShaderProgram.h"
 #include "GL/GLPreviewWidget.h"
+#include "Preferences/PreferencesWidget.h"
 
 GLShaderDev::GLShaderDev()
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this)),
   _glInfoDialog(0),
-  _newFileDialog(new NewFileDialog(this))
+  _newFileDialog(new NewFileDialog(this)),
+  _preferencesWidget(new PreferencesWidget(this))
 {
   resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
   setWindowIcon(QIcon(":/glsd-icon.png"));
@@ -335,7 +337,7 @@ void GLShaderDev::showGLInfo()
 
 void GLShaderDev::showPreferences()
 {
-    _preferencesWidget.show();
+  _preferencesWidget->show();
 }
 
 void GLShaderDev::about()

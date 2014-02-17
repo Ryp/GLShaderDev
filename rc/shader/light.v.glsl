@@ -12,7 +12,12 @@ uniform mat4 MVP;
 
 void main(void)
 {
-  gl_Position = MVP * vec4(vertex, 1.0);
+	mat4	mat;
+	mat[0] = vec4(1.0, 0.0, 0.0, 0.0);
+	mat[1] = vec4(0.0, 1.0, 0.0, 0.0);
+	mat[2] = vec4(0.0, 0.0, 1.0, 0.0);
+	mat[3] = vec4(0.0, 0.0, 0.0, 1.0);
+  gl_Position = MVP * mat * vec4(vertex, 1.0);
 	
 	d = abs(gl_Position);
   d = d / 20;

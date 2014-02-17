@@ -33,34 +33,34 @@ class PreferencesWidget : public QDialog
 {
   Q_OBJECT
 public:
-  PreferencesWidget();
+  PreferencesWidget(QWidget* parent = 0);
   ~PreferencesWidget();
-  
+
   void 	enableApply();
-  
+
 private:
   void 	initPreferences();
-  
+
   bool 	modifyPreferences(bool);
 
-public slots: 
+public slots:
   void 	onSelectionChanged(QItemSelection);
-  
+
   void 	accept();
   void 	cancel();
   void 	apply(QAbstractButton*);
-  
+
 public:
   enum		PanelList
   {
     General = 0,
     ShaderExtensions
   };
-  
+
 private:
   QListView*				_listView;
   QStackedWidget*			_panel;
-  std::vector<APreferencePanel*>	_panels;	
+  std::vector<APreferencePanel*>	_panels;
   QDialogButtonBox*			_buttons;
 };
 
