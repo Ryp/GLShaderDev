@@ -26,7 +26,12 @@
 
 ShaderExtensionsPanel::ShaderExtensionsPanel(PreferencesWidget* parent) : APreferencePanel(parent, QIcon(":/preferences-other.png"), "Shader Extansions")
 {
-
+  _labels["vertexShaderExt"] = "VertexShader";
+  _labels["tesselationControlShaderExt"] = "TesselationControlShader";
+  _labels["tesselationEvaluationShaderExt"] = "TesselationEvaluationShader";
+  _labels["geometryShaderExt"] = "GeometryShader";
+  _labels["fragmentShaderExt"] = "FragmentShader";
+  _labels["computeShaderExt"] = "ComputeShader";
 }
 
 ShaderExtensionsPanel::~ShaderExtensionsPanel()
@@ -38,89 +43,32 @@ void ShaderExtensionsPanel::init()
 {
   ExtensionValidator*		validator = new ExtensionValidator;
   
-  //->VertexShader
-  QHBoxLayout*	vertexShaderLayout = new QHBoxLayout;
-  QLabel*	vertexShaderLabel = new QLabel();
-  vertexShaderLabel->setText("VertexShader extension :   *.");
-  vertexShaderLayout->addWidget(vertexShaderLabel);
-  
-  QLineEdit*	vertexShaderEditBox = new QLineEdit;
-  vertexShaderEditBox->setText(_settings.getSetting("vertexShaderExt")->toString());
-  vertexShaderEditBox->setValidator(validator);
-  vertexShaderLayout->addWidget(vertexShaderEditBox);
-  connect(vertexShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(vertexShaderHasChanged(QString)));
-  connect(vertexShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(vertexShaderLayout);
-  
-  //->TesselationControlShader
-  QHBoxLayout*	tesselationControlShaderLayout = new QHBoxLayout;
-  QLabel*	tesselationControlShaderLabel = new QLabel();
-  tesselationControlShaderLabel->setText("TesselationControlShader extension :   *.");
-  tesselationControlShaderLayout->addWidget(tesselationControlShaderLabel);
-  
-  QLineEdit*	tesselationControlShaderEditBox = new QLineEdit;
-  tesselationControlShaderEditBox->setText(_settings.getSetting("tesselationControlShaderExt")->toString());
-  tesselationControlShaderEditBox->setValidator(validator);
-  tesselationControlShaderLayout->addWidget(tesselationControlShaderEditBox);
-  connect(tesselationControlShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationControlShaderHasChanged(QString)));
-  connect(tesselationControlShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(tesselationControlShaderLayout);
-  
-  //->TesselationEvaluationShader
-  QHBoxLayout*	tesselationEvaluationShaderLayout = new QHBoxLayout;
-  QLabel*	tesselationEvaluationShaderLabel = new QLabel();
-  tesselationEvaluationShaderLabel->setText("TesselationEvaluationShader extension :   *.");
-  tesselationEvaluationShaderLayout->addWidget(tesselationEvaluationShaderLabel);
-  
-  QLineEdit*	tesselationEvaluationShaderEditBox = new QLineEdit;
-  tesselationEvaluationShaderEditBox->setText(_settings.getSetting("tesselationEvaluationShaderExt")->toString());
-  tesselationEvaluationShaderEditBox->setValidator(validator);
-  tesselationEvaluationShaderLayout->addWidget(tesselationEvaluationShaderEditBox);
-  connect(tesselationEvaluationShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationEvaluationShaderHasChanged(QString)));
-  connect(tesselationEvaluationShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(tesselationEvaluationShaderLayout);
-  
-  //->GeometryShader
-  QHBoxLayout*	geometryShaderLayout = new QHBoxLayout;
-  QLabel*	geometryShaderLabel = new QLabel();
-  geometryShaderLabel->setText("GeometryShader extension :   *.");
-  geometryShaderLayout->addWidget(geometryShaderLabel);
-  
-  QLineEdit*	geometryShaderEditBox = new QLineEdit;
-  geometryShaderEditBox->setText(_settings.getSetting("geometryShaderExt")->toString());
-  geometryShaderEditBox->setValidator(validator);
-  geometryShaderLayout->addWidget(geometryShaderEditBox);
-  connect(geometryShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(geometryShaderHasChanged(QString)));
-  connect(geometryShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(geometryShaderLayout);
-  
-  //->FragmentShader
-  QHBoxLayout*	fragmentShaderLayout = new QHBoxLayout;
-  QLabel*	fragmentShaderPathLabel = new QLabel();
-  fragmentShaderPathLabel->setText("FragmentShader extension :   *.");
-  fragmentShaderLayout->addWidget(fragmentShaderPathLabel);
-  
-  QLineEdit*	fragmentShaderPathEditBox = new QLineEdit;
-  fragmentShaderPathEditBox->setText(_settings.getSetting("fragmentShaderExt")->toString());
-  fragmentShaderPathEditBox->setValidator(validator);
-  fragmentShaderLayout->addWidget(fragmentShaderPathEditBox);
-  connect(fragmentShaderPathEditBox, SIGNAL(textEdited(QString)), this, SLOT(fragmentShaderHasChanged(QString)));
-  connect(fragmentShaderPathEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(fragmentShaderLayout);
-  
-  //->ComputeShader
-  QHBoxLayout*	computeShaderLayout = new QHBoxLayout;
-  QLabel*	computeShaderLabel = new QLabel();
-  computeShaderLabel->setText("ComputeShader extension :   *.");
-  computeShaderLayout->addWidget(computeShaderLabel);
-  
-  QLineEdit*	computeShaderEditBox = new QLineEdit;
-  computeShaderEditBox->setText(_settings.getSetting("computeShaderExt")->toString());
-  computeShaderEditBox->setValidator(validator);
-  computeShaderLayout->addWidget(computeShaderEditBox);
-  connect(computeShaderEditBox, SIGNAL(textEdited(QString)), this, SLOT(computeShaderHasChanged(QString)));
-  connect(computeShaderEditBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
-  _layout->addLayout(computeShaderLayout);
+  for (QHash<QString, QString>::iterator it = _labels.begin(); it != _labels.end(); ++it)
+  {
+    QHBoxLayout*	layout = new QHBoxLayout;
+    QLabel*		label = new QLabel();
+    label->setText(it.value() + " extension :   *.");
+    layout->addWidget(label);
+    
+    QLineEdit*		editBox = new QLineEdit;
+    editBox->setText(_settings.getSetting(it.key())->toString());
+    editBox->setValidator(validator);
+    layout->addWidget(editBox);
+    if (it.key() == "vertexShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(vertexShaderHasChanged(QString)));
+    else if (it.key() == "tesselationControlShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationControlShaderHasChanged(QString)));
+    else if (it.key() == "tesselationEvaluationShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(tesselationEvaluationShaderHasChanged(QString)));
+    else if (it.key() == "geometryShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(geometryShaderHasChanged(QString)));
+    else if (it.key() == "fragmentShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(fragmentShaderHasChanged(QString)));
+    else if (it.key() == "computeShaderExt")
+      connect(editBox, SIGNAL(textEdited(QString)), this, SLOT(computeShaderHasChanged(QString)));
+    connect(editBox, SIGNAL(editingFinished()), this, SLOT(duplicatorz()));
+    _layout->addLayout(layout);
+  }
 }
 
 QVariant* ShaderExtensionsPanel::delDuplicate(QVariant* varToChange)
@@ -204,12 +152,10 @@ void ShaderExtensionsPanel::duplicatorz()
 	  if (inTab.contains(currentTab.at(k)))
 	  {
 	    _valid = false;
-	    _errorMsg = "There is some duplicates. Check your synthax in " + boxes[i] + " and " + boxes[j] + ".";
+	    _errorMsg = "There is some duplicates. Check your synthax in " + _labels[boxes[i]] + " and " +_labels[boxes[j]] + ".";
 	  }
 	}
       }
     }
   }
-  
-
 }

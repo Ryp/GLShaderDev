@@ -75,7 +75,8 @@ bool APreferencePanel::apply(bool condition)
   if (!_valid && condition)
   {
     QMessageBox::warning(this, tr("Error"), tr(_errorMsg.toStdString().c_str()));
-    return _valid;
+    _valid = true;
+    return false;
   }
   
   for (std::map<QString, QVariant*>::const_iterator i_it = _settings.getList().begin();

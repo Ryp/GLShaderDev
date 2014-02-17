@@ -18,6 +18,8 @@
 #ifndef SHADEREXTENSIONSPANEL_H
 #define SHADEREXTENSIONSPANEL_H
 
+#include <QHash>
+
 #include <Preferences/Panels/APreferencePanel.h>
 
 class ShaderExtensionsPanel : public APreferencePanel
@@ -42,6 +44,9 @@ public slots:
   void 		computeShaderHasChanged(QString);
   
   void		duplicatorz();
+  
+private:
+  QHash<QString, QString>	_labels;
 };
 
 #endif // SHADEREXTENSIONSPANEL_H

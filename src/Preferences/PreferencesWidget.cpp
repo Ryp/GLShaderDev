@@ -121,31 +121,31 @@ void PreferencesWidget::initPreferences()
   if (vertexShaderExt.isEmpty())
   {
      settings.setValue("vertexShaderExt", QString("vert"));
-     vertexShaderExt = QString("nowhere");
+     vertexShaderExt = QString("vert");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("vertexShaderExt", new QVariant(vertexShaderExt));
 
   QString 		tesselationControlShaderExt(settings.value("tesselationControlShaderExt").toString());
   if (tesselationControlShaderExt.isEmpty())
   {
-     settings.setValue("tesselationControlShaderExt", QString("control"));
-     tesselationControlShaderExt = QString("nowhere");
+     settings.setValue("tesselationControlShaderExt", QString("tc"));
+     tesselationControlShaderExt = QString("tc");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("tesselationControlShaderExt", new QVariant(tesselationControlShaderExt));
 
   QString 		tesselationEvaluationShaderExt(settings.value("tesselationEvaluationShaderExt").toString());
   if (tesselationEvaluationShaderExt.isEmpty())
   {
-     settings.setValue("tesselationEvaluationShaderExt", QString("eval"));
-     tesselationEvaluationShaderExt = QString("nowhere");
+     settings.setValue("tesselationEvaluationShaderExt", QString("te"));
+     tesselationEvaluationShaderExt = QString("te");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("tesselationEvaluationShaderExt", new QVariant(tesselationEvaluationShaderExt));
 
   QString 		geometryShaderExt(settings.value("geometryShaderExt").toString());
   if (geometryShaderExt.isEmpty())
   {
-     settings.setValue("geometryShaderExt", QString("geo"));
-     geometryShaderExt = QString("nowhere");
+     settings.setValue("geometryShaderExt", QString("geom"));
+     geometryShaderExt = QString("geom");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("geometryShaderExt", new QVariant(geometryShaderExt));
 
@@ -153,15 +153,15 @@ void PreferencesWidget::initPreferences()
   if (fragmentShaderExt.isEmpty())
   {
      settings.setValue("fragmentShaderExt", QString("frag"));
-     fragmentShaderExt = QString("nowhere");
+     fragmentShaderExt = QString("frag");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("fragmentShaderExt", new QVariant(fragmentShaderExt));
 
   QString 		computeShaderExt(settings.value("computeShaderExt").toString());
   if (computeShaderExt.isEmpty())
   {
-     settings.setValue("computeShaderExt", QString("comp"));
-     computeShaderExt = QString("nowhere");
+     settings.setValue("computeShaderExt", QString("cs"));
+     computeShaderExt = QString("cs");
   }
  _panels.at(ShaderExtensions)->getSettings().setSetting("computeShaderExt", new QVariant(computeShaderExt));
  //-->[END]-->SHADEREXTANSIONS
