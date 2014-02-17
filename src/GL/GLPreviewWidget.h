@@ -21,6 +21,10 @@
 #include <QWidget>
 #include <QGLWidget>
 
+QT_BEGIN_NAMESPACE
+class QAction;
+QT_END_NAMESPACE
+
 class OpenGLWidget;
 
 class GLPreviewWidget : public QWidget
@@ -36,9 +40,11 @@ public:
 public slots:
   void	backgroundColorButtonClicked();
   void	takeScreenshot();
+  void	changeAutoRefresh();
 
 private:
   OpenGLWidget*	_glWigdet;
+  QAction*	_refreshAction;
 };
 
 #endif // GLPREVIEWWIDGET_H

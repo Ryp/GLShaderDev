@@ -19,6 +19,7 @@
 #include <QWheelEvent>
 #include <QFileDialog>
 #include <QDebug>
+#include <QTimer>
 
 #include <gli/core/load_dds.hpp>
 #include <gli/gli.hpp>
@@ -42,6 +43,8 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
 : QGLWidget(fmt, parent),
   _viewportSize(size().width(), size().height()),
   _shader(0),
+  _refreshTimer(new QTimer(this)),
+  _autoRefresh(false), // FIXME Get this param from project
   _fov(DefaultFov),
   _ModelMatrix(glm::mat4(1.0f)),
   _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
@@ -51,8 +54,12 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
   _isDraggingMouse(false)
 {
   updateProjectionMatrix();
-  _clock.start();
-  setMinimumHeight(200);
+
+  _time.start();
+  _refreshTimer->setInterval(16); // FIXME
+  connect(_refreshTimer, SIGNAL(timeout()), this, SLOT(updateGL()));
+
+  setMinimumHeight(200); // FIXME
   setMinimumWidth(200);
 }
 
@@ -69,14 +76,19 @@ const QColor& OpenGLWidget::getBgrColor() const
   return (_bgrColor);
 }
 
-int OpenGLWidget::getTime() const
-{
-  return (_clock.elapsed());
-}
-
 void OpenGLWidget::resetTime()
 {
-  _clock.start();
+  _time.restart();
+}
+
+void OpenGLWidget::setAutoRefresh(bool enabled)
+{
+  _autoRefresh = enabled;
+
+  if (_autoRefresh)
+    _refreshTimer->start();
+  else
+    _refreshTimer->stop();
 }
 
 void OpenGLWidget::changeBackgroundColor(const QColor& color)
@@ -94,13 +106,54 @@ void OpenGLWidget::changeBackgroundColor(const QColor& color)
   updateGL();
 }
 
+void	OpenGLWidget::paintGL()
+{
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+  if (!_shader)
+    return;
+
+  _shader->bind();
+  GLuint vertexLocation = _shader->getAttribLocation("vertex");
+  GLuint normalLocation = _shader->getAttribLocation("normal");
+  GLuint uvLocation = _shader->getAttribLocation("uv");
+
+  glUniformMatrix4fv(_shader->getUniformLocation("MVP"), 1, GL_FALSE, &_MVP[0][0]);
+
+  if (_autoRefresh)
+    glUniform1f(_shader->getUniformLocation("time"), static_cast<GLfloat>(_time.elapsed()) / 1000.0f);
+
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, _textureHandle);
+  glUniform1i(_shader->getUniformLocation("texture"), 0);
+
+  glEnableVertexAttribArray(vertexLocation);
+  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
+  glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+  glEnableVertexAttribArray(normalLocation);
+  glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
+  glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+  glEnableVertexAttribArray(uvLocation);
+  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
+  glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+  glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
+
+  glDisableVertexAttribArray(vertexLocation);
+  glDisableVertexAttribArray(normalLocation);
+  glDisableVertexAttribArray(uvLocation);
+}
+
 void	OpenGLWidget::initializeGL()
 {
   if (glewInit() != GLEW_OK)
     throw (GlsdException("glewInit() failed"));
 
   glEnable(GL_DEPTH_TEST);
-//   glEnable(GL_CULL_FACE);
+  //   glEnable(GL_CULL_FACE);
   glDepthFunc(GL_LESS);
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -159,43 +212,6 @@ void	OpenGLWidget::initializeGL()
   }
 
   emit glInitialized();
-}
-
-void	OpenGLWidget::paintGL()
-{
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  if (!_shader)
-    return;
-
-  _shader->bind();
-  GLuint vertexLocation = _shader->getAttribLocation("vertex");
-  GLuint normalLocation = _shader->getAttribLocation("normal");
-  GLuint uvLocation = _shader->getAttribLocation("uv");
-
-  glUniformMatrix4fv(_shader->getUniformLocation("MVP"), 1, GL_FALSE, &_MVP[0][0]);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, _textureHandle);
-  glUniform1i(_shader->getUniformLocation("texture"), 0);
-
-  glEnableVertexAttribArray(vertexLocation);
-  glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
-  glVertexAttribPointer(vertexLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  glEnableVertexAttribArray(normalLocation);
-  glBindBuffer(GL_ARRAY_BUFFER, _normalBuffer);
-  glVertexAttribPointer(normalLocation, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  glEnableVertexAttribArray(uvLocation);
-  glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
-  glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
-
-  glDisableVertexAttribArray(vertexLocation);
-  glDisableVertexAttribArray(normalLocation);
-  glDisableVertexAttribArray(uvLocation);
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)

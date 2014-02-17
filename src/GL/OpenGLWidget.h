@@ -24,6 +24,11 @@
 #include <QGLWidget>
 #include <QTime>
 
+QT_BEGIN_NAMESPACE
+class QTimer;
+class QTime;
+QT_END_NAMESPACE
+
 class ShaderProgram;
 
 class OpenGLWidget : public QGLWidget
@@ -45,14 +50,11 @@ public:
 public:
   void		setShader(ShaderProgram* prgm);
   const QColor&	getBgrColor() const;
-  int		getTime() const;
   void		resetTime();
+  void		setAutoRefresh(bool enabled);
 
 public slots:
-//   void	setRealtime(bool enable);
   void	changeBackgroundColor(const QColor& color);
-
-public:
   void	paintGL();
 
 protected:
@@ -77,7 +79,9 @@ private:
   GLuint		_normalBuffer;
   GLuint		_uvBuffer;
   GLuint		_textureHandle;
-  QTime			_clock;
+  QTimer*		_refreshTimer;
+  QTime			_time;
+  bool			_autoRefresh;
   QColor		_bgrColor;
   Model*		_model; // FIXME debug
   float			_fov;
