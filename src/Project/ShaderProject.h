@@ -18,26 +18,41 @@
 #ifndef SHADERPROJECT_H
 #define SHADERPROJECT_H
 
-#include <QString>
 #include <map>
+
+#include <QString>
+#include <QStringList>
 
 #include "GL/Shader/ShaderObject.h"
 
 class ShaderProject
 {
-  static const QString ShaderProjectExtension;
+  static const QString	ShaderProjectExtension;
+  static const QString	StageSeparator;
 public:
   explicit ShaderProject(); // NOTE may throw ProjectException
   ShaderProject(const QString& fileName); // NOTE may throw ProjectException
   ~ShaderProject();
 
 public:
-  static QString	parseProjectName(const QString& projectFile);
+  typedef std::map<ShaderObject::ShaderType, QString> Stages;
+
+public:
+  const QString&	getName() const;
+  const QString&	getProjectFile() const;
+  const Stages&		getStages() const;
+  bool			isValid() const;
+  void			addShaderObject(ShaderObject::ShaderType type, const QString& filename);
+  void			delShaderObject(ShaderObject::ShaderType type);
+  void			close();
 
 private:
-  QString					_file;
-  QString					_name;
-  std::map<ShaderObject::ShaderType, QString>	_shaderObjects;
+  void	loadStages(const QStringList& stages);
+
+private:
+  QString	_file;
+  QString	_name;
+  Stages	_shaderObjects;
 };
 
 #endif // SHADERPROJECT_H

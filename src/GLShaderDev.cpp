@@ -16,6 +16,7 @@
  */
 
 #include <iostream> // FIXME
+
 #include <QSettings>
 #include <QApplication>
 #include <QMenu>
@@ -35,6 +36,7 @@
 #include "Dialog/GLInfoDialog.h"
 #include "ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
+#include "Exceptions/ProjectException.hpp"
 #include "ShaderInputView.h"
 #include "Build/OutputParser.h"
 #include "Build/OutputModel.h"
@@ -57,8 +59,7 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openFile(QFile("../rc/shader/light.v.glsl").fileName()); // FIXME Debug only
-  openFile(QFile("../rc/shader/light.f.glsl").fileName()); // FIXME Debug only
+  openProject("../rc/shader/light.glsd"); // FIXME
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -107,10 +108,15 @@ void GLShaderDev::initializeActions()
 
   QMenu* projectMenu = menuBar()->addMenu(tr("&Project"));
   projectMenu->addAction(QIcon(":/project-development-new-template.png"), tr("&New Project"), this, SLOT(newProject()));
-  projectMenu->addAction(QIcon(":/project-open.png"), tr("&Open Project..."), this, SLOT(openProject()));
+  projectMenu->addAction(QIcon(":/project-open.png"), tr("&Open Project..."), this, SLOT(openProjectDialog()));
   recent = projectMenu->addMenu(QIcon(":/document-open-recent.png"), tr("Open &Recent"));
-  QAction* clearProjectRecentAction = recent->addAction(tr("&Clear List"), this, SLOT(clearProjectRecent()));
-  clearProjectRecentAction->setEnabled(false);
+
+  for (int i = 0; i < MaxRecentProjects; ++i)
+    (_recentProjectActions[i] = recent->addAction(tr("<Empty>"), this, SLOT(openRecentProject())))->setVisible(true);
+  (_recentProjectActions[MaxRecentProjects] = recent->addSeparator())->setVisible(true);
+  (_recentProjectActions[MaxRecentProjects + 1] = recent->addAction(tr("&Clear List"), this, SLOT(clearProjectRecent())))->setEnabled(false);
+  updateRecentProjects();
+
   projectMenu->addSeparator();
   projectMenu->addAction(QIcon(":/run-build.png"), tr("&Build Current"), this, SLOT(buildCurrentProject()), tr("F8"));
   projectMenu->addSeparator();
@@ -180,6 +186,25 @@ void GLShaderDev::updateRecentFiles()
   _recentFileActions[MaxRecentFiles + 1]->setEnabled((listLength > 0));
 }
 
+void GLShaderDev::updateRecentProjects()
+{
+  QSettings	settings;
+  QStringList	recentProjects = settings.value("recentProjects").toStringList();
+  int		listLength = std::min(recentProjects.count(), static_cast<int>(MaxRecentProjects));
+
+  for (int i = 0; i < MaxRecentProjects; ++i)
+  {
+    if (i < listLength)
+    {
+      _recentProjectActions[i]->setText(tr("&%1 %2 [%3]").arg(i + 1).arg(QFileInfo(recentProjects[i]).fileName()).arg(recentProjects[i]));
+      _recentProjectActions[i]->setData(recentProjects[i]);
+    }
+    _recentProjectActions[i]->setVisible((i < listLength));
+  }
+  _recentProjectActions[MaxRecentProjects]->setVisible((listLength > 0));
+  _recentProjectActions[MaxRecentProjects + 1]->setEnabled((listLength > 0));
+}
+
 void GLShaderDev::addRecentFile(const QString& filename)
 {
   QSettings	settings;
@@ -193,6 +218,19 @@ void GLShaderDev::addRecentFile(const QString& filename)
   updateRecentFiles();
 }
 
+void GLShaderDev::addRecentProject(const QString& filename)
+{
+  QSettings	settings;
+  QStringList	recentProjects = settings.value("recentProjects").toStringList();
+
+  recentProjects.removeAll(filename);
+  recentProjects.prepend(filename);
+  while (recentProjects.size() > MaxRecentProjects)
+    recentProjects.removeLast();
+  settings.setValue("recentProjects", recentProjects);
+  updateRecentProjects();
+}
+
 void GLShaderDev::openFile(const QString& filename)
 {
   if (filename.isEmpty())
@@ -204,11 +242,39 @@ void GLShaderDev::openFile(const QString& filename)
     addRecentFile(file.absoluteFilePath());
 }
 
+void GLShaderDev::openProject(const QString& filename)
+{
+  if (filename.isEmpty())
+    return;
+
+  QFileInfo	proj(filename);
+
+  try
+  {
+    _projectManager.openProject(proj.absoluteFilePath());
+    openProjectFiles(_projectManager.getCurrentProject());
+    addRecentProject(proj.absoluteFilePath());
+  }
+  catch (const ProjectException& e)
+  {
+    QMessageBox::warning(this, tr("Error"), e.what());
+  }
+}
+
+void GLShaderDev::openProjectFiles(ShaderProject* project)
+{
+  const ShaderProject::Stages& stages = project->getStages();
+
+  for (ShaderProject::Stages::const_iterator it = stages.begin(); it != stages.end(); ++it)
+    openFile(it->second);
+}
+
 void GLShaderDev::closeEvent(QCloseEvent* event)
 {
   static_cast<void>(event);
   // TODO Save opened tabs for next execution
   _editor->closeAllTabs();
+  _projectManager.closeAll();
   std::cout << "Closing app..." << std::endl; // TODO
 }
 
@@ -217,14 +283,25 @@ void GLShaderDev::newProject()
   std::cout << "newProject() not implemented yet" << std::endl; // TODO
 }
 
-void GLShaderDev::openProject()
+void GLShaderDev::openProjectDialog()
 {
-  std::cout << "newProject() not implemented yet" << std::endl; // TODO
+  openProject(QFileDialog::getOpenFileName());
+}
+
+void GLShaderDev::openRecentProject()
+{
+  QAction*	action = qobject_cast<QAction*>(sender());
+
+  if (action)
+    openProject(action->data().toString());
 }
 
 void GLShaderDev::clearProjectRecent()
 {
-  std::cout << "clearProjectRecent() not implemented yet" << std::endl; // TODO
+  QSettings	settings;
+
+  settings.setValue("recentProjects", QStringList());
+  updateRecentProjects();
 }
 
 void GLShaderDev::closeProject()

@@ -15,18 +15,31 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTEXCEPTION_HPP
-#define PROJECTEXCEPTION_HPP
+#ifndef PROJECTMANAGER_H
+#define PROJECTMANAGER_H
 
-#include <string>
+#include <map>
 
-#include "GlsdException.hpp"
+#include "ShaderProject.h"
 
-class ProjectException : public GlsdException
+class ProjectManager
 {
+  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectException(const std::string& message) : GlsdException(message) {};
-  virtual ~ProjectException() throw() {};
+  ProjectManager();
+  ~ProjectManager();
+
+public:
+  void			openProject(const QString& filename);
+  void			close(const QString& filename);
+  void			closeAll();
+
+public:
+  ShaderProject*	getCurrentProject();
+
+private:
+  ShaderProject*	_currentProject;
+  ProjectContainer	_openedProjects;
 };
 
-#endif // PROJECTEXCEPTION_HPP
+#endif // PROJECTMANAGER_H

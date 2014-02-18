@@ -50,12 +50,12 @@ bool CodeEditor::openFile(const QString& file)
   }
   if (!info.exists())
   {
-    QMessageBox::warning(this, tr("Error"), tr("File does not exist: ") + file);
+    QMessageBox::warning(this, tr("Error"), tr("File does not exist: %1").arg(file));
     return (false);
   }
   if (!f->open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    QMessageBox::warning(this, tr("Error"), tr("Could not open: ") + f->fileName());
+    QMessageBox::warning(this, tr("Error"), tr("Could not open: %1").arg(f->fileName()));
     return (false);
   }
 

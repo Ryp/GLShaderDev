@@ -28,6 +28,7 @@ set(GLShaderDev_SRCS
   Preferences/Panels/GeneralPanel.cpp
   Preferences/Panels/ShaderExtensionsPanel.cpp
   Preferences/Panels/ExtensionValidator.cpp
+  Project/ProjectManager.cpp
   Project/ShaderProject.cpp
 )
 

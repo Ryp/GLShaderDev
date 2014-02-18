@@ -19,12 +19,14 @@
 #include <QObject>
 #include <QFile>
 #include <QFileInfo>
+#include <QSettings>
 #include <QMessageBox>
 
 #include "ShaderProject.h"
 #include "Exceptions/ProjectException.hpp"
 
-const QString ShaderProject::ShaderProjectExtension = ".glsd";
+const QString ShaderProject::ShaderProjectExtension = "glsd";
+const QString ShaderProject::StageSeparator = ":";
 
 ShaderProject::ShaderProject()
 : _file(""),
@@ -34,21 +36,98 @@ ShaderProject::ShaderProject()
 ShaderProject::ShaderProject(const QString& fileName)
 : _file(fileName)
 {
-  QFile*	f = new QFile(fileName);
-  QFileInfo	fileInfo(*f);
+  QFileInfo	info(fileName);
 
-  // File existence etc....
+  if (info.suffix() != ShaderProjectExtension)
+    throw (ProjectException(QString(QObject::tr("File '%1' has invalid extension").arg(fileName)).toStdString()));
+  if (info.completeBaseName().isEmpty())
+    throw (ProjectException(QString(QObject::tr("Bad file name '%1'").arg(fileName)).toStdString()));
+  _name = info.completeBaseName();
 
-  //
-  _name = parseProjectName(fileInfo.fileName());
+  if (!info.exists())
+    throw (ProjectException(QString(QObject::tr("File '%1' does not exists").arg(fileName)).toStdString()));
+
+  QSettings	projectFile(fileName, QSettings::IniFormat);
+
+  loadStages(projectFile.value("stages").toStringList());
 }
 
 ShaderProject::~ShaderProject() {}
 
-QString ShaderProject::parseProjectName(const QString& projectFile)
+const QString& ShaderProject::getName() const
 {
-  if (projectFile.size() <= ShaderProjectExtension.size() || !projectFile.endsWith(ShaderProjectExtension))
-    throw (ProjectException("invalid file name: " + projectFile.toStdString()));
-  else
-    return (projectFile.left(projectFile.size() - ShaderProjectExtension.size()));
+  return (_name);
+}
+
+const QString& ShaderProject::getProjectFile() const
+{
+  return (_file);
+}
+
+const ShaderProject::Stages& ShaderProject::getStages() const
+{
+  return (_shaderObjects);
+}
+
+bool ShaderProject::isValid() const
+{
+  return (!_shaderObjects.at(ShaderObject::VertexShader).isEmpty() && !_shaderObjects.at(ShaderObject::FragmentShader).isEmpty());
+}
+
+void ShaderProject::addShaderObject(ShaderObject::ShaderType type, const QString& filename)
+{
+  _shaderObjects[type] = filename;
+}
+
+void ShaderProject::delShaderObject(ShaderObject::ShaderType type)
+{
+  _shaderObjects.erase(type);
+}
+
+void ShaderProject::close()
+{
+  QStringList			list;
+  QFileInfo			info(_file);
+  ShaderObject::ShaderType	type;
+
+  for (Stages::const_iterator it = _shaderObjects.begin(); it != _shaderObjects.end(); ++it)
+  {
+    type = it->first;
+    if (type == ShaderObject::VertexShader)
+      list.append("Vertex" + StageSeparator + it->second);
+    else if (type == ShaderObject::FragmentShader)
+      list.append("Fragment" + StageSeparator + it->second);
+    else if (type == ShaderObject::GeometryShader)
+      list.append("Geometry" + StageSeparator + it->second);
+  }
+
+  QSettings	projectFile(_file, QSettings::IniFormat);
+
+  projectFile.setValue("stages", list);
+  qDebug() << "Project " << _file << " closed";
+}
+
+void ShaderProject::loadStages(const QStringList& stages)
+{
+  int		len = stages.size();
+  int		cutPos;
+  QString	item;
+  QString	type;
+
+  for (int i = 0; i < len; ++i)
+  {
+    item = stages[i];
+    if ((cutPos = item.indexOf(StageSeparator)) == -1)
+      continue;
+    type = item.left(cutPos);
+    item = item.remove(0, cutPos + StageSeparator.size());
+    if (type == "Vertex")
+      addShaderObject(ShaderObject::VertexShader, item);
+    else if (type == "Fragment")
+      addShaderObject(ShaderObject::FragmentShader, item);
+    else if (type == "Geometry")
+      addShaderObject(ShaderObject::GeometryShader, item);
+    else
+      qDebug() << "loadStages::Invalid type";
+  }
 }

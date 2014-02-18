@@ -19,6 +19,8 @@
 #define GLSHADERDEV_H
 
 #include <QMainWindow>
+
+#include "Project/ProjectManager.h"
 #include "GL/GLInfo.h"
 
 class GLPreviewWidget;
@@ -44,14 +46,19 @@ private:
   void	initializeDockWidgets();
 
   void	updateRecentFiles();
+  void	updateRecentProjects();
   void	addRecentFile(const QString& filename);
+  void	addRecentProject(const QString& filename);
   void	openFile(const QString& filename);
+  void	openProject(const QString& filename);
+  void	openProjectFiles(ShaderProject* project);
 
 public slots:
   void	closeEvent(QCloseEvent* event);
 
   void	newProject();
-  void	openProject();
+  void	openProjectDialog();
+  void	openRecentProject();
   void	clearProjectRecent();
   void	closeProject();
 
@@ -72,6 +79,7 @@ public slots:
 
 private:
   enum { MaxRecentFiles = 9 };
+  enum { MaxRecentProjects = 9 };
 
 private:
   CodeEditor*		_editor;
@@ -84,7 +92,9 @@ private:
   ShaderInputView*	_shaderInput;
   NewFileDialog*	_newFileDialog;
   QAction*		_recentFileActions[MaxRecentFiles + 2];
+  QAction*		_recentProjectActions[MaxRecentProjects + 2];
   PreferencesWidget*	_preferencesWidget;
+  ProjectManager	_projectManager;
   GLInfo		_glInfo;
 };
 

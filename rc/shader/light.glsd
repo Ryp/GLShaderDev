@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/light.f.glsl, Vertex:../rc/shader/light.v.glsl
