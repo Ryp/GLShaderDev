@@ -34,10 +34,10 @@
 #include "GL/OpenGLWidget.h"
 #include "Dialog/NewFileDialog.h"
 #include "Dialog/GLInfoDialog.h"
-#include "ShaderStagesView.h"
+#include "ShaderStagesView/ShaderStagesView.h"
 #include "Exceptions/GlsdException.hpp"
 #include "Exceptions/ProjectException.hpp"
-#include "ShaderInputView.h"
+#include "ShaderInputView/ShaderInputView.h"
 #include "Build/OutputParser.h"
 #include "Build/OutputModel.h"
 #include "GL/Shader/ShaderProgram.h"
@@ -369,7 +369,7 @@ void GLShaderDev::buildCurrentProject()
     QFile		file(it->second);
     QFileInfo		fileInfo(file);
     ShaderObject*	obj = new ShaderObject;
-    QString		str = QString("[%1/%2] Compiling %3...").arg(i).arg(stages.size()).arg(fileInfo.fileName());
+    QString		str = QString(tr("[%1/%2] Compiling %3...")).arg(i).arg(stages.size()).arg(fileInfo.fileName());
 
     _output->getModel()->addItem(OutputItem(str, OutputItem::InformationItem));
     if (!file.open(QIODevice::ReadOnly))

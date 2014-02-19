@@ -22,15 +22,18 @@
 #include <QHeaderView>
 
 #include "ShaderStagesView.h"
+#include "StagesModel.h"
 #include "Editor/CodeWidget.h"
 #include "GL/Shader/ShaderObject.h"
 
 ShaderStagesView::ShaderStagesView(QWidget* parent)
-: QWidget(parent)
+: QWidget(parent),
+  _stageModel(new StagesModel(this))
 {
   QVBoxLayout*	vLayout = new QVBoxLayout;
   QToolBar*	toolbar = new QToolBar;
   QTreeWidget*	tree = new QTreeWidget;
+  QTreeView*	stagesView = new QTreeView;
 
   toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
   toolbar->setIconSize(QSize(16, 16));
@@ -71,10 +74,15 @@ ShaderStagesView::ShaderStagesView(QWidget* parent)
   _stages[ShaderObject::FragmentShader] = fragment;
 
 
+  stagesView->setModel(_stageModel);
+
   vLayout->setSpacing(0);
   vLayout->setMargin(0);
   vLayout->addWidget(toolbar);
   vLayout->addWidget(tree);
+  vLayout->addWidget(stagesView);
+
+  stagesView->reset();
 
   setLayout(vLayout);
 }

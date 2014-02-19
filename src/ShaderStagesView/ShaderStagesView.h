@@ -15,33 +15,33 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef SHADERSTAGESVIEW_H
+#define SHADERSTAGESVIEW_H
 
+#include <list>
 #include <map>
 
-#include "ShaderProject.h"
+#include <QWidget>
 
-class ProjectManager
+class StagesModel;
+
+QT_BEGIN_NAMESPACE
+class QTreeWidgetItem;
+QT_END_NAMESPACE
+
+class ShaderStagesView : public QWidget
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
+  Q_OBJECT
 public:
-  ProjectManager();
-  ~ProjectManager();
+  ShaderStagesView(QWidget* parent = 0);
+  ~ShaderStagesView();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-
-public:
-  ShaderProject*	getCurrentProject();
+  std::list<std::pair<int, QString> >	getShaderConfig() const;
 
 private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  StagesModel*				_stageModel;
+  std::map<int, QTreeWidgetItem*>	_stages;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // SHADERSTAGESVIEW_H

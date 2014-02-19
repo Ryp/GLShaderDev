@@ -44,6 +44,7 @@ public:
   bool			isValid() const;
   void			addShaderObject(ShaderObject::ShaderType type, const QString& filename);
   void			delShaderObject(ShaderObject::ShaderType type);
+  void			build();
   void			close();
 
 private:

@@ -1,7 +1,6 @@
 set(GLShaderDev_SRCS
   main.cpp
   GLShaderDev.cpp
-  ShaderInputView.cpp
   Build/BuildOutput.cpp
   Build/OutputDelegate.cpp
   Build/OutputItem.cpp
@@ -18,7 +17,6 @@ set(GLShaderDev_SRCS
   GL/Shader/ShaderManager.cpp
   GL/Shader/ShaderObject.cpp
   GL/Shader/ShaderProgram.cpp
-  ShaderStagesView.cpp
   Model/Model.cpp
   Model/ModelLoader.cpp
   Preferences/PreferencesWidget.cpp
@@ -30,20 +28,22 @@ set(GLShaderDev_SRCS
   Preferences/Panels/ExtensionValidator.cpp
   Project/ProjectManager.cpp
   Project/ShaderProject.cpp
+  ShaderInputView/ShaderInputView.cpp
+  ShaderStagesView/StagesModel.cpp
+  ShaderStagesView/ShaderStagesView.cpp
 )
 
 set(MOC_HEADERS
-  ShaderInputView.h
-  ShaderStagesView.h
   GLShaderDev.h
   Build/BuildOutput.h
   Build/OutputDelegate.h
   Build/OutputModel.h
+  Dialog/NewFileDialog.h
+  Dialog/GLInfoDialog.h
   Editor/CodeEditor.h
   Editor/CodeWidget.h
   Editor/QsciLexerGLSL.h
-  Dialog/NewFileDialog.h
-  Dialog/GLInfoDialog.h
+  GL/GLPreviewWidget.h
   GL/OpenGLWidget.h
   Preferences/PreferencesWidget.h
   Preferences/PreferenceListItemDelegate.h
@@ -51,7 +51,9 @@ set(MOC_HEADERS
   Preferences/Panels/GeneralPanel.h
   Preferences/Panels/ShaderExtensionsPanel.h
   Preferences/Panels/ExtensionValidator.h
-  GL/GLPreviewWidget.h
+  ShaderInputView/ShaderInputView.h
+  ShaderStagesView/StagesModel.h
+  ShaderStagesView/ShaderStagesView.h
 )
 
 set(GLShaderDev_RCCS

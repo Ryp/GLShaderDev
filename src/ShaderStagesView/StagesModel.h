@@ -15,26 +15,24 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADERSTAGESVIEW_H
-#define SHADERSTAGESVIEW_H
+#ifndef STAGESMODEL_H
+#define STAGESMODEL_H
 
-#include <list>
+#include <QAbstractListModel>
 
-#include <QWidget>
-#include <QTreeWidget>
-
-class ShaderStagesView : public QWidget
+class StagesModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
-  ShaderStagesView(QWidget* parent = 0);
-  ~ShaderStagesView();
+  StagesModel(QObject* parent = 0);
+  ~StagesModel();
 
 public:
-  std::list< std::pair<int, QString> >	getShaderConfig() const;
-
-private:
-  std::map<int, QTreeWidgetItem*>	_stages;
+  QVariant	data(const QModelIndex& index, int role) const;
+  int		columnCount(const QModelIndex& parent = QModelIndex()) const;
+  int		rowCount(const QModelIndex& parent = QModelIndex()) const;
+  QModelIndex	parent(const QModelIndex& child) const;
+  QModelIndex	index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
 };
 
-#endif // SHADERSTAGESVIEW_H
+#endif // STAGESMODEL_H

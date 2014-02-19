@@ -38,7 +38,7 @@ ShaderProject::ShaderProject(const QString& fileName)
 {
   QFileInfo	info(fileName);
 
-  if (info.suffix() != ShaderProjectExtension)
+  if (info.suffix().compare(ShaderProjectExtension, Qt::CaseInsensitive))
     throw (ProjectException(QString(QObject::tr("File '%1' has invalid extension").arg(fileName)).toStdString()));
   if (info.completeBaseName().isEmpty())
     throw (ProjectException(QString(QObject::tr("Bad file name '%1'").arg(fileName)).toStdString()));
@@ -82,6 +82,14 @@ void ShaderProject::addShaderObject(ShaderObject::ShaderType type, const QString
 void ShaderProject::delShaderObject(ShaderObject::ShaderType type)
 {
   _shaderObjects.erase(type);
+}
+
+void ShaderProject::build()
+{
+  for (Stages::const_iterator it = _shaderObjects.begin(); it != _shaderObjects.end(); ++it)
+  {
+    // TODO
+  }
 }
 
 void ShaderProject::close()
