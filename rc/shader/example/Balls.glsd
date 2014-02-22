@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/example/Balls/balls.frag, Vertex:../rc/shader/example/Balls/balls.vert

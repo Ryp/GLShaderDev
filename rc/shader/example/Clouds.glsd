@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/example/Clouds/clouds.frag, Vertex:../rc/shader/example/Clouds/clouds.vert

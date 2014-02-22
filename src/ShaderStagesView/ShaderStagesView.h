@@ -23,9 +23,11 @@
 
 #include <QWidget>
 
+class ShaderProject;
 class StagesModel;
 
 QT_BEGIN_NAMESPACE
+class QTreeView;
 class QTreeWidgetItem;
 QT_END_NAMESPACE
 
@@ -37,9 +39,14 @@ public:
   ~ShaderStagesView();
 
 public:
-  std::list<std::pair<int, QString> >	getShaderConfig() const;
+  void	setProject(ShaderProject* project);
+
+public slots:
+  void	addStage();
+  void	delStage();
 
 private:
+  QTreeView*				_view;
   StagesModel*				_stageModel;
   std::map<int, QTreeWidgetItem*>	_stages;
 };

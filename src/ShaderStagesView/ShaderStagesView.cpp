@@ -16,84 +16,59 @@
  */
 
 #include <QBoxLayout>
-#include <QToolButton>
 #include <QToolBar>
-#include <QTreeWidget>
-#include <QHeaderView>
+#include <QTreeView>
 
 #include "ShaderStagesView.h"
 #include "StagesModel.h"
-#include "Editor/CodeWidget.h"
 #include "GL/Shader/ShaderObject.h"
+#include "Project/ShaderProject.h"
 
 ShaderStagesView::ShaderStagesView(QWidget* parent)
 : QWidget(parent),
-  _stageModel(new StagesModel(this))
+  _view(new QTreeView),
+  _stageModel(0)
 {
   QVBoxLayout*	vLayout = new QVBoxLayout;
   QToolBar*	toolbar = new QToolBar;
-  QTreeWidget*	tree = new QTreeWidget;
-  QTreeView*	stagesView = new QTreeView;
 
   toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
   toolbar->setIconSize(QSize(16, 16));
-  toolbar->addAction(QIcon(":/list-add.png"), tr("&Add"));
-  toolbar->addAction(QIcon(":/list-remove.png"), tr("&Remove"));
-//   toolbar->addAction(QIcon(":/dialog-close.png"), tr("&Close"), this, SLOT(languageChange()));
-
-  QStringList headerLabels;
-  headerLabels.append("Stage");
-  headerLabels.append("File");
-  //   tree->header()->hide();
-//   tree->setRootIsDecorated(false);
-  tree->setColumnCount(2);
-  tree->setHeaderLabels(headerLabels);
-
-  QStringList rootStrings;
-  rootStrings.append("MyShader");
-
-  QTreeWidgetItem* shaderRoot = new QTreeWidgetItem(tree, rootStrings);
-  shaderRoot->setExpanded(true);
-
-  QStringList vstrings;
-  vstrings.append("Vertex");
-  vstrings.append("../rc/shader/light.v.glsl");
-  QTreeWidgetItem* vertex = new QTreeWidgetItem(shaderRoot, vstrings);
-  _stages[ShaderObject::VertexShader] = vertex;
-
-//   QStringList gstrings;
-//   gstrings.append("Geometry");
-//   gstrings.append("../rc/shader/geopassthrough.geom");
-//   QTreeWidgetItem* geometry = new QTreeWidgetItem(shaderRoot, gstrings);
-//   _stages[ShaderObject::GeometryShader] = geometry;
-
-  QStringList fstrings;
-  fstrings.append("Fragment");
-  fstrings.append("../rc/shader/light.f.glsl");
-  QTreeWidgetItem* fragment = new QTreeWidgetItem(shaderRoot, fstrings);
-  _stages[ShaderObject::FragmentShader] = fragment;
-
-
-  stagesView->setModel(_stageModel);
+  toolbar->addAction(QIcon(":/list-add.png"), tr("&Add"), this, SLOT(addStage()));
+  toolbar->addAction(QIcon(":/list-remove.png"), tr("&Remove"), this, SLOT(delStage()));
 
   vLayout->setSpacing(0);
   vLayout->setMargin(0);
   vLayout->addWidget(toolbar);
-  vLayout->addWidget(tree);
-  vLayout->addWidget(stagesView);
-
-  stagesView->reset();
+  vLayout->addWidget(_view);
 
   setLayout(vLayout);
 }
 
 ShaderStagesView::~ShaderStagesView() {}
 
-std::list< std::pair< int, QString > >  ShaderStagesView::getShaderConfig() const
+void ShaderStagesView::setProject(ShaderProject* project)
 {
-  std::list< std::pair< int, QString > >	list;
+  if (!_stageModel)
+  {
+    _stageModel = new StagesModel(this);
+    _view->setModel(_stageModel);
+  }
+  _stageModel->setProject(project);
+}
 
-  for (std::map<int, QTreeWidgetItem*>::const_iterator it = _stages.begin(); it != _stages.end(); ++it)
-    list.push_back(std::make_pair(it->first, it->second->text(1)));
-  return (list);
+void ShaderStagesView::addStage()
+{
+  // FIXME Better UI
+
+  _stageModel->addShaderObject(ShaderObject::VertexShader, "../rc/shader/light.v.glsl");
+  _stageModel->addShaderObject(ShaderObject::FragmentShader, "../rc/shader/light.f.glsl");
+}
+
+void ShaderStagesView::delStage()
+{
+  QModelIndexList idxList = _view->selectionModel()->selectedIndexes();
+
+  if (idxList.size() > 0)
+    _stageModel->delShaderObject(idxList[0]);
 }

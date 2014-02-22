@@ -53,6 +53,8 @@ private:
   void	openProject(const QString& filename);
   void	openProjectFiles(ShaderProject* project);
 
+  void	updateTitleBar();
+
 public slots:
   void	closeEvent(QCloseEvent* event);
 

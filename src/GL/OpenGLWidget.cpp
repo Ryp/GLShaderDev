@@ -56,7 +56,7 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
   updateProjectionMatrix();
 
   _time.start();
-  _refreshTimer->setInterval(16); // FIXME
+  _refreshTimer->setInterval(30); // FIXME
   connect(_refreshTimer, SIGNAL(timeout()), this, SLOT(updateGL()));
 
   setMinimumHeight(200); // FIXME
@@ -123,10 +123,11 @@ void	OpenGLWidget::paintGL()
   if (_autoRefresh)
     glUniform1f(_shader->getUniformLocation("time"), static_cast<GLfloat>(_time.elapsed()) / 1000.0f);
 
+  glUniform2ui(_shader->getUniformLocation("screenSize"), _viewportSize[0], _viewportSize[1]);
 
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, _textureHandle);
-  glUniform1i(_shader->getUniformLocation("texture"), 0);
+  glUniform1i(_shader->getUniformLocation("tex"), 0);
 
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -158,7 +159,7 @@ void	OpenGLWidget::initializeGL()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
-  _model = ml.load("../rc/model/suzanne.obj");
+  _model = ml.load("../rc/model/quad.obj");
 
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -172,7 +173,7 @@ void	OpenGLWidget::initializeGL()
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getUVBufferSize(), _model->getUVBuffer(), GL_STATIC_DRAW);
 
-  gli::texture2D texture(gli::load_dds("../rc/texture/uvchecker.dds"));
+  gli::texture2D texture(gli::load_dds("../rc/texture/noise.dds"));
   if (texture.empty())
     throw (GlsdException("Could not load texture"));
 

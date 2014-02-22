@@ -59,7 +59,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
-  openProject("../rc/shader/light.glsd"); // FIXME
+  updateTitleBar();
+//   openProject("../rc/shader/light.glsd"); // FIXME
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -69,7 +70,7 @@ void GLShaderDev::initializeContext()
   QGLFormat	glFormat;
 
   glFormat.setVersion(4, 2);
-  glFormat.setProfile(QGLFormat::CoreProfile);
+  glFormat.setProfile(QGLFormat::CompatibilityProfile);
   glFormat.setSampleBuffers(true); // NOTE this option activates MSAA
   glFormat.setDoubleBuffer(true);
 
@@ -128,7 +129,7 @@ void GLShaderDev::initializeActions()
   toolsMenu->addAction(QIcon(":/preferences-other.png"), tr("&OpenGL Info..."), this, SLOT(showGLInfo()));
 
   QMenu* settingsMenu = menuBar()->addMenu(tr("&Settings"));
-  settingsMenu->addAction(QIcon(":/preferences-other.png"), tr("&Preferences"), this, SLOT(showPreferences()));
+  settingsMenu->addAction(QIcon(":/preferences-other.png"), tr("&Preferences..."), this, SLOT(showPreferences()));
 
   QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
   helpMenu->addAction(QIcon(":/glsd-icon.png"), tr("&About GLShaderDev"), this, SLOT(about()));
@@ -253,6 +254,8 @@ void GLShaderDev::openProject(const QString& filename)
   {
     _projectManager.openProject(proj.absoluteFilePath());
     openProjectFiles(_projectManager.getCurrentProject());
+    _shaderStages->setProject(_projectManager.getCurrentProject());
+    updateTitleBar();
     addRecentProject(proj.absoluteFilePath());
   }
   catch (const ProjectException& e)
@@ -267,6 +270,18 @@ void GLShaderDev::openProjectFiles(ShaderProject* project)
 
   for (ShaderProject::Stages::const_iterator it = stages.begin(); it != stages.end(); ++it)
     openFile(it->second);
+}
+
+void GLShaderDev::updateTitleBar()
+{
+  QString	projectName(tr("No project"));
+  QString	fileString;
+
+  if (_projectManager.getCurrentProject())
+    projectName = _projectManager.getCurrentProject()->getName();
+  if (_editor->count() > 0)
+    fileString = QString("- [ %1 ]").arg("DA CURRENT FILENAME");
+  setWindowTitle(QString(tr("%1 %2 - GLShaderDev")).arg(projectName).arg(fileString));
 }
 
 void GLShaderDev::closeEvent(QCloseEvent* event)
@@ -353,18 +368,17 @@ void GLShaderDev::saveFileAs()
 
 void GLShaderDev::buildCurrentProject()
 {
-  ShaderProgram*				prog = new ShaderProgram;
-  bool						success = true;
-  std::list <std::pair <int, QString > >	stages;
-  int						i = 1;
-  OutputParser					parser(_glInfo.getVendor());
+  ShaderProgram*		prog = new ShaderProgram;
+  bool				success = true;
+  int				i = 1;
+  OutputParser			parser(_glInfo.getVendor());
+  const ShaderProject::Stages&	stages = _projectManager.getCurrentProject()->getStages();
 
   _editor->saveAll();
   _output->getModel()->clear();
   _buildOutputDock->setVisible(true);
 
-  stages = _shaderStages->getShaderConfig();
-  for (std::list <std::pair <int, QString > >::iterator it = stages.begin(); it != stages.end(); ++it)
+  for (ShaderProject::Stages::const_iterator it = stages.begin(); it != stages.end(); ++it)
   {
     QFile		file(it->second);
     QFileInfo		fileInfo(file);

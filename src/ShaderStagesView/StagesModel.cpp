@@ -18,10 +18,47 @@
 #include "StagesModel.h"
 
 StagesModel::StagesModel(QObject* parent)
-: QAbstractItemModel(parent)
+: QAbstractItemModel(parent),
+  _project(0)
 {}
 
 StagesModel::~StagesModel() {}
+
+void StagesModel::setProject(ShaderProject* project)
+{
+  emit QAbstractItemModel::beginResetModel();
+  _project = project;
+  emit QAbstractItemModel::endResetModel();
+}
+
+void StagesModel::addShaderObject(ShaderObject::ShaderType type, const QString& filename)
+{
+  emit QAbstractItemModel::beginResetModel();
+  _project->addShaderObject(type, filename);
+  emit QAbstractItemModel::endResetModel();
+}
+
+void StagesModel::delShaderObject(ShaderObject::ShaderType type)
+{
+  emit QAbstractItemModel::beginResetModel();
+  _project->delShaderObject(type);
+  emit QAbstractItemModel::endResetModel();
+}
+
+void StagesModel::delShaderObject(const QModelIndex& index)
+{
+  if (index.isValid()
+    && index.row() >= 0
+    && index.row() < rowCount())
+  {
+    ShaderProject::Stages::const_iterator it = _project->getStages().begin();
+    for (int i = 0; i < index.row(); ++i)
+      ++it;
+    emit QAbstractItemModel::beginResetModel();
+    _project->delShaderObject(it->first);
+    emit QAbstractItemModel::endResetModel();
+  }
+}
 
 QVariant StagesModel::data(const QModelIndex& index, int role) const
 {
@@ -31,23 +68,31 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
     && index.column() >= 0
     && index.column() < columnCount())
   {
+    ShaderProject::Stages::const_iterator it = _project->getStages().begin();
+    for (int i = 0; i < index.row(); ++i)
+      ++it;
     if (role == Qt::DisplayRole)
-      return ("Text");// FIXME
+    {
+      if (index.column() == 0)
+	return (QString("%1").arg(it->first));
+      if (index.column() == 1)
+	return (it->second);
+    }
   }
-  return QVariant();
+  return (QVariant());
 }
 
 int StagesModel::columnCount(const QModelIndex& parent) const
 {
   if (!parent.isValid())
-    return (2);// FIXME
+    return (2);
   return (0);
 }
 
 int StagesModel::rowCount(const QModelIndex& parent) const
 {
   if (!parent.isValid())
-    return (2);// FIXME
+    return (_project->getStages().size());
   return (0);
 }
 
@@ -55,14 +100,14 @@ QModelIndex StagesModel::parent(const QModelIndex& child) const
 {
   static_cast<void>(child);
 
-  return (QModelIndex()); // FIXME
+  return (QModelIndex());
 }
 
 QModelIndex StagesModel::index(int row, int column, const QModelIndex& parent) const
 {
-  static_cast<void>(row);
-  static_cast<void>(column);
   static_cast<void>(parent);
 
-  return (QModelIndex()); // FIXME
+  if (column >= 0 && column <= columnCount())
+    return (createIndex(row, column));
+  return (QModelIndex());
 }

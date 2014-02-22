@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/example/Postprocessing/post.frag, Vertex:../rc/shader/example/Postprocessing/post.vert

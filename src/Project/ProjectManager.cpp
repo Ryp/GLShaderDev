@@ -70,8 +70,8 @@ void ProjectManager::close(const QString& filename)
 
 void ProjectManager::closeAll()
 {
-  for (ProjectContainer::const_iterator it = _openedProjects.begin(); it != _openedProjects.end(); ++it)
-    close(it->first);
+  while (_openedProjects.size() > 0)
+    close(_openedProjects.begin()->first);
 }
 
 ShaderProject* ProjectManager::getCurrentProject()
