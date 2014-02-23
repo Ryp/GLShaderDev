@@ -45,6 +45,9 @@ private:
   void	initializeActions();
   void	initializeDockWidgets();
 
+  void	loadSettings();
+  void	saveSettings();
+
   void	updateRecentFiles();
   void	updateRecentProjects();
   void	addRecentFile(const QString& filename);

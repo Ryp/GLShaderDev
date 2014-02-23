@@ -59,8 +59,8 @@ GLShaderDev::GLShaderDev()
   initializeActions();
   initializeDockWidgets();
 
+  loadSettings();
   updateTitleBar();
-//   openProject("../rc/shader/light.glsd"); // FIXME
 }
 
 GLShaderDev::~GLShaderDev() {}
@@ -166,6 +166,24 @@ void GLShaderDev::initializeDockWidgets()
   _buildOutputDock->hide();
 
   connect(_output, SIGNAL(dereferencableItemActivated(const QString&, int, int)), _editor, SLOT(gotoFile(const QString&, int, int)));
+}
+
+void GLShaderDev::loadSettings()
+{
+  QSettings	settings;
+  QString	lastProject = settings.value("lastProject").toString();
+
+  if (!lastProject.isEmpty())
+    openProject(lastProject);
+}
+
+void GLShaderDev::saveSettings()
+{
+  QSettings		settings;
+  ShaderProject*	proj;
+
+  if ((proj = _projectManager.getCurrentProject()) != 0)
+    settings.setValue("lastProject", proj->getProjectFile());
 }
 
 void GLShaderDev::updateRecentFiles()
@@ -287,7 +305,8 @@ void GLShaderDev::updateTitleBar()
 void GLShaderDev::closeEvent(QCloseEvent* event)
 {
   static_cast<void>(event);
-  // TODO Save opened tabs for next execution
+
+  saveSettings();
   _editor->closeAllTabs();
   _projectManager.closeAll();
   std::cout << "Closing app..." << std::endl; // TODO
