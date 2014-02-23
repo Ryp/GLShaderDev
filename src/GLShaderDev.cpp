@@ -279,9 +279,9 @@ void GLShaderDev::updateTitleBar()
 
   if (_projectManager.getCurrentProject())
     projectName = _projectManager.getCurrentProject()->getName();
-  if (_editor->count() > 0)
-    fileString = QString("- [ %1 ]").arg("DA CURRENT FILENAME");
-  setWindowTitle(QString(tr("%1 %2 - GLShaderDev")).arg(projectName).arg(fileString));
+//   if (_editor->count() > 0)
+//     fileString = QString("- [ %1 ] ").arg("DA CURRENT FILENAME");
+  setWindowTitle(QString(tr("%1 %2- GLShaderDev")).arg(projectName).arg(fileString));
 }
 
 void GLShaderDev::closeEvent(QCloseEvent* event)
@@ -397,7 +397,7 @@ void GLShaderDev::buildCurrentProject()
     ++i;
   }
 
-  _output->getModel()->addItem(OutputItem("Linking shader...", OutputItem::InformationItem));
+  _output->getModel()->addItem(OutputItem(tr("Linking shader..."), OutputItem::InformationItem));
   if (!prog->link())
   {
     _output->getModel()->addItem(OutputItem(prog->getLog().c_str(), OutputItem::ErrorItem));
@@ -406,10 +406,10 @@ void GLShaderDev::buildCurrentProject()
 
   if (!success)
   {
-    _output->getModel()->addItem(OutputItem("*** Compilation failed ***", OutputItem::StandardItem));
+    _output->getModel()->addItem(OutputItem(tr("*** Compilation failed ***"), OutputItem::StandardItem));
     return;
   }
-  _output->getModel()->addItem(OutputItem("*** Compilation successful ***", OutputItem::StandardItem));
+  _output->getModel()->addItem(OutputItem(tr("*** Compilation successful ***"), OutputItem::StandardItem));
   // FIXME Set shader properly, with attributes correctly bound
   _glwidget->setShader(prog);
 }
