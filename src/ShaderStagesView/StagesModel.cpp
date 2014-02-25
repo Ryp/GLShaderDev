@@ -84,6 +84,22 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
   return (QVariant());
 }
 
+QVariant StagesModel::headerData(int section, Qt::Orientation orientation, int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    {
+        switch (section)
+        {
+            case 0:
+                return "Type";
+            case 1:
+                return "File";
+        }
+    }
+
+    return QVariant();
+}
+
 int StagesModel::columnCount(const QModelIndex& parent) const
 {
   if (!parent.isValid())
