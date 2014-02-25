@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/example/TesselationShader/tesselation.frag, Vertex:../rc/shader/example/TesselationShader/tesselation.vert, Geometry:../rc/shader/example/TesselationShader/tesselation.geom, TesselationEvaluation:../rc/shader/example/TesselationShader/tesselation.tese, TesselationControl:../rc/shader/example/TesselationShader/tesselation.tesc

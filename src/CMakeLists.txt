@@ -14,6 +14,7 @@ set(GLShaderDev_SRCS
   GL/GLInfo.cpp
   GL/GLPreviewWidget.cpp
   GL/OpenGLWidget.cpp
+  GL/ShaderUtils.cpp
   GL/Shader/ShaderManager.cpp
   GL/Shader/ShaderObject.cpp
   GL/Shader/ShaderProgram.cpp

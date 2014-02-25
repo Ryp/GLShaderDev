@@ -15,6 +15,8 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include "GL/ShaderUtils.h"
+
 #include "StagesModel.h"
 
 StagesModel::StagesModel(QObject* parent)
@@ -74,7 +76,7 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
     if (role == Qt::DisplayRole)
     {
       if (index.column() == 0)
-	return (QString("%1").arg(it->first));
+	return (ShaderUtils::getShaderString(it->first));
       if (index.column() == 1)
 	return (it->second);
     }

@@ -39,7 +39,7 @@ GLPreviewWidget::GLPreviewWidget(const QGLFormat& format, QWidget* parent)
   toolbar->addAction(QIcon(":/preferences-desktop-screensaver.png"), tr("&Take Screenshot"), this, SLOT(takeScreenshot()));
   toolbar->addAction(QIcon(":/fill-color.png"), tr("&Background color"), this, SLOT(backgroundColorButtonClicked()));
   toolbar->addSeparator();
-  _refreshAction = toolbar->addAction(QIcon(":/view-refresh.png"), tr("&Refresh"), this, SLOT(changeAutoRefresh()));
+  _refreshAction = toolbar->addAction(QIcon(":/view-refresh.png"), tr("&AutoRefresh"), this, SLOT(changeAutoRefresh()));
   _refreshAction->setCheckable(true);
 
   layout->addWidget(_glWigdet);
@@ -57,7 +57,7 @@ OpenGLWidget* GLPreviewWidget::getGLWidget()
 
 void GLPreviewWidget::backgroundColorButtonClicked()
 {
-  QColor	color = QColorDialog::getColor(_glWigdet->getBgrColor(), this, "Text Color", QColorDialog::DontUseNativeDialog);
+  QColor	color = QColorDialog::getColor(_glWigdet->getBgrColor(), this, tr("Text Color"), QColorDialog::DontUseNativeDialog);
 
   if (color.isValid())
     _glWigdet->changeBackgroundColor(color);
@@ -71,14 +71,14 @@ void GLPreviewWidget::takeScreenshot() // FIXME Open FileDialog
 
   QFileDialog	dialogFile(this);
   dialogFile.setDefaultSuffix("png");
-  QString fileName = dialogFile.getSaveFileName(this, QString::fromUtf8("Save Screenshot"), tr("screenshot.png"), tr(".png"));
+  QString fileName = dialogFile.getSaveFileName(this, tr("Save Screenshot"), "screenshot.png", ".png");
 
   if (fileName.isEmpty())
     return;
 
   if (!img.save(fileName))
   {
-    QMessageBox::warning(this, tr("Error"), tr("Failed to save: ") + fileName);
+    QMessageBox::warning(this, tr("Error"), tr("Failed to save: '%1'").arg(fileName));
   }
 }
 

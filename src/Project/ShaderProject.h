@@ -41,14 +41,13 @@ public:
   const QString&	getName() const;
   const QString&	getProjectFile() const;
   const Stages&		getStages() const;
-  bool			isValid() const;
   void			addShaderObject(ShaderObject::ShaderType type, const QString& filename);
   void			delShaderObject(ShaderObject::ShaderType type);
-  void			build();
-  void			close();
+  void			close();// NOTE may throw ProjectException
 
 private:
-  void	loadStages(const QStringList& stages);
+  void	save();// NOTE may throw ProjectException
+  void	load(const QStringList& stages);// NOTE may throw ProjectException
 
 private:
   QString	_file;
