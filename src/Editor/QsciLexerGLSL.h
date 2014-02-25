@@ -56,6 +56,7 @@ private:
     Comment,
     Keyword,
     Operator,
+    Macro,
     MaxStyle
   };
 

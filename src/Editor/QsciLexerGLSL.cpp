@@ -47,6 +47,11 @@ QsciLexerGLSL::QsciLexerGLSL(QObject *parent)
   _styles[Operator].setDescription("Operator");
   _styles[Operator].setColor("#2288ff");
   _styles[Operator].setFont(ft);
+  
+  _styles[Macro] = QsciStyle(Macro);
+  _styles[Macro].setDescription("Macro");
+  _styles[Macro].setColor("#001100");
+  _styles[Macro].setFont(ft);
 
 }
 
@@ -102,7 +107,17 @@ void QsciLexerGLSL::styleText(int start, int end)
   QStringList lines = text.split('\n');
   for (int i = 0; i < lines.size(); i++)
   {
-    styleLine(lines.at(i), lines.at(i).size());
+    int style = Default;
+    
+    if (lines.at(i).startsWith("//")) {
+      style = Comment;
+    }
+    if (lines.at(i).startsWith("#")) {
+      style = Macro;
+    }
+    
+    setStyling(lines.at(i).size(), style);
+    
     if (i < lines.size() - 1)
       setStyling(1, Default);
   }
@@ -154,5 +169,5 @@ const char* QsciLexerGLSL::wordCharacters() const
 void QsciLexerGLSL::styleLine(const QString& line, int size)
 {
   setStyling(size, Default);
-  qDebug() << line;
+  qDebug() << "styleLine(" + line;
 }
