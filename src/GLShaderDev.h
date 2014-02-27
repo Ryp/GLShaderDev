@@ -37,7 +37,7 @@ class GLShaderDev : public QMainWindow
 {
   Q_OBJECT
 public:
-  GLShaderDev();
+  GLShaderDev(const QStringList& args);
   ~GLShaderDev();
 
 private:

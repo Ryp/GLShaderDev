@@ -32,7 +32,9 @@ int	main(int argc, char** argv)
     QCoreApplication::setApplicationVersion("0.9.1");
     QCoreApplication::setOrganizationName("Epitech");
     QApplication app(argc, argv);
-    GLShaderDev ide;
+    QStringList	args = app.arguments();
+    args.pop_front();
+    GLShaderDev ide(args);
     ide.show();
     ret = app.exec();
   }

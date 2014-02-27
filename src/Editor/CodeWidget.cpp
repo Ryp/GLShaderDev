@@ -45,7 +45,7 @@ CodeWidget::CodeWidget(const QString& filename, QWidget *parent)
   setAutoCompletionSource(QsciScintilla::AcsAPIs);
 
   QsciAPIs* apis = new QsciAPIs(_lexer);
-  if (!apis->load("../rc/syntax/glsl-4-30-core.kw"))
+  if (!apis->load("../rc/syntax/glsl-4-20-compatibility.kw"))
     qDebug() << "NOT";
   apis->prepare();
 

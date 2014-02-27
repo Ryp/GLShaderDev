@@ -44,7 +44,7 @@
 #include "GL/GLPreviewWidget.h"
 #include "Preferences/PreferencesWidget.h"
 
-GLShaderDev::GLShaderDev()
+GLShaderDev::GLShaderDev(const QStringList& args)
 : _editor(new CodeEditor(this)),
   _output(new BuildOutput(this)),
   _glInfoDialog(0),
@@ -61,6 +61,9 @@ GLShaderDev::GLShaderDev()
 
   loadSettings();
   updateTitleBar();
+
+  for (int i = 0; i < args.size(); ++i)
+    openFile(args.at(i));
 }
 
 GLShaderDev::~GLShaderDev() {}
