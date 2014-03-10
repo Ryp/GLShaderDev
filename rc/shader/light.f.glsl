@@ -2,7 +2,7 @@
 
 layout(location = 0, index = 0) out vec4 fragColor;
 
-uniform sampler2D texture;
+uniform sampler2D tex;
 uniform float time;
 
 in vec3 n;
@@ -11,5 +11,5 @@ in vec2 UV_out;
 
 void main(void)
 {
-    fragColor = d * dot(vec3(1.0, 1.0, 1.0), n) * 0 + texture2D(texture, UV_out).rgba * dot(vec3(1.0, 1.0, 1.0), n) * ((cos(time * 9 + 3) / 2) + 1);
+    fragColor = d * dot(vec3(1.0, 1.0, 1.0), n) * 0 + texture2D(tex, UV_out).rgba * dot(vec3(1.0, 1.0, 1.0), n) * ((cos(time * 9 + 3) / 2) + 1);
 }

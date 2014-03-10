@@ -29,6 +29,12 @@ set(GLShaderDev_SRCS
   Preferences/Panels/ExtensionValidator.cpp
   Project/ProjectManager.cpp
   Project/ShaderProject.cpp
+  ShaderInputView/InputItem/AShaderInputItem.cpp
+  ShaderInputView/InputItem/ShaderInputFactory.cpp
+  ShaderInputView/InputItem/TextureInputItem.cpp
+  ShaderInputView/InputItem/FloatInputItem.cpp
+  ShaderInputView/ShaderInputDelegate.cpp
+  ShaderInputView/ShaderInputModel.cpp
   ShaderInputView/ShaderInputView.cpp
   ShaderStagesView/StagesModel.cpp
   ShaderStagesView/ShaderStagesView.cpp
@@ -52,7 +58,9 @@ set(MOC_HEADERS
   Preferences/Panels/GeneralPanel.h
   Preferences/Panels/ShaderExtensionsPanel.h
   Preferences/Panels/ExtensionValidator.h
+  ShaderInputView/ShaderInputDelegate.h
   ShaderInputView/ShaderInputView.h
+  ShaderInputView/ShaderInputModel.h
   ShaderStagesView/StagesModel.h
   ShaderStagesView/ShaderStagesView.h
 )

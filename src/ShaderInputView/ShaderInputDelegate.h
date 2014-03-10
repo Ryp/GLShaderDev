@@ -15,31 +15,27 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef SHADERINPUTDELEGATE_H
+#define SHADERINPUTDELEGATE_H
 
-#include <map>
+#include <QStyledItemDelegate>
 
-#include "ShaderProject.h"
+QT_BEGIN_NAMESPACE
+class QPainter;
+QT_END_NAMESPACE
 
-class ProjectManager
+class ShaderInputDelegate : public QStyledItemDelegate
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
+  Q_OBJECT
 public:
-  ProjectManager();
-  ~ProjectManager();
+  ShaderInputDelegate(QObject* parent = 0);
+  ~ShaderInputDelegate();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-  ShaderProject*	getCurrentProject();
-
-private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  QWidget*	createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  void		setEditorData(QWidget* editor, const QModelIndex& index) const;
+  void		setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
+  void		updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // SHADERINPUTDELEGATE_H

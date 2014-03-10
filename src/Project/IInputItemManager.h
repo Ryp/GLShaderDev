@@ -15,31 +15,21 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef IINPUTITEMMANAGER_H
+#define IINPUTITEMMANAGER_H
 
-#include <map>
+#include <vector>
 
-#include "ShaderProject.h"
+#include "ShaderInputView/InputItem/IShaderInputItem.h"
 
-class ProjectManager
+class IInputItemManager
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
+  typedef std::vector<IShaderInputItem*>	InputItems;
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-  ShaderProject*	getCurrentProject();
-
-private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  virtual ~IInputItemManager() {}
+  virtual InputItems&	getInputItems() = 0;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // IINPUTITEMMANAGER_H

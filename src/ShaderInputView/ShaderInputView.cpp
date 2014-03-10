@@ -15,17 +15,68 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <iostream> // FIXME
+#include <QDebug> // FIXME
+
+#include <QToolBar>
+#include <QBoxLayout>
+#include <QMenu>
+#include <QTreeView>
+
+#include "ShaderInputModel.h"
+#include "ShaderInputDelegate.h"
 #include "ShaderInputView.h"
-#include <QFormLayout>
-#include <QPushButton>
-#include <QLabel>
-#include <QColorDialog>
-#include <QMessageBox>
-#include <QPalette>
 
 ShaderInputView::ShaderInputView(QWidget* parent)
-: QWidget(parent)
-{}
+: QWidget(parent),
+  _view(new QTreeView),
+  _model(0)
+{
+  QVBoxLayout*	vLayout = new QVBoxLayout;
+  QToolBar*	toolbar = new QToolBar;
+  QMenu*	inputTypeMenu = new QMenu;
+
+  toolbar->setToolButtonStyle(Qt::ToolButtonIconOnly);
+  toolbar->setIconSize(QSize(16, 16));
+
+  QAction* menuAction = toolbar->addAction(QIcon(":/list-add.png"), tr("Add Input"));
+  inputTypeMenu->addAction(tr("&Texture..."), this, SLOT(createTexture()));
+  inputTypeMenu->addAction(tr("&Float..."), this, SLOT(createFloat()));
+  menuAction->setMenuRole(QAction::TextHeuristicRole);
+  menuAction->setMenu(inputTypeMenu);
+
+  _view->setHeaderHidden(true);
+  _view->setItemDelegate(new ShaderInputDelegate(this));
+
+  vLayout->setSpacing(0);
+  vLayout->setMargin(0);
+  vLayout->addWidget(toolbar);
+  vLayout->addWidget(_view);
+
+  setLayout(vLayout);
+
+}
 
 ShaderInputView::~ShaderInputView() {}
+
+void ShaderInputView::setInputItemManager(IInputItemManager* itemManager)
+{
+  if (!_model)
+  {
+    _model = new ShaderInputModel(itemManager, this);
+    _view->setModel(_model);
+  }
+}
+
+void ShaderInputView::createTexture()
+{
+  // TODO Show dialog
+  _model->addItem(_inputFactory.createTexture());
+  qDebug() << "New texture";
+}
+
+void ShaderInputView::createFloat()
+{
+  // TODO Show dialog
+  _model->addItem(_inputFactory.createFloat());
+  qDebug() << "New float";
+}

@@ -148,8 +148,8 @@ void GLShaderDev::initializeDockWidgets()
   _shaderInput = new ShaderInputView;
 
   optionTab->setMovable(true);
-  optionTab->addTab(_shaderStages, tr("Build Stages"));
   optionTab->addTab(_shaderInput, tr("Shader Input"));
+  optionTab->addTab(_shaderStages, tr("Build Stages"));
 
   splitter->setOrientation(Qt::Vertical);
   splitter->addWidget(_glpreview);
@@ -275,7 +275,9 @@ void GLShaderDev::openProject(const QString& filename)
   {
     _projectManager.openProject(proj.absoluteFilePath());
     openProjectFiles(_projectManager.getCurrentProject());
-    _shaderStages->setProject(_projectManager.getCurrentProject());
+    _shaderStages->setStagesManager(_projectManager.getCurrentProject());
+    _shaderInput->setInputItemManager(_projectManager.getCurrentProject());
+    _glwidget->setInputs(_projectManager.getCurrentProject());
     updateTitleBar();
     addRecentProject(proj.absoluteFilePath());
   }

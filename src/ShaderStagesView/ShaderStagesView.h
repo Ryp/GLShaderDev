@@ -23,12 +23,12 @@
 
 #include <QWidget>
 
-class ShaderProject;
+#include "Project/IStagesManager.h"
+
 class StagesModel;
 
 QT_BEGIN_NAMESPACE
 class QTreeView;
-class QTreeWidgetItem;
 QT_END_NAMESPACE
 
 class ShaderStagesView : public QWidget
@@ -39,7 +39,7 @@ public:
   ~ShaderStagesView();
 
 public:
-  void	setProject(ShaderProject* project);
+  void	setStagesManager(IStagesManager* stagesManager);
 
 public slots:
   void	addStage();
@@ -48,7 +48,6 @@ public slots:
 private:
   QTreeView*				_view;
   StagesModel*				_stageModel;
-  std::map<int, QTreeWidgetItem*>	_stages;
 };
 
 #endif // SHADERSTAGESVIEW_H

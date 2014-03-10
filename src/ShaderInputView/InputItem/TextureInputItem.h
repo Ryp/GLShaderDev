@@ -15,31 +15,29 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef TEXTUREINPUTITEM_H
+#define TEXTUREINPUTITEM_H
 
-#include <map>
+#include "AShaderInputItem.h"
 
-#include "ShaderProject.h"
-
-class ProjectManager
+class TextureInputItem : public AShaderInputItem
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
+  TextureInputItem(const std::string& name = "");
+  ~TextureInputItem();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
+  const std::string&	getTextureFile() const;
+  void			setTextureFile(const std::string& file);
 
 public:
-  ShaderProject*	getCurrentProject();
+  virtual void	load();
+  virtual void	reload();
+  virtual void	unload();
+  virtual void	bind(ShaderProgram* prgm);
 
 private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  std::string	_textureFile;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // TEXTUREINPUTITEM_H

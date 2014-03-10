@@ -15,31 +15,31 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef SHADERINPUTMODEL_H
+#define SHADERINPUTMODEL_H
 
-#include <map>
+#include <QAbstractItemModel>
 
-#include "ShaderProject.h"
+#include "InputItem/IShaderInputItem.h"
+#include "Project/IInputItemManager.h"
 
-class ProjectManager
+class ShaderInputModel : public QAbstractListModel
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
+  Q_OBJECT
 public:
-  ProjectManager();
-  ~ProjectManager();
+  ShaderInputModel(IInputItemManager* itemManager, QObject* parent = 0);
+  ~ShaderInputModel();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
+  void	addItem(IShaderInputItem* item);
 
 public:
-  ShaderProject*	getCurrentProject();
+  Qt::ItemFlags	flags(const QModelIndex& index) const;
+  QVariant	data(const QModelIndex& index, int role) const;
+  int		rowCount(const QModelIndex& parent = QModelIndex()) const;
 
 private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  IInputItemManager::InputItems&	_items;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // SHADERINPUTMODEL_H

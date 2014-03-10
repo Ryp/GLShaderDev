@@ -17,7 +17,6 @@
 
 #include <QKeyEvent>
 #include <QWheelEvent>
-#include <QFileDialog>
 #include <QDebug>
 #include <QTimer>
 
@@ -28,8 +27,12 @@
 #include "OpenGLWidget.h"
 #include "Math.hpp"
 #include "Shader/ShaderProgram.h"
+#include "Project/IInputItemManager.h"
 #include "Exceptions/GlsdException.hpp"
+
 #include "Model/ModelLoader.h" // FIXME not here
+#include "ShaderInputView/InputItem/TextureInputItem.h" // FIXME not here
+#include "ShaderInputView/InputItem/FloatInputItem.h" // FIXME not here
 
 const float OpenGLWidget::NearPlane = 0.1f;
 const float OpenGLWidget::FarPlane = 1000.0f;
@@ -43,6 +46,7 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
 : QGLWidget(fmt, parent),
   _viewportSize(size().width(), size().height()),
   _shader(0),
+  _inputs(0),
   _refreshTimer(new QTimer(this)),
   _autoRefresh(false), // FIXME Get this param from project
   _fov(DefaultFov),
@@ -68,6 +72,12 @@ OpenGLWidget::~OpenGLWidget() {}
 void OpenGLWidget::setShader(ShaderProgram* prgm)
 {
   _shader = prgm;
+  updateGL();
+}
+
+void OpenGLWidget::setInputs(IInputItemManager* inputs)
+{
+  _inputs = inputs;
   updateGL();
 }
 
@@ -123,11 +133,18 @@ void	OpenGLWidget::paintGL()
   if (_autoRefresh)
     glUniform1f(_shader->getUniformLocation("time"), static_cast<GLfloat>(_time.elapsed()) / 1000.0f);
 
-  glUniform2ui(_shader->getUniformLocation("screenSize"), _viewportSize[0], _viewportSize[1]);
+  if (_inputs)
+  {
+    for (IInputItemManager::InputItems::iterator it = _inputs->getInputItems().begin(); it != _inputs->getInputItems().end(); ++it)
+    {
+      IShaderInputItem* item = *it;
 
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, _textureHandle);
-  glUniform1i(_shader->getUniformLocation("tex"), 0);
+      if (item->isEnabled())
+	item->bind(_shader);
+    }
+  }
+
+  glUniform2ui(_shader->getUniformLocation("screenSize"), _viewportSize[0], _viewportSize[1]);
 
   glEnableVertexAttribArray(vertexLocation);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
@@ -161,6 +178,19 @@ void	OpenGLWidget::initializeGL()
   ModelLoader	ml;
   _model = ml.load("../rc/model/quad.obj");
 
+  if (_inputs) // FIXME not here
+  {
+    TextureInputItem* textureInput = new TextureInputItem("tex");
+    textureInput->setTextureFile("../rc/texture/filter_lowres.dds");
+    textureInput->load();
+
+    FloatInputItem* floatInput = new FloatInputItem("b");
+    floatInput->setValue(0.5f);
+
+    _inputs->getInputItems().push_back(textureInput);
+    _inputs->getInputItems().push_back(floatInput);
+  }
+
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getVertexBufferSize(), _model->getVertexBuffer(), GL_STATIC_DRAW);
@@ -172,47 +202,6 @@ void	OpenGLWidget::initializeGL()
   glGenBuffers(1, &_uvBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getUVBufferSize(), _model->getUVBuffer(), GL_STATIC_DRAW);
-
-  gli::texture2D texture(gli::load_dds("../rc/texture/noise.dds"));
-  if (texture.empty())
-    throw (GlsdException("Could not load texture"));
-
-  glGenTextures(1, &_textureHandle);
-  glBindTexture(GL_TEXTURE_2D, _textureHandle);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, GLint(texture.levels() - 1));
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_RED);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_GREEN);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_BLUE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_ALPHA);
-  glTexStorage2D(GL_TEXTURE_2D,
-		 GLint(texture.levels()),
-		 GLenum(gli::internal_format(texture.format())),
-		 GLsizei(texture.dimensions().x),
-		 GLsizei(texture.dimensions().y));
-  for (gli::texture2D::size_type Level = 0; Level < texture.levels(); ++Level)
-  {
-    if (gli::is_compressed(texture.format()))
-      glCompressedTexSubImage2D(GL_TEXTURE_2D,
-				GLint(Level),
-				0, 0,
-				GLsizei(texture[Level].dimensions().x),
-				GLsizei(texture[Level].dimensions().y),
-				GLenum(gli::internal_format(texture.format())),
-				GLsizei(texture[Level].size()),
-				texture[Level].data());
-      else
-	glTexSubImage2D(GL_TEXTURE_2D,
-			GLint(Level),
-			0, 0,
-		 GLsizei(texture[Level].dimensions().x),
-			GLsizei(texture[Level].dimensions().y),
-			GLenum(gli::external_format(texture.format())),
-			GLenum(gli::type_format(texture.format())),
-			texture[Level].data());
-  }
-
-  emit glInitialized();
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)

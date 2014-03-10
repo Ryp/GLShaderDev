@@ -15,31 +15,22 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef SHADERINPUTFACTORY_H
+#define SHADERINPUTFACTORY_H
 
-#include <map>
+#include <QString>
 
-#include "ShaderProject.h"
+#include "IShaderInputItem.h"
 
-class ProjectManager
+class ShaderInputFactory
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
+  ShaderInputFactory();
+  ~ShaderInputFactory();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-  ShaderProject*	getCurrentProject();
-
-private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  IShaderInputItem*	createTexture();
+  IShaderInputItem*	createFloat();
 };
 
-#endif // PROJECTMANAGER_H
+#endif // SHADERINPUTFACTORY_H

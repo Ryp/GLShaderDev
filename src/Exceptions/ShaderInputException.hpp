@@ -15,31 +15,17 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef SHADERINPUTEXCEPTION_HPP
+#define SHADERINPUTEXCEPTION_HPP
 
-#include <map>
+#include <string>
+#include "GlsdException.hpp"
 
-#include "ShaderProject.h"
-
-class ProjectManager
+class ShaderInputException : public GlsdException
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
-
-public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-  ShaderProject*	getCurrentProject();
-
-private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  ShaderInputException(const std::string& message) : GlsdException("ShaderInput::" + message) {};
+  virtual ~ShaderInputException() throw() {};
 };
 
-#endif // PROJECTMANAGER_H
+#endif // SHADERINPUTEXCEPTION_HPP

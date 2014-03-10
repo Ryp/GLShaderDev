@@ -20,6 +20,10 @@
 
 #include <QtGui/QItemDelegate>
 
+QT_BEGIN_NAMESPACE
+class QPainter;
+QT_END_NAMESPACE
+
 class OutputDelegate : public QItemDelegate
 {
   Q_OBJECT
@@ -27,7 +31,8 @@ public:
   OutputDelegate(QObject* parent = 0);
   ~OutputDelegate();
 
-  void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
+public:
+  void	paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 };
 
 #endif // OUTPUTDELEGATE_H

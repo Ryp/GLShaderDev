@@ -15,31 +15,29 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef FLOATINPUTITEM_H
+#define FLOATINPUTITEM_H
 
-#include <map>
+#include "AShaderInputItem.h"
 
-#include "ShaderProject.h"
-
-class ProjectManager
+class FloatInputItem : public AShaderInputItem
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
+  FloatInputItem(const std::string& name);
+  ~FloatInputItem();
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
+  GLfloat	getValue() const;
+  void		setValue(GLfloat value);
 
 public:
-  ShaderProject*	getCurrentProject();
+  virtual void	load();
+  virtual void	reload();
+  virtual void	unload();
+  virtual void	bind(ShaderProgram* prgm);
 
 private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  GLfloat	_value;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // FLOATINPUTITEM_H

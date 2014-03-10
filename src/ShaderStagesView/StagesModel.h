@@ -20,7 +20,7 @@
 
 #include <QAbstractItemModel>
 
-#include "Project/ShaderProject.h"
+#include "Project/IStagesManager.h"
 
 class StagesModel : public QAbstractItemModel
 {
@@ -30,7 +30,7 @@ public:
   ~StagesModel();
 
 public:
-  void	setProject(ShaderProject* project);
+  void	setStagesManager(IStagesManager* stagesManager);
   void	addShaderObject(ShaderObject::ShaderType type, const QString& filename);
   void	delShaderObject(ShaderObject::ShaderType type);
   void	delShaderObject(const QModelIndex& index);
@@ -44,7 +44,7 @@ public:
   QModelIndex	index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
 
 private:
-  ShaderProject*	_project;
+  IStagesManager*	_stagesManager;
 };
 
 #endif // STAGESMODEL_H

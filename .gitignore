@@ -1,15 +1,16 @@
+!.gitignore
+
 #Ryp custom
 *.kdev4*
 *#*.bak
 
 #Qt project
-cmake_install.cmake
-CMakeFiles
-CMakeCache.txt
 *.moc
 moc_*
 *.depends
 *.cxx
 Makefile
-
-!.gitignore
+CMakeCache.txt
+CMakeFiles
+cmake_install.cmake
+build

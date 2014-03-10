@@ -24,6 +24,8 @@
 #include <QGLWidget>
 #include <QTime>
 
+class IInputItemManager;
+
 QT_BEGIN_NAMESPACE
 class QTimer;
 class QTime;
@@ -49,6 +51,7 @@ public:
 
 public:
   void		setShader(ShaderProgram* prgm);
+  void		setInputs(IInputItemManager* inputs);
   const QColor&	getBgrColor() const;
   void		resetTime();
   void		setAutoRefresh(bool enabled);
@@ -75,10 +78,10 @@ signals:
 private:
   Vect2u		_viewportSize;
   ShaderProgram*	_shader;
+  IInputItemManager*	_inputs;
   GLuint		_vertexBuffer;
   GLuint		_normalBuffer;
   GLuint		_uvBuffer;
-  GLuint		_textureHandle;
   QTimer*		_refreshTimer;
   QTime			_time;
   bool			_autoRefresh;

@@ -34,7 +34,7 @@ GLInfoDialog::GLInfoDialog(GLInfo& glInfos, QWidget *parent)
   QGroupBox*	versionsBox = new QGroupBox(tr("General"));
   QListWidget*	extensionsList = new QListWidget;
   QVBoxLayout*	extensionslayout = new QVBoxLayout;
-  QGroupBox*	extensionsBox = new QGroupBox(tr("Extensions supported"));
+  QGroupBox*	extensionsBox = new QGroupBox(tr("Supported extensions"));
   QLabel*	label;
 
   QFont font = this->font();

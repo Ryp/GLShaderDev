@@ -23,9 +23,10 @@
 #include <QString>
 #include <QStringList>
 
-#include "GL/Shader/ShaderObject.h"
+#include "IInputItemManager.h"
+#include "IStagesManager.h"
 
-class ShaderProject
+class ShaderProject : public IInputItemManager, public IStagesManager
 {
   static const QString	ShaderProjectExtension;
   static const QString	StageSeparator;
@@ -35,14 +36,16 @@ public:
   ~ShaderProject();
 
 public:
-  typedef std::map<ShaderObject::ShaderType, QString> Stages;
 
 public:
   const QString&	getName() const;
   const QString&	getProjectFile() const;
-  const Stages&		getStages() const;
-  void			addShaderObject(ShaderObject::ShaderType type, const QString& filename);
-  void			delShaderObject(ShaderObject::ShaderType type);
+
+  InputItems&		getInputItems(); // inherited from IInputItemManager
+  const Stages&		getStages() const; // inherited from IStagesManager
+  void			addShaderObject(ShaderObject::ShaderType type, const QString& filename); // inherited from IStagesManager
+  void			delShaderObject(ShaderObject::ShaderType type); // inherited from IStagesManager
+
   void			close();// NOTE may throw ProjectException
 
 private:
@@ -53,6 +56,7 @@ private:
   QString	_file;
   QString	_name;
   Stages	_shaderObjects;
+  InputItems	_inputItems;
 };
 
 #endif // SHADERPROJECT_H

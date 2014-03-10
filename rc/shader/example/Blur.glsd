@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../rc/shader/example/Blur/blur.frag, Vertex:../rc/shader/example/Blur/blur.vert

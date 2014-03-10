@@ -15,35 +15,36 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include "GL/ShaderUtils.h"
+#include <QFileInfo>
 
+#include "GL/ShaderUtils.h"
 #include "StagesModel.h"
 
 StagesModel::StagesModel(QObject* parent)
 : QAbstractItemModel(parent),
-  _project(0)
+  _stagesManager(0)
 {}
 
 StagesModel::~StagesModel() {}
 
-void StagesModel::setProject(ShaderProject* project)
+void StagesModel::setStagesManager(IStagesManager* stagesManager)
 {
   emit QAbstractItemModel::beginResetModel();
-  _project = project;
+  _stagesManager = stagesManager;
   emit QAbstractItemModel::endResetModel();
 }
 
 void StagesModel::addShaderObject(ShaderObject::ShaderType type, const QString& filename)
 {
   emit QAbstractItemModel::beginResetModel();
-  _project->addShaderObject(type, filename);
+  _stagesManager->addShaderObject(type, filename);
   emit QAbstractItemModel::endResetModel();
 }
 
 void StagesModel::delShaderObject(ShaderObject::ShaderType type)
 {
   emit QAbstractItemModel::beginResetModel();
-  _project->delShaderObject(type);
+  _stagesManager->delShaderObject(type);
   emit QAbstractItemModel::endResetModel();
 }
 
@@ -53,11 +54,11 @@ void StagesModel::delShaderObject(const QModelIndex& index)
     && index.row() >= 0
     && index.row() < rowCount())
   {
-    ShaderProject::Stages::const_iterator it = _project->getStages().begin();
+    IStagesManager::Stages::const_iterator it = _stagesManager->getStages().begin();
     for (int i = 0; i < index.row(); ++i)
       ++it;
     emit QAbstractItemModel::beginResetModel();
-    _project->delShaderObject(it->first);
+    _stagesManager->delShaderObject(it->first);
     emit QAbstractItemModel::endResetModel();
   }
 }
@@ -70,7 +71,7 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
     && index.column() >= 0
     && index.column() < columnCount())
   {
-    ShaderProject::Stages::const_iterator it = _project->getStages().begin();
+    IStagesManager::Stages::const_iterator it = _stagesManager->getStages().begin();
     for (int i = 0; i < index.row(); ++i)
       ++it;
     if (role == Qt::DisplayRole)
@@ -78,7 +79,10 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
       if (index.column() == 0)
 	return (ShaderUtils::getShaderString(it->first));
       if (index.column() == 1)
-	return (it->second);
+      {
+	QFileInfo nfo(it->second);
+	return (nfo.fileName());
+      }
     }
   }
   return (QVariant());
@@ -86,18 +90,14 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
 
 QVariant StagesModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-    {
-        switch (section)
-        {
-            case 0:
-                return "Type";
-            case 1:
-                return "File";
-        }
-    }
-
-    return QVariant();
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+  {
+    if (section == 0)
+      return ("Type");
+    else if (section == 1)
+      return ("File");
+  }
+  return QVariant();
 }
 
 int StagesModel::columnCount(const QModelIndex& parent) const
@@ -110,7 +110,7 @@ int StagesModel::columnCount(const QModelIndex& parent) const
 int StagesModel::rowCount(const QModelIndex& parent) const
 {
   if (!parent.isValid())
-    return (_project->getStages().size());
+    return (_stagesManager->getStages().size());
   return (0);
 }
 

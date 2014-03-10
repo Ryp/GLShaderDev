@@ -22,7 +22,6 @@
 #include "ShaderStagesView.h"
 #include "StagesModel.h"
 #include "GL/Shader/ShaderObject.h"
-#include "Project/ShaderProject.h"
 
 ShaderStagesView::ShaderStagesView(QWidget* parent)
 : QWidget(parent),
@@ -47,14 +46,14 @@ ShaderStagesView::ShaderStagesView(QWidget* parent)
 
 ShaderStagesView::~ShaderStagesView() {}
 
-void ShaderStagesView::setProject(ShaderProject* project)
+void ShaderStagesView::setStagesManager(IStagesManager* stagesManager)
 {
   if (!_stageModel)
   {
     _stageModel = new StagesModel(this);
     _view->setModel(_stageModel);
   }
-  _stageModel->setProject(project);
+  _stageModel->setStagesManager(stagesManager);
 }
 
 void ShaderStagesView::addStage()

@@ -65,9 +65,14 @@ const QString& ShaderProject::getProjectFile() const
   return (_file);
 }
 
-const ShaderProject::Stages& ShaderProject::getStages() const
+const IStagesManager::Stages& ShaderProject::getStages() const
 {
   return (_shaderObjects);
+}
+
+IInputItemManager::InputItems& ShaderProject::getInputItems()
+{
+  return (_inputItems);
 }
 
 void ShaderProject::addShaderObject(ShaderObject::ShaderType type, const QString& filename)

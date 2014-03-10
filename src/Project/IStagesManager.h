@@ -15,31 +15,25 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef PROJECTMANAGER_H
-#define PROJECTMANAGER_H
+#ifndef ISTAGESITEMMANAGER_H
+#define ISTAGESITEMMANAGER_H
 
 #include <map>
 
-#include "ShaderProject.h"
+#include <QString>
 
-class ProjectManager
+#include "GL/Shader/ShaderObject.h"
+
+class IStagesManager
 {
-  typedef std::map<QString, ShaderProject*> ProjectContainer;
 public:
-  ProjectManager();
-  ~ProjectManager();
+  typedef std::map<ShaderObject::ShaderType, QString>	Stages;
 
 public:
-  void			openProject(const QString& filename);
-  void			close(const QString& filename);
-  void			closeAll();
-
-public:
-  ShaderProject*	getCurrentProject();
-
-private:
-  ShaderProject*	_currentProject;
-  ProjectContainer	_openedProjects;
+  virtual ~IStagesManager() {}
+  virtual const Stages&	getStages() const = 0;
+  virtual void		addShaderObject(ShaderObject::ShaderType type, const QString& filename) = 0;
+  virtual void		delShaderObject(ShaderObject::ShaderType type) = 0;
 };
 
-#endif // PROJECTMANAGER_H
+#endif // ISTAGESITEMMANAGER_H
