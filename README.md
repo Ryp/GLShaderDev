@@ -1,3 +1,5 @@
+[logo]: https://raw.github.com/Ryp/GLShaderDev/master/rc/icon/glsd-icon.png "GLShaderDev Logo"
+![alt text][logo]
 # GLShaderDev
 
 GLShaderDev is an IDE for modern GLSL Shaders.
