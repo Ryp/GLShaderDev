@@ -31,12 +31,17 @@ public:
   ~ShaderInputModel();
 
 public:
-  void	addItem(IShaderInputItem* item);
+  void		addItem(IShaderInputItem* item);
+  void		notifyDataChange(const QModelIndex& index);
 
 public:
   Qt::ItemFlags	flags(const QModelIndex& index) const;
   QVariant	data(const QModelIndex& index, int role) const;
   int		rowCount(const QModelIndex& parent = QModelIndex()) const;
+  QModelIndex	index(int row, int column = 0, const QModelIndex& parent = QModelIndex()) const;
+
+private:
+  IShaderInputItem*	getItem(const QModelIndex& index);
 
 private:
   IInputItemManager::InputItems&	_items;

@@ -33,6 +33,8 @@ set(GLShaderDev_SRCS
   ShaderInputView/InputItem/ShaderInputFactory.cpp
   ShaderInputView/InputItem/TextureInputItem.cpp
   ShaderInputView/InputItem/FloatInputItem.cpp
+  ShaderInputView/InputWidget/AInputItemEditorWidget.cpp
+  ShaderInputView/InputWidget/TestWidget.cpp
   ShaderInputView/ShaderInputDelegate.cpp
   ShaderInputView/ShaderInputModel.cpp
   ShaderInputView/ShaderInputView.cpp
@@ -58,6 +60,8 @@ set(MOC_HEADERS
   Preferences/Panels/GeneralPanel.h
   Preferences/Panels/ShaderExtensionsPanel.h
   Preferences/Panels/ExtensionValidator.h
+  ShaderInputView/InputWidget/AInputItemEditorWidget.h
+  ShaderInputView/InputWidget/TestWidget.h
   ShaderInputView/ShaderInputDelegate.h
   ShaderInputView/ShaderInputView.h
   ShaderInputView/ShaderInputModel.h

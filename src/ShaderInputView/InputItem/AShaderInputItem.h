@@ -24,7 +24,7 @@ class AShaderInputItem : public IShaderInputItem
 {
 public:
   AShaderInputItem(Type type, const std::string& name = "");
-  ~AShaderInputItem();
+  virtual ~AShaderInputItem();
 
 public:
   GLuint		getHandle() const;

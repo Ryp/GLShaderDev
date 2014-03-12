@@ -15,40 +15,11 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef SHADERINPUTVIEW_H
-#define SHADERINPUTVIEW_H
+#include "AInputItemEditorWidget.h"
+#include "ShaderInputView/InputItem/IShaderInputItem.h"
 
-#include <QWidget>
+AInputItemEditorWidget::AInputItemEditorWidget(QWidget* parent)
+: QWidget(parent)
+{}
 
-#include "InputItem/ShaderInputFactory.h"
-#include "Project/IInputItemManager.h"
-
-class ShaderProject;
-class ShaderInputModel;
-
-QT_BEGIN_NAMESPACE
-class QListView;
-QT_END_NAMESPACE
-
-class ShaderInputView : public QWidget
-{
-  Q_OBJECT
-public:
-  ShaderInputView(QWidget* parent = 0);
-  ~ShaderInputView();
-
-public:
-  void	setInputItemManager(IInputItemManager* itemManager);
-
-private slots:
-  void	createTexture();
-  void	createFloat();
-
-private:
-  QListView*			_view;
-  ShaderInputModel*		_model;
-  ShaderInputFactory		_inputFactory;
-  IInputItemManager*		_inputManager;
-};
-
-#endif // SHADERINPUTVIEW_H
+AInputItemEditorWidget::~AInputItemEditorWidget() {}

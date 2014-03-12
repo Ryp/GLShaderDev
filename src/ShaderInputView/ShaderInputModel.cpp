@@ -31,6 +31,11 @@ void ShaderInputModel::addItem(IShaderInputItem* item)
   emit QAbstractItemModel::endInsertRows();
 }
 
+void ShaderInputModel::notifyDataChange(const QModelIndex& index)
+{
+  emit dataChanged(index, index);
+}
+
 Qt::ItemFlags ShaderInputModel::flags(const QModelIndex& index) const
 {
   static_cast<void>(index);
@@ -48,8 +53,6 @@ QVariant ShaderInputModel::data(const QModelIndex& index, int role) const
   {
     if (role == Qt::DisplayRole)
       return (QString(_items[row]->getInputName().c_str()));
-    else if (role == Qt::EditRole)
-      return (QString(_items[row]->getInputName().c_str()));
     else if (role == Qt::ToolTipRole)
       return (QString(_items[row]->getInputName().c_str()));
   }
@@ -61,4 +64,23 @@ int ShaderInputModel::rowCount(const QModelIndex& parent) const
   if (!parent.isValid())
     return (_items.size());
   return (0);
+}
+
+QModelIndex ShaderInputModel::index(int row, int column, const QModelIndex& parent) const
+{
+  static_cast<void>(parent);
+
+  if (row >= 0 && row < rowCount())
+    return (createIndex(row, column, _items[row]));
+  else
+    return (createIndex(row, column));
+}
+
+IShaderInputItem* ShaderInputModel::getItem(const QModelIndex& index)
+{
+  IShaderInputItem *item = 0;
+
+  if (index.isValid())
+    item = static_cast<IShaderInputItem*>(index.internalPointer());
+  return (item);
 }

@@ -20,6 +20,8 @@
 
 #include <QStyledItemDelegate>
 
+class AInputItemEditorWidget;
+
 QT_BEGIN_NAMESPACE
 class QPainter;
 QT_END_NAMESPACE
@@ -36,6 +38,11 @@ public:
   void		setEditorData(QWidget* editor, const QModelIndex& index) const;
   void		setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
   void		updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  void		paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+  QSize		sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
+
+public:
+  AInputItemEditorWidget*	_testWidget;
 };
 
 #endif // SHADERINPUTDELEGATE_H

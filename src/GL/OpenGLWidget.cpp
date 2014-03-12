@@ -15,9 +15,10 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
+#include <QDebug> // FIXME not here
+
 #include <QKeyEvent>
 #include <QWheelEvent>
-#include <QDebug>
 #include <QTimer>
 
 #include <gli/core/load_dds.hpp>
@@ -139,6 +140,7 @@ void	OpenGLWidget::paintGL()
     {
       IShaderInputItem* item = *it;
 
+      qDebug() << "Binding input: " << QString(item->getInputName().c_str());
       if (item->isEnabled())
 	item->bind(_shader);
     }

@@ -20,7 +20,7 @@
 #include <QToolBar>
 #include <QBoxLayout>
 #include <QMenu>
-#include <QTreeView>
+#include <QListView>
 
 #include "ShaderInputModel.h"
 #include "ShaderInputDelegate.h"
@@ -28,7 +28,7 @@
 
 ShaderInputView::ShaderInputView(QWidget* parent)
 : QWidget(parent),
-  _view(new QTreeView),
+  _view(new QListView),
   _model(0)
 {
   QVBoxLayout*	vLayout = new QVBoxLayout;
@@ -44,7 +44,6 @@ ShaderInputView::ShaderInputView(QWidget* parent)
   menuAction->setMenuRole(QAction::TextHeuristicRole);
   menuAction->setMenu(inputTypeMenu);
 
-  _view->setHeaderHidden(true);
   _view->setItemDelegate(new ShaderInputDelegate(this));
 
   vLayout->setSpacing(0);
