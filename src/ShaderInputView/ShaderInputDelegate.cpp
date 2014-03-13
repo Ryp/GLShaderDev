@@ -41,8 +41,8 @@ QWidget* ShaderInputDelegate::createEditor(QWidget* parent, const QStyleOptionVi
 
   if (dynamic_cast<FloatInputItem*>(static_cast<IShaderInputItem*>(index.internalPointer())))
   {
-    _testWidget->setParent(parent);
-    return (_testWidget);
+    qDebug() << "Editor created";
+    return (new TestWidget(parent));
   }
   else
     return (0);

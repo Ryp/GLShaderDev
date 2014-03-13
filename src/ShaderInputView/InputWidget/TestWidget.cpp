@@ -20,6 +20,8 @@
 #include <QBoxLayout>
 #include <QLineEdit>
 #include <QSpinBox>
+#include <QPushButton>
+#include <QLabel>
 
 #include "ShaderInputView/InputItem/FloatInputItem.h"
 
@@ -27,16 +29,23 @@ TestWidget::TestWidget(QWidget* parent)
 : AInputItemEditorWidget(parent)
 {
   QBoxLayout*	layout = new QBoxLayout(QBoxLayout::LeftToRight, this);
-  
+
   _lineEdit = new QLineEdit;
-  _spinBox = new QSpinBox;
+  _spinBox = new QDoubleSpinBox;
+  _reloadButton = new QPushButton(QIcon(":/view-refresh.png"), "");
 
+  _reloadButton->setToolTip(tr("Reload"));
+
+  layout->setSpacing(0);
+  layout->setMargin(0);
   layout->addWidget(_lineEdit);
+  layout->addWidget(new QLabel("Value:"));
   layout->addWidget(_spinBox);
-
+  layout->addWidget(_reloadButton);
   setLayout(layout);
 
   connect(_spinBox, SIGNAL(editingFinished()), this, SIGNAL(editingFinished()));
+  connect(_reloadButton, SIGNAL(pressed()), this, SLOT(reload()));
 }
 
 TestWidget::~TestWidget() {}
@@ -56,4 +65,9 @@ void TestWidget::pushChangesToItem()
 {
   _item->setInputName(_lineEdit->text().toStdString());
   _item->setValue(_spinBox->value());
+}
+
+void TestWidget::reload()
+{
+  _item->reload();
 }

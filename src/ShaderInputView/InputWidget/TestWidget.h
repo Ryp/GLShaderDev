@@ -25,8 +25,9 @@
 class FloatInputItem;
 
 QT_BEGIN_NAMESPACE
-class QSpinBox;
+class QDoubleSpinBox;
 class QLineEdit;
+class QPushButton;
 QT_END_NAMESPACE
 
 class TestWidget : public AInputItemEditorWidget
@@ -41,13 +42,17 @@ public:
   void	pullChangesFromItem();
   void	pushChangesToItem();
 
+public slots:
+  void	reload();
+
 signals:
   void	editingFinished();
 
 private:
   FloatInputItem*	_item;
-  QSpinBox*		_spinBox;
+  QDoubleSpinBox*	_spinBox;
   QLineEdit*		_lineEdit;
+  QPushButton*		_reloadButton;
 };
 
 #endif // TESTWIDGET_H
