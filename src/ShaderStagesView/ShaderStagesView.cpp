@@ -36,6 +36,8 @@ ShaderStagesView::ShaderStagesView(QWidget* parent)
   toolbar->addAction(QIcon(":/list-add.png"), tr("&Add"), this, SLOT(addStage()));
   toolbar->addAction(QIcon(":/list-remove.png"), tr("&Remove"), this, SLOT(delStage()));
 
+  _view->setRootIsDecorated(false);
+
   vLayout->setSpacing(0);
   vLayout->setMargin(0);
   vLayout->addWidget(toolbar);

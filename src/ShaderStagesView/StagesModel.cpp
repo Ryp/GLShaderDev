@@ -16,6 +16,8 @@
  */
 
 #include <QFileInfo>
+#include <QFont>
+#include <QSize>
 
 #include "GL/ShaderUtils.h"
 #include "StagesModel.h"
@@ -65,25 +67,39 @@ void StagesModel::delShaderObject(const QModelIndex& index)
 
 QVariant StagesModel::data(const QModelIndex& index, int role) const
 {
+  int row = index.row();
+  int column = index.column();
+
   if (index.isValid()
-    && index.row() >= 0
-    && index.row() < rowCount()
-    && index.column() >= 0
-    && index.column() < columnCount())
+    && row >= 0
+    && row < rowCount()
+    && column >= 0
+    && column < columnCount())
   {
     IStagesManager::Stages::const_iterator it = _stagesManager->getStages().begin();
-    for (int i = 0; i < index.row(); ++i)
+    for (int i = 0; i < row; ++i)
       ++it;
     if (role == Qt::DisplayRole)
     {
-      if (index.column() == 0)
+      if (column == 0)
 	return (ShaderUtils::getShaderString(it->first));
-      if (index.column() == 1)
+      if (column == 1)
       {
 	QFileInfo nfo(it->second);
 	return (nfo.fileName());
       }
     }
+    else if (role == Qt::FontRole)
+    {
+      if (column == 0)
+      {
+	QFont boldFont;
+	boldFont.setBold(true);
+	return boldFont;
+      }
+    }
+    else if (role == Qt::SizeHintRole)
+      return (QSize(100, 20));
   }
   return (QVariant());
 }

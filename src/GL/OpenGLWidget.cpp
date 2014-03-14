@@ -183,7 +183,7 @@ void	OpenGLWidget::initializeGL()
   if (_inputs) // FIXME not here
   {
     TextureInputItem* textureInput = new TextureInputItem("tex");
-    textureInput->setTextureFile("../rc/texture/filter_lowres.dds");
+    textureInput->setTextureFile("../rc/texture/uvchecker.dds");
     textureInput->load();
 
     FloatInputItem* floatInput = new FloatInputItem("b");
