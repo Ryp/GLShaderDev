@@ -91,6 +91,7 @@ private:
   glm::mat4		_ModelMatrix;
   glm::mat4		_ViewMatrix;
   glm::mat4		_ProjectionMatrix;
+  glm::mat4		_MV;
   glm::mat4		_MVP;
   float			_pitch;
   float			_yaw;

@@ -53,7 +53,8 @@ OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
   _fov(DefaultFov),
   _ModelMatrix(glm::mat4(1.0f)),
   _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
-  _MVP(_ProjectionMatrix * _ViewMatrix * _ModelMatrix),
+  _MV(_ViewMatrix * _ModelMatrix),
+  _MVP(_ProjectionMatrix * _MV),
   _pitch(0.0f),
   _yaw(0.0f),
   _isDraggingMouse(false)
@@ -129,6 +130,7 @@ void	OpenGLWidget::paintGL()
   GLuint normalLocation = _shader->getAttribLocation("normal");
   GLuint uvLocation = _shader->getAttribLocation("uv");
 
+  glUniformMatrix4fv(_shader->getUniformLocation("MV"), 1, GL_FALSE, &_MV[0][0]);
   glUniformMatrix4fv(_shader->getUniformLocation("MVP"), 1, GL_FALSE, &_MVP[0][0]);
 
   if (_autoRefresh)
@@ -183,7 +185,7 @@ void	OpenGLWidget::initializeGL()
   if (_inputs) // FIXME not here
   {
     TextureInputItem* textureInput = new TextureInputItem("tex");
-    textureInput->setTextureFile("../rc/texture/uvchecker.dds");
+    textureInput->setTextureFile("../rc/texture/noise.dds");
     textureInput->load();
 
     FloatInputItem* floatInput = new FloatInputItem("b");
@@ -204,6 +206,8 @@ void	OpenGLWidget::initializeGL()
   glGenBuffers(1, &_uvBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glBufferData(GL_ARRAY_BUFFER, _model->getUVBufferSize(), _model->getUVBuffer(), GL_STATIC_DRAW);
+
+  emit glInitialized();
 }
 
 void	OpenGLWidget::resizeGL(int w, int h)
@@ -272,12 +276,13 @@ void OpenGLWidget::mouseMoved(const QPoint& offset, bool slow)
   _ModelMatrix = glm::mat4(1.0f);
   _ModelMatrix = glm::rotate(_ModelMatrix, RadToDeg(_pitch), glm::vec3(1.0f, 0.0f, 0.0f));
   _ModelMatrix = glm::rotate(_ModelMatrix, RadToDeg(_yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
+  _MV = _ViewMatrix * _ModelMatrix;
+  _MVP = _ProjectionMatrix * _MV;
   updateGL();
 }
 
 void OpenGLWidget::updateProjectionMatrix()
 {
   _ProjectionMatrix = glm::perspective(_fov, static_cast<float>(_viewportSize.ratio()), NearPlane, FarPlane);
-  _MVP = _ProjectionMatrix * _ViewMatrix * _ModelMatrix;
+  _MVP = _ProjectionMatrix * _MV;
 }

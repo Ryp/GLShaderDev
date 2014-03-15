@@ -8,8 +8,6 @@ in float gPrimitive;
 layout(location = 0) out vec4 FragColor;
 
 uniform vec3 LightPosition_worldspace;
-uniform vec3 DiffuseMaterial;
-uniform vec3 AmbientMaterial;
 
 float amplify(float d, float scale, float offset)
 {

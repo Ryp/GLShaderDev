@@ -40,6 +40,9 @@ public:
   GLuint		getAttribLocation(const std::string& name) const;
   GLuint		getUniformLocation(const std::string& name) const;
 
+public:
+  void			printDebug(); // FIXME Debug only
+
 private:
   void			retrieveLocations();
 

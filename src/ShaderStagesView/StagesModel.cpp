@@ -79,8 +79,7 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
     IStagesManager::Stages::const_iterator it = _stagesManager->getStages().begin();
     for (int i = 0; i < row; ++i)
       ++it;
-    if (role == Qt::DisplayRole)
-    {
+    if (role == Qt::DisplayRole) {
       if (column == 0)
 	return (ShaderUtils::getShaderString(it->first));
       if (column == 1)
@@ -89,8 +88,7 @@ QVariant StagesModel::data(const QModelIndex& index, int role) const
 	return (nfo.fileName());
       }
     }
-    else if (role == Qt::FontRole)
-    {
+    else if (role == Qt::FontRole) {
       if (column == 0)
       {
 	QFont boldFont;

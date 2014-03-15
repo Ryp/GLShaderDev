@@ -436,12 +436,14 @@ void GLShaderDev::buildCurrentProject()
   _output->getModel()->addItem(OutputItem(tr("*** Compilation successful ***"), OutputItem::StandardItem));
   // FIXME Set shader properly, with attributes correctly bound
   _glwidget->setShader(prog);
+  prog->printDebug();
 }
 
 void GLShaderDev::initGLInfo()
 {
   _glInfo.updateInfos();
   _glInfoDialog = new GLInfoDialog(_glInfo, this);
+  std::cout << "LOL" << std::endl;
 }
 
 void GLShaderDev::showGLInfo()

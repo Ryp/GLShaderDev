@@ -16,7 +16,7 @@
  */
 
 #include <vector>
-#include <iostream>
+#include <iostream> // FIXME
 
 #include "ShaderProgram.h"
 #include "ShaderObject.h"
@@ -106,6 +106,16 @@ GLuint ShaderProgram::getUniformLocation(const std::string& name) const
     return (it->second);
   std::cerr << "Shader uniform \'" << name << "\' does not exist" << std::endl;
   return (-1);
+}
+
+void ShaderProgram::printDebug()
+{
+  std::cout << "Attributes:" << std::endl;
+  for (std::map<std::string, GLuint>::iterator it = _attribs.begin(); it != _attribs.end(); ++it)
+    std::cout << "Name: " << (*it).first << std::endl;
+  std::cout << "Uniforms:" << std::endl;
+  for (std::map<std::string, GLuint>::iterator it = _uniforms.begin(); it != _uniforms.end(); ++it)
+    std::cout << "Name: " << (*it).first << std::endl;
 }
 
 void ShaderProgram::retrieveLocations()
