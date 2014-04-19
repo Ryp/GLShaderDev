@@ -36,8 +36,6 @@ public:
   ~ShaderProject();
 
 public:
-
-public:
   const QString&	getName() const;
   const QString&	getProjectFile() const;
 
@@ -56,6 +54,7 @@ private:
   QString	_file;
   QString	_name;
   Stages	_shaderObjects;
+
   InputItems	_inputItems;
 };
 

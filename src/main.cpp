@@ -17,6 +17,7 @@
 
 #include <QtGui/QApplication>
 #include <QtCore/QResource>
+
 #include <iostream>
 
 #include "GLShaderDev.h"
@@ -29,7 +30,7 @@ int	main(int argc, char** argv)
   try
   {
     QCoreApplication::setApplicationName("GLShaderDev");
-    QCoreApplication::setApplicationVersion("0.9.1");
+    QCoreApplication::setApplicationVersion("0.9.2");
     QCoreApplication::setOrganizationName("Epitech");
     QApplication app(argc, argv);
     QStringList	args = app.arguments();

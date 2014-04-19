@@ -31,76 +31,75 @@ class OpenGLWidget;
 class NewFileDialog;
 class BuildOutput;
 class CodeEditor;
-class PreferencesWidget;
 
 class GLShaderDev : public QMainWindow
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  GLShaderDev(const QStringList& args);
-  ~GLShaderDev();
+    GLShaderDev(const QStringList& args);
+    ~GLShaderDev();
 
 private:
-  void	initializeContext();
-  void	initializeActions();
-  void	initializeDockWidgets();
+    void  initializeContext();
+    void  initializeActions();
+    void  initializeDockWidgets();
 
-  void	loadSettings();
-  void	saveSettings();
+    void  loadSettings();
+    void  saveSettings();
 
-  void	updateRecentFiles();
-  void	updateRecentProjects();
-  void	addRecentFile(const QString& filename);
-  void	addRecentProject(const QString& filename);
-  void	openFile(const QString& filename);
-  void	openProject(const QString& filename);
-  void	openProjectFiles(ShaderProject* project);
+    void  updateRecentFiles();
+    void  updateRecentProjects();
+    void  addRecentFile(const QString& filename);
+    void  addRecentProject(const QString& filename);
+    void  openFile(const QString& filename);
+    void  openProject(const QString& filename);
+    void  openProjectFiles(ShaderProject* project);
 
-  void	updateTitleBar();
+    void  updateTitleBar();
 
 public slots:
-  void	closeEvent(QCloseEvent* event);
+    void  closeEvent(QCloseEvent* event);
 
-  void	newProject();
-  void	openProjectDialog();
-  void	openRecentProject();
-  void	clearProjectRecent();
-  void	closeProject();
+    void  newProject();
+    void  openProjectDialog();
+    void  openRecentProject();
+    void  clearProjectRecent();
+    void  closeProject();
 
-  void	newFile();
-  void	openFileDialog();
-  void	openRecentFile();
-  void	clearFileRecent();
-  void	saveFileAs();
+    void  newFile();
+    void  openFileDialog();
+    void  openRecentFile();
+    void  clearFileRecent();
+    void  saveFileAs();
 
-  void	buildCurrentProject();
+    void  openProjectConfiguration();
+    void  buildCurrentProject();
 
-  void	initGLInfo();
-  void	showGLInfo();
+    void  initGLInfo();
+    void  showGLInfo();
 
-  void 	showPreferences();
+    void  showPreferences();
 
-  void	about();
-
-private:
-  enum { MaxRecentFiles = 9 };
-  enum { MaxRecentProjects = 9 };
+    void  about();
 
 private:
-  CodeEditor*		_editor;
-  BuildOutput*		_output;
-  QDockWidget*		_buildOutputDock;
-  OpenGLWidget*		_glwidget;
-  GLPreviewWidget*	_glpreview;
-  GLInfoDialog*		_glInfoDialog;
-  ShaderStagesView*	_shaderStages;
-  ShaderInputView*	_shaderInput;
-  NewFileDialog*	_newFileDialog;
-  QAction*		_recentFileActions[MaxRecentFiles + 2];
-  QAction*		_recentProjectActions[MaxRecentProjects + 2];
-  PreferencesWidget*	_preferencesWidget;
-  ProjectManager	_projectManager;
-  GLInfo		_glInfo;
+    enum { MaxRecentFiles = 9 };
+    enum { MaxRecentProjects = 9 };
+
+private:
+    CodeEditor*         _editor;
+    BuildOutput*        _output;
+    QDockWidget*        _buildOutputDock;
+    OpenGLWidget*       _glwidget;
+    GLPreviewWidget*    _glpreview;
+    GLInfoDialog*       _glInfoDialog;
+    ShaderStagesView*   _shaderStages;
+    ShaderInputView*    _shaderInput;
+    NewFileDialog*      _newFileDialog;
+    QAction*            _recentFileActions[MaxRecentFiles + 2];
+    QAction*            _recentProjectActions[MaxRecentProjects + 2];
+    ProjectManager      _projectManager;
+    GLInfo              _glInfo;
 };
 
 #endif // GLSHADERDEV_H

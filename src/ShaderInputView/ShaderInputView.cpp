@@ -26,6 +26,12 @@
 #include "ShaderInputDelegate.h"
 #include "ShaderInputView.h"
 
+#include <qtpropertymanager.h>
+#include <qteditorfactory.h>
+#include <qttreepropertybrowser.h>
+#include <qtbuttonpropertybrowser.h>
+#include <qtgroupboxpropertybrowser.h>
+
 ShaderInputView::ShaderInputView(QWidget* parent)
 : QWidget(parent),
   _view(new QListView),
@@ -50,6 +56,35 @@ ShaderInputView::ShaderInputView(QWidget* parent)
   vLayout->setMargin(0);
   vLayout->addWidget(toolbar);
   vLayout->addWidget(_view);
+
+  QtBoolPropertyManager *boolManager = new QtBoolPropertyManager(this);
+  QtIntPropertyManager *intManager = new QtIntPropertyManager(this);
+  QtStringPropertyManager *stringManager = new QtStringPropertyManager(this);
+  QtSizePropertyManager *sizeManager = new QtSizePropertyManager(this);
+  QtRectPropertyManager *rectManager = new QtRectPropertyManager(this);
+  QtSizePolicyPropertyManager *sizePolicyManager = new QtSizePolicyPropertyManager(this);
+  QtEnumPropertyManager *enumManager = new QtEnumPropertyManager(this);
+  QtGroupPropertyManager *groupManager = new QtGroupPropertyManager(this);
+
+  QtCheckBoxFactory *checkBoxFactory = new QtCheckBoxFactory(this);
+  QtSpinBoxFactory *spinBoxFactory = new QtSpinBoxFactory(this);
+  QtSliderFactory *sliderFactory = new QtSliderFactory(this);
+  QtScrollBarFactory *scrollBarFactory = new QtScrollBarFactory(this);
+  QtLineEditFactory *lineEditFactory = new QtLineEditFactory(this);
+  QtEnumEditorFactory *comboBoxFactory = new QtEnumEditorFactory(this);
+
+  QtAbstractPropertyBrowser *editor1 = new QtTreePropertyBrowser();
+  editor1->setFactoryForManager(sizeManager->subIntPropertyManager(), spinBoxFactory);
+  editor1->setFactoryForManager(rectManager->subIntPropertyManager(), spinBoxFactory);
+  editor1->setFactoryForManager(sizePolicyManager->subIntPropertyManager(), spinBoxFactory);
+  editor1->setFactoryForManager(sizePolicyManager->subEnumPropertyManager(), comboBoxFactory);
+  editor1->setFactoryForManager(enumManager, comboBoxFactory);
+
+
+  QtProperty *item0 = groupManager->addProperty("QObject");
+  editor1->addProperty(item0);
+
+  vLayout->addWidget(editor1);
 
   setLayout(vLayout);
 

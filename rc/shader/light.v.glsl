@@ -24,7 +24,6 @@ void main(void)
   d = d / 10;
   d[3] = 1.0;
 
-
 	UV_out = uv;
   n = vec4(MVP * vec4(normal, 1.0)).xyz;
 }

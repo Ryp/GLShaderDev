@@ -136,6 +136,9 @@ void	OpenGLWidget::paintGL()
   if (_autoRefresh)
     glUniform1f(_shader->getUniformLocation("time"), static_cast<GLfloat>(_time.elapsed()) / 1000.0f);
 
+  // FIXME FIXME FIXME
+  glUniform3f(_shader->getUniformLocation("LightPosition_worldspace"), 3.0f, 3.0f, 3.0f);
+
   if (_inputs)
   {
     for (IInputItemManager::InputItems::iterator it = _inputs->getInputItems().begin(); it != _inputs->getInputItems().end(); ++it)

@@ -19,17 +19,17 @@
 #define MATH_HPP
 
 #ifndef M_PI
-# define M_PI 3.14159265358979323846
+#   define M_PI 3.14159265358979323846
 #endif
 
 inline float DegToRad(const float deg)
 {
-  return (deg * (2.0f * M_PI) / 360.0f);
+    return (deg * (2.0f * M_PI) / 360.0f);
 }
 
 inline float RadToDeg(const float rad)
 {
-  return (rad * 360.0f / (2.0f * M_PI));
+    return (rad * 360.0f / (2.0f * M_PI));
 }
 
 #endif // MATH_HPP
