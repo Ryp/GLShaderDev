@@ -36,6 +36,8 @@ ShaderStagesView::ShaderStagesView(QWidget* parent)
   toolbar->addAction(QIcon(":/list-add.png"), tr("&Add"), this, SLOT(addStage()));
   toolbar->addAction(QIcon(":/list-remove.png"), tr("&Remove"), this, SLOT(delStage()));
 
+  toolbar->setDisabled(true); // FIXME
+
   _view->setRootIsDecorated(false);
 
   vLayout->setSpacing(0);
@@ -61,9 +63,6 @@ void ShaderStagesView::setStagesManager(IStagesManager* stagesManager)
 void ShaderStagesView::addStage()
 {
   // FIXME Better UI
-
-  _stageModel->addShaderObject(ShaderObject::VertexShader, "../rc/shader/light.v.glsl");
-  _stageModel->addShaderObject(ShaderObject::FragmentShader, "../rc/shader/light.f.glsl");
 }
 
 void ShaderStagesView::delStage()

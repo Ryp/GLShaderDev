@@ -44,10 +44,10 @@
 #include "GL/GLPreviewWidget.h"
 
 GLShaderDev::GLShaderDev(const QStringList& args)
-: _editor(new CodeEditor(this)),
-_output(new BuildOutput(this)),
-_glInfoDialog(0),
-_newFileDialog(new NewFileDialog(this))
+:   _editor(new CodeEditor(this)),
+    _output(new BuildOutput(this)),
+    _glInfoDialog(nullptr),
+    _newFileDialog(new NewFileDialog(this))
 {
     resize(1000, 800); // FIXME set sizeHint instead of hardcoding it
     setWindowIcon(QIcon(":/glsd-icon.png"));

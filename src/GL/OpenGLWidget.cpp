@@ -183,12 +183,12 @@ void	OpenGLWidget::initializeGL()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
-  _model = ml.load("../rc/model/quad.obj");
+  _model = ml.load("../rc/model/suzanne.obj");
 
   if (_inputs) // FIXME not here
   {
     TextureInputItem* textureInput = new TextureInputItem("tex");
-    textureInput->setTextureFile("../rc/texture/noise.dds");
+    textureInput->setTextureFile("../rc/texture/uvchecker.dds");
     textureInput->load();
 
     FloatInputItem* floatInput = new FloatInputItem("b");
