@@ -22,25 +22,25 @@
 
 struct OutputItem
 {
-  enum OutputItemType
-  {
-    HiddenItem = 0,
-    ErrorItem,
-    StandardItem,
-    InformationItem
-  };
-
-  explicit OutputItem(const QString& line = QString());
-  OutputItem(const QString& line, OutputItemType type);
-
-  OutputItemType	type;
-  QString		originalString;
-  QString		shortenedString;
-  bool			isDeferencable;
-  QString		file;
-  int			lineNo;
-  int			columnNo;
-  int			errNo;
+    enum OutputItemType
+    {
+        HiddenItem = 0,
+        ErrorItem,
+        StandardItem,
+        InformationItem
+    };
+    
+    explicit OutputItem(const QString& line = QString());
+    OutputItem(const QString& line, OutputItemType type);
+    
+    OutputItemType  type;
+    QString         originalString;
+    QString         shortenedString;
+    bool            isDeferencable;
+    QString         file;
+    int             lineNo;
+    int             columnNo;
+    int             errNo;
 };
 
 #endif // OUTPUTITEM_H

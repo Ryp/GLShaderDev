@@ -1,4 +1,4 @@
- 
+
 // Bulb Spill by eiffie (SoC with reflections sample)
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 varying vec2 coord;

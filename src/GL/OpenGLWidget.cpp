@@ -165,7 +165,8 @@ void	OpenGLWidget::paintGL()
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-  glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
+  glPatchParameteri(GL_PATCH_VERTICES, 4);
+  glDrawArrays(GL_PATCHES, 0, _model->getTriangleCount() * 3);
 
   glDisableVertexAttribArray(vertexLocation);
   glDisableVertexAttribArray(normalLocation);
@@ -183,7 +184,7 @@ void	OpenGLWidget::initializeGL()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
-  _model = ml.load("../rc/model/suzanne.obj");
+  _model = ml.load("../rc/model/icosahedron.obj");
 
   if (_inputs) // FIXME not here
   {

@@ -14,7 +14,7 @@ uniform float time;
 void main(void)
 {
 	mat4	mat;
-	mat[0] = vec4(cos(time* 5 + 3.14) / 2 + 1, 0.0, 0.0, 0.0);
+	mat[0] = vec4(cos(time * 5 + 3.14) / 2 + 1, 0.0, 0.0, 0.0);
 	mat[1] = vec4(0.0, sin(time* 5) / 2 + 1, 0.0, 0.0);
 	mat[2] = vec4(0.0, 0.0, cos(time * 1.0) / 2 + 1, 0.0);
 	mat[3] = vec4(0.0, 0.0, 0.0, 1.0);

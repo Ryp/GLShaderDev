@@ -28,25 +28,32 @@
 class OutputParser
 {
 public:
-  OutputParser(GLInfo::Vendor vendor = GLInfo::Unknown);
-  ~OutputParser();
-
-  typedef void (OutputParser::*OutputParserFunc)(const std::string&, const std::string&);
-
+    OutputParser(GLInfo::Vendor vendor = GLInfo::Vendor::Unknown);
+    ~OutputParser();
+    
+    typedef void (OutputParser::*OutputParserFunc)(const std::string&, const std::string&);
+    
 public:
-  const std::list<OutputItem>&	parse(const std::string& output, const std::string& fileAbsPath);
-
+    const std::list<OutputItem>&    parse(const std::string& output, const std::string& fileAbsPath);
+    
 private:
-  void	parseUnknown(const std::string& output, const std::string& fileAbsPath);
-  void	parseATI(const std::string& output, const std::string& fileAbsPath);
-  void	parseATIErrorLocation(std::string string, int *line, int *col);
-  void	parseATIErrNo(std::string& string, int *errNo);
-  void	parseNvidia(const std::string& output, const std::string& fileAbsPath);
-
+    void    parseUnknown(const std::string& output, const std::string& fileAbsPath);
+    
+    void    parseATI(const std::string& output, const std::string& fileAbsPath);
+    void    parseATIErrorLocation(std::string string, int& line, int& col);
+    void    parseATIErrNo(std::string& string, int& errNo);
+    
+    void    parseNvidia(const std::string& output, const std::string& fileAbsPath);
+    
+    void    parseIntel(const std::string& output, const std::string& fileAbsPath);
+    void    parseIntelLine(const std::string& string, const std::string& fileAbsPath);
+    void    parseIntelErrorLocation(std::string string, int& line, int& col);
+    void    parseIntelErrorNo(const std::string& string, int& errNo);
+    
 private:
-  std::list<OutputItem>				_errors;
-  GLInfo::Vendor				_vendor;
-  std::map<GLInfo::Vendor, OutputParserFunc>	_parsers;
+    std::list<OutputItem>                       _errors;
+    GLInfo::Vendor                              _vendor;
+    std::map<GLInfo::Vendor, OutputParserFunc>  _parsers;
 };
 
 #endif // OUTPUTPARSER_H

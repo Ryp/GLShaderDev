@@ -1,4 +1,4 @@
- 
+
 in vec3 vertex;
 in vec2 uv;
 

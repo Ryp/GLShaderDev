@@ -396,10 +396,10 @@ void GLShaderDev::openProjectConfiguration()
 
 void GLShaderDev::buildCurrentProject()
 {
-    ShaderProgram*        prog = new ShaderProgram;
-    bool              success = true;
-    int               i = 1;
-    OutputParser          parser(_glInfo.getVendor());
+    ShaderProgram*  prog = new ShaderProgram;
+    bool            success = true;
+    int             i = 1;
+    OutputParser    parser(_glInfo.getVendor());
     const ShaderProject::Stages&  stages = _projectManager.getCurrentProject()->getStages();
 
     _editor->saveAll();
