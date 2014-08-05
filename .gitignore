@@ -4,13 +4,4 @@
 *.kdev4*
 *#*.bak
 
-#Qt project
-*.moc
-moc_*
-*.depends
-*.cxx
-Makefile
-CMakeCache.txt
-CMakeFiles
-cmake_install.cmake
 build

@@ -25,43 +25,44 @@
 class GLInfo
 {
 public:
-  enum Vendor {
-    Unknown = 0,
-    ATI,
-    Nvidia,
-    SGI
-  };
+    enum class Vendor {
+        Unknown = 0,
+        ATI,
+        Nvidia,
+        Intel,
+        SGI
+    };
 
 public:
-  GLInfo();
-  ~GLInfo();
-
+    GLInfo();
+    ~GLInfo();
+    
 public:
-  void	updateInfos();
-
+    void  updateInfos();
+    
 public:
-  Vendor				getVendor() const;
-  const std::string&			getVendorString() const;
-  const std::string&			getRendererString() const;
-  const std::string&			getOpenGLVersionString() const;
-  const std::string&			getGLSLVersionString() const;
-  int					getGLSLMajorVersion() const;
-  int					getGLSLMinorVersion() const;
-  const std::vector<std::string>&	getExtensions() const;
-
+    Vendor                          getVendor() const;
+    const std::string&              getVendorString() const;
+    const std::string&              getRendererString() const;
+    const std::string&              getOpenGLVersionString() const;
+    const std::string&              getGLSLVersionString() const;
+    int                             getGLSLMajorVersion() const;
+    int                             getGLSLMinorVersion() const;
+    const std::vector<std::string>& getExtensions() const;
+    
 private:
-  void					parseGLSLVersion(std::string glslVersionString);
-
+    void    parseGLSLVersion(std::string glslVersionString);
+    
 private:
-  Vendor			_vendor;
-  std::string			_vendorString;
-  std::string			_rendererString;
-  std::string			_glVersionString;
-  std::string			_glslVersionString;
-  int				_glslMajorVersion;
-  int				_glslMinorVersion;
-  std::vector<std::string>	_extensions;
-  std::map<std::string, Vendor>	_vendorID;
+    Vendor                          _vendor;
+    std::string                     _vendorString;
+    std::string                     _rendererString;
+    std::string                     _glVersionString;
+    std::string                     _glslVersionString;
+    int                             _glslMajorVersion;
+    int                             _glslMinorVersion;
+    std::vector<std::string>        _extensions;
+    std::map<std::string, Vendor>   _vendorID;
 };
 
 #endif // GLINFO_H

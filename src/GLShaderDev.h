@@ -36,51 +36,51 @@ class GLShaderDev : public QMainWindow
 {
     Q_OBJECT
 public:
-    GLShaderDev(const QStringList& args);
+    explicit GLShaderDev(const QStringList& args);
     ~GLShaderDev();
 
 private:
-    void  initializeContext();
-    void  initializeActions();
-    void  initializeDockWidgets();
+    void    initializeContext();
+    void    initializeActions();
+    void    initializeDockWidgets();
 
-    void  loadSettings();
-    void  saveSettings();
+    void    loadSettings();
+    void    saveSettings();
 
-    void  updateRecentFiles();
-    void  updateRecentProjects();
-    void  addRecentFile(const QString& filename);
-    void  addRecentProject(const QString& filename);
-    void  openFile(const QString& filename);
-    void  openProject(const QString& filename);
-    void  openProjectFiles(ShaderProject* project);
+    void    updateRecentFiles();
+    void    updateRecentProjects();
+    void    addRecentFile(const QString& filename);
+    void    addRecentProject(const QString& filename);
+    void    openFile(const QString& filename);
+    void    openProject(const QString& filename);
+    void    openProjectFiles(ShaderProject* project);
 
-    void  updateTitleBar();
+    void    updateTitleBar();
 
 public slots:
-    void  closeEvent(QCloseEvent* event);
+    void    closeEvent(QCloseEvent* event);
 
-    void  newProject();
-    void  openProjectDialog();
-    void  openRecentProject();
-    void  clearProjectRecent();
-    void  closeProject();
+    void    newProject();
+    void    openProjectDialog();
+    void    openRecentProject();
+    void    clearProjectRecent();
+    void    closeProject();
 
-    void  newFile();
-    void  openFileDialog();
-    void  openRecentFile();
-    void  clearFileRecent();
-    void  saveFileAs();
+    void    newFile();
+    void    openFileDialog();
+    void    openRecentFile();
+    void    clearFileRecent();
+    void    saveFileAs();
 
-    void  openProjectConfiguration();
-    void  buildCurrentProject();
+    void    openProjectConfiguration();
+    void    buildCurrentProject();
 
-    void  initGLInfo();
-    void  showGLInfo();
+    void    initGLInfo();
+    void    showGLInfo();
 
-    void  showPreferences();
+    void    showPreferences();
 
-    void  about();
+    void    about();
 
 private:
     enum { MaxRecentFiles = 9 };

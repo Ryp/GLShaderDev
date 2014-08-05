@@ -15,33 +15,30 @@
  * along with GLShaderDev.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QtGui/QApplication>
-#include <QtCore/QResource>
+#include <QApplication>
 
 #include <iostream>
 
 #include "GLShaderDev.h"
 #include "Exceptions/GlsdException.hpp"
 
-int	main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-  int	ret = 0;
+    int   ret = 0;
 
-  try
-  {
-    QCoreApplication::setApplicationName("GLShaderDev");
-    QCoreApplication::setApplicationVersion("0.9.2");
-    QCoreApplication::setOrganizationName("Epitech");
-    QApplication app(argc, argv);
-    QStringList	args = app.arguments();
-    args.pop_front();
-    GLShaderDev ide(args);
-    ide.show();
-    ret = app.exec();
-  }
-  catch (const GlsdException& e)
-  {
-    std::cerr << "GlsdException caught: " << e.what() << std::endl;
-  }
-  return (ret);
+    try {
+        QCoreApplication::setApplicationName("GLShaderDev");
+        QCoreApplication::setApplicationVersion("0.9.2");
+        QCoreApplication::setOrganizationName("Epitech");
+        QApplication app(argc, argv);
+        QStringList args = app.arguments();
+        args.pop_front();
+        GLShaderDev ide(args);
+        ide.show();
+        ret = app.exec();
+    }
+    catch (const GlsdException& e) {
+        std::cerr << "GlsdException caught: " << e.what() << std::endl;
+    }
+    return (ret);
 }
