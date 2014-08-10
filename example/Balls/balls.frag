@@ -1,3 +1,4 @@
+#version 130
 
 // Bulb Spill by eiffie (SoC with reflections sample)
 // License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
@@ -87,7 +88,7 @@ vec3 FuzzyReflection(vec3 ro, vec3 rd, float coneGrad, float rCoC){
 
 void main()
 {
-	pixelSize=2.0/screenSize.y;
+	pixelSize = 2.0 * vec2(screenSize).y;
 	float tim=time*1.5;
 	vec3 ro=vec3(tim*2.0,0.0,tim);
 	vec3 rd=lookat(vec3(2.0,-1.0,0.0),vec3(0.0,1.0,0.0))*normalize(vec3((2.0*gl_FragCoord.xy-screenSize.xy)/screenSize.y,2.0));

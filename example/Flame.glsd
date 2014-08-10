@@ -1,2 +1,2 @@
 [General]
-stages=Fragment:../rc/shader/example/Flame/flame.frag, Vertex:../rc/shader/example/Flame/flame.vert
+stages=Fragment:../example/Flame/flame.frag, Vertex:../example/Flame/flame.vert
