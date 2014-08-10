@@ -44,20 +44,20 @@ const float OpenGLWidget::MaxFov = 140.0f;
 const float OpenGLWidget::MouseWheelSpeed = 0.10f;
 
 OpenGLWidget::OpenGLWidget(const QGLFormat& fmt, QWidget* parent)
-: QGLWidget(fmt, parent),
-  _viewportSize(size().width(), size().height()),
-  _shader(0),
-  _inputs(0),
-  _refreshTimer(new QTimer(this)),
-  _autoRefresh(false), // FIXME Get this param from project
-  _fov(DefaultFov),
-  _ModelMatrix(glm::mat4(1.0f)),
-  _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
-  _MV(_ViewMatrix * _ModelMatrix),
-  _MVP(_ProjectionMatrix * _MV),
-  _pitch(0.0f),
-  _yaw(0.0f),
-  _isDraggingMouse(false)
+:   QGLWidget(fmt, parent),
+    _viewportSize(size().width(), size().height()),
+    _shader(0),
+    _inputs(0),
+    _refreshTimer(new QTimer(this)),
+    _autoRefresh(false), // FIXME Get this param from project
+    _fov(DefaultFov),
+    _ModelMatrix(glm::mat4(1.0f)),
+    _ViewMatrix(glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)), glm::vec3(0.0f, 0.0f, -3.0f))),
+    _MV(_ViewMatrix * _ModelMatrix),
+    _MVP(_ProjectionMatrix * _MV),
+    _pitch(0.0f),
+    _yaw(0.0f),
+    _isDraggingMouse(false)
 {
   updateProjectionMatrix();
 
@@ -147,7 +147,7 @@ void	OpenGLWidget::paintGL()
 
       qDebug() << "Binding input: " << QString(item->getInputName().c_str());
       if (item->isEnabled())
-	item->bind(_shader);
+        item->bind(_shader);
     }
   }
 
@@ -165,8 +165,9 @@ void	OpenGLWidget::paintGL()
   glBindBuffer(GL_ARRAY_BUFFER, _uvBuffer);
   glVertexAttribPointer(uvLocation, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
-  glPatchParameteri(GL_PATCH_VERTICES, 4);
-  glDrawArrays(GL_PATCHES, 0, _model->getTriangleCount() * 3);
+//   glPatchParameteri(GL_PATCH_VERTICES, 4);
+//   glDrawArrays(GL_PATCHES, 0, _model->getTriangleCount() * 3);
+  glDrawArrays(GL_TRIANGLES, 0, _model->getTriangleCount() * 3);
 
   glDisableVertexAttribArray(vertexLocation);
   glDisableVertexAttribArray(normalLocation);
@@ -184,20 +185,7 @@ void	OpenGLWidget::initializeGL()
   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
   ModelLoader	ml;
-  _model = ml.load("../rc/model/icosahedron.obj");
-
-  if (_inputs) // FIXME not here
-  {
-    TextureInputItem* textureInput = new TextureInputItem("tex");
-    textureInput->setTextureFile("../rc/texture/uvchecker.dds");
-    textureInput->load();
-
-    FloatInputItem* floatInput = new FloatInputItem("b");
-    floatInput->setValue(0.5f);
-
-    _inputs->getInputItems().push_back(textureInput);
-    _inputs->getInputItems().push_back(floatInput);
-  }
+  _model = ml.load("../rc/model/suzanne.obj");
 
   glGenBuffers(1, &_vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertexBuffer);

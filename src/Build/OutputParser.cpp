@@ -20,6 +20,19 @@
 
 #include "OutputParser.h"
 
+static void buildShortenedString(const std::string& content, OutputItem& item)
+{
+    QString lineString;
+
+    if (item.lineNo)
+        lineString = QString(":%1:%2").arg(item.lineNo).arg(item.columnNo);
+    item.shortenedString = QString("%1: %2 [%3]").arg(lineString).arg(QString::fromStdString(content)).arg(item.errNo);
+    if (item.type == OutputItem::ErrorItem)
+        item.shortenedString.prepend("Error");
+    else if (item.type == OutputItem::WarningItem)
+        item.shortenedString.prepend("Warning");
+}
+
 OutputParser::OutputParser(GLInfo::Vendor vendor)
 : _vendor(vendor)
 {
@@ -42,11 +55,11 @@ void OutputParser::parseUnknown(const std::string& output, const std::string& fi
 {
     std::istringstream  iss(output);
     std::string         line;
-    
+
     while (std::getline(iss, line))
     {
         OutputItem  error(line.c_str(), OutputItem::StandardItem);
-        
+
         error.file = fileAbsPath.c_str();
         _errors.push_back(error);
     }
@@ -57,63 +70,111 @@ void OutputParser::parseATI(const std::string& output, const std::string& fileAb
     std::istringstream  iss(output);
     std::string         line;
     std::size_t         pos;
-    
+
     std::getline(iss, line); // Skip first line saying "following errors.."
     while (std::getline(iss, line))
     {
         OutputItem  error(line.c_str(), OutputItem::ErrorItem);
-        QString lineString;
-        
+
+        error.file = fileAbsPath.c_str();
         line = line.substr(7); // Remove "ERROR: "
         if ((pos = line.find("error(")) != 0 && pos != std::string::npos)
         {
-            parseATIErrorLocation(line.substr(0, pos), error.lineNo, error.lineNo);
+            parseATIErrorLocation(line.substr(0, pos), error);
             line = line.substr(pos);
         }
         line = line.substr(7); // Remove "error(#"
-        parseATIErrNo(line, error.errNo);
-        
-        if (error.lineNo)
-            lineString = QString(":%1:%2").arg(error.lineNo).arg(error.columnNo);
-        error.shortenedString = QString("Error%1: %2 (#%3)").arg(lineString).arg(QString::fromStdString(line)).arg(error.errNo);
+        parseATIErrNo(line, error);
+
+        buildShortenedString(line, error);
         error.isDeferencable = true;
-        error.file = fileAbsPath.c_str();
         _errors.push_back(error);
     }
     _errors.pop_back(); // Remove GLSL error saying "X compilation errors, no code generated"
 }
 
-void OutputParser::parseATIErrorLocation(std::string string, int& line, int& col)
+void OutputParser::parseATIErrorLocation(std::string string, OutputItem& item)
 {
     std::istringstream  iss;
-    
+
     std::replace(string.begin(), string.end(), ':', ' ');
     iss.str(string);
-    iss >> col;
-    iss >> line;
+    iss >> item.columnNo;
+    iss >> item.lineNo;
 }
 
-void OutputParser::parseATIErrNo(std::string& string, int& errNo)
+void OutputParser::parseATIErrNo(std::string& string, OutputItem& item)
 {
     std::size_t         pos;
-    std::istringstream  iss;
-    
+
     pos = string.find(')');
-    iss.str(string.substr(0, pos));
-    iss >> errNo;
+    item.errNo = string.substr(0, pos).c_str();
     string = string.substr(pos + 2);
 }
 
 void OutputParser::parseNvidia(const std::string& output, const std::string& fileAbsPath)
 {
-    parseUnknown(output, fileAbsPath);
+    std::istringstream  iss(output);
+    std::string         line;
+
+    while (std::getline(iss, line))
+    {
+        OutputItem  item(line.c_str());
+
+        item.file = fileAbsPath.c_str();
+        parseNvidiaLine(line, item);
+        _errors.push_back(item);
+    }
 }
+
+void OutputParser::parseNvidiaLine(const std::string& output, OutputItem& item)
+{
+    std::size_t pos;
+    std::string detail;
+    std::string wrnStr("warning");
+    std::string errStr("error");
+
+    if ((pos = output.find(':')) == std::string::npos)
+        return;
+    parseNvidiaLocation(output.substr(0, pos), item);
+    detail = output.substr(pos + 2);
+    if (detail.find(errStr) == 0)
+    {
+        detail = detail.substr(errStr.size() + 1);
+        item.type = OutputItem::ErrorItem;
+        item.isDeferencable = true;
+    }
+    else if (detail.find(wrnStr) == 0)
+    {
+        detail = detail.substr(wrnStr.size() + 1);
+        item.type = OutputItem::WarningItem;
+        item.isDeferencable = true;
+    }
+    if ((pos = detail.find(':')) != std::string::npos)
+    {
+        item.errNo = detail.substr(0, pos).c_str();
+        detail = detail.substr(pos + 2);
+    }
+    buildShortenedString(detail, item);
+}
+
+void OutputParser::parseNvidiaLocation(std::string locationString, OutputItem& item)
+{
+    std::istringstream  iss;
+
+    std::replace(locationString.begin(), locationString.end(), '(', ' ');
+    std::replace(locationString.begin(), locationString.end(), ')', ' ');
+    iss.str(locationString);
+    iss >> item.columnNo;
+    iss >> item.lineNo;
+}
+
 
 void OutputParser::parseIntel(const std::string& output, const std::string& fileAbsPath)
 {
     std::istringstream  iss(output);
     std::string         line;
-    
+
     while (std::getline(iss, line))
         parseIntelLine(line, fileAbsPath);
 }
@@ -123,18 +184,14 @@ void OutputParser::parseIntelLine(const std::string& string, const std::string& 
     OutputItem  item(string.c_str());
     std::string errstr(": error: ");
     std::size_t errpos;
-    
+
     item.file = fileAbsPath.c_str();
     if ((errpos = string.find(errstr)) != std::string::npos)
     {
-        QString lineString;
-        
         item.type = OutputItem::ErrorItem;
-        parseIntelErrorLocation(string.substr(0, errpos), item.lineNo, item.columnNo);
-        parseIntelErrorNo(string.substr(0, errpos), item.errNo);
-        if (item.lineNo)
-            lineString = QString(":%1:%2").arg(item.lineNo).arg(item.columnNo);
-        item.shortenedString = QString("Error%1: %2 (#%3)").arg(lineString).arg(QString::fromStdString(string.substr(errpos + errstr.size()))).arg(item.errNo);
+        parseIntelErrorLocation(string.substr(0, errpos), item);
+        parseIntelErrorNo(string.substr(0, errpos), item);
+        buildShortenedString(string.substr(errpos + errstr.size()), item);
         item.isDeferencable = true;
     }
     else
@@ -142,27 +199,25 @@ void OutputParser::parseIntelLine(const std::string& string, const std::string& 
     _errors.push_back(item);
 }
 
-void OutputParser::parseIntelErrorLocation(std::string string, int& line, int& col)
+void OutputParser::parseIntelErrorLocation(std::string string, OutputItem& item)
 {
     std::istringstream  iss;
-    
+
     std::replace(string.begin(), string.end(), ':', ' ');
     std::replace(string.begin(), string.end(), '(', ' ');
     iss.str(string);
-    iss >> col;
-    iss >> line;
+    iss >> item.columnNo;
+    iss >> item.lineNo;
 }
 
-void OutputParser::parseIntelErrorNo(const std::string& string, int& errNo)
+void OutputParser::parseIntelErrorNo(const std::string& string, OutputItem& item)
 {
-    std::istringstream  iss;
     std::size_t         opos;
     std::size_t         cpos;
-    
+
     opos = string.find('(');
     cpos = string.find(')');
     if (opos == std::string::npos || cpos == std::string::npos)
         return;
-    iss.str(string.substr(opos + 1, cpos - opos - 1));
-    iss >> errNo;
+    item.errNo = string.substr(opos + 1, cpos - opos - 1).c_str();
 }

@@ -24,14 +24,14 @@ ShaderInputFactory::ShaderInputFactory() {}
 
 ShaderInputFactory::~ShaderInputFactory() {}
 
-IShaderInputItem* ShaderInputFactory::createTexture()
+TextureInputItem* ShaderInputFactory::createTexture()
 {
   TextureInputItem* item = new TextureInputItem("texture");
 
   return (item);
 }
 
-IShaderInputItem* ShaderInputFactory::createFloat()
+FloatInputItem* ShaderInputFactory::createFloat()
 {
   FloatInputItem* item = new FloatInputItem("float");
 

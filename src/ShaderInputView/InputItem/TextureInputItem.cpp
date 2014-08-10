@@ -25,7 +25,7 @@
 #include "Exceptions/ShaderInputException.hpp"
 
 TextureInputItem::TextureInputItem(const std::string& name)
-: AShaderInputItem(IShaderInputItem::Texture, name)
+:   AShaderInputItem(IShaderInputItem::Type::Texture, name)
 {}
 
 TextureInputItem::~TextureInputItem() {}
@@ -84,7 +84,7 @@ void TextureInputItem::load() // FIXME Handle errors properly
 		      GLenum(gli::type_format(texture.format())),
 		      texture[level].data());
   }
-  _loaded = true;
+  _isLoaded = true;
 }
 
 void TextureInputItem::reload()
@@ -96,7 +96,7 @@ void TextureInputItem::reload()
 void TextureInputItem::unload()
 {
   glDeleteTextures(1, &_handle);
-  _loaded = false;
+  _isLoaded = false;
 }
 
 void TextureInputItem::bind(ShaderProgram* prgm)

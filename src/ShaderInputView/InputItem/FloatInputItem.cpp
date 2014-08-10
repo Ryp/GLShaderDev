@@ -21,39 +21,39 @@
 #include "FloatInputItem.h"
 
 FloatInputItem::FloatInputItem(const std::string& name)
-: AShaderInputItem(IShaderInputItem::Float, name)
+:   AShaderInputItem(IShaderInputItem::Type::Float, name)
 {
-  _loaded = true;
+    _isLoaded = true;
 }
 
 FloatInputItem::~FloatInputItem() {}
 
 void FloatInputItem::setValue(GLfloat value)
 {
-  _value = value;
+    _value = value;
 }
 
 GLfloat FloatInputItem::getValue() const
 {
-  return (_value);
+    return (_value);
 }
 
 void FloatInputItem::load()
 {
-  // NOTE nothing has to be performed
+    // NOTE nothing has to be performed
 }
 
 void FloatInputItem::reload()
 {
-  // NOTE nothing has to be performed
+    // NOTE nothing has to be performed
 }
 
 void FloatInputItem::unload()
 {
-  // NOTE nothing has to be performed
+    // NOTE nothing has to be performed
 }
 
 void FloatInputItem::bind(ShaderProgram* prgm)
 {
-  glUniform1f(prgm->getUniformLocation(getInputName()), _value);
+    glUniform1f(prgm->getUniformLocation(getInputName()), _value);
 }

@@ -1,3 +1,5 @@
+#version 130
+
 uniform float time;
 uniform uvec2 screenSize;
 

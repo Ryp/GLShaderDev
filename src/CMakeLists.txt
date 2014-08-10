@@ -28,8 +28,10 @@ set(GLSD_SRC
     ShaderInputView/InputItem/TextureInputItem.cpp
     ShaderInputView/InputItem/FloatInputItem.cpp
     ShaderInputView/InputWidget/AInputItemEditorWidget.cpp
-    ShaderInputView/InputWidget/TestWidget.cpp
-    ShaderInputView/ShaderInputDelegate.cpp
+    ShaderInputView/InputWidget/AShaderInputProperty.cpp
+    ShaderInputView/InputWidget/FloatInputProperty.cpp
+#     ShaderInputView/InputWidget/TestWidget.cpp
+#     ShaderInputView/ShaderInputDelegate.cpp
     ShaderInputView/ShaderInputModel.cpp
     ShaderInputView/ShaderInputView.cpp
     ShaderStagesView/StagesModel.cpp
@@ -49,8 +51,10 @@ set(MOC_HEADERS
     GL/GLPreviewWidget.h
     GL/OpenGLWidget.h
     ShaderInputView/InputWidget/AInputItemEditorWidget.h
-    ShaderInputView/InputWidget/TestWidget.h
-    ShaderInputView/ShaderInputDelegate.h
+    ShaderInputView/InputWidget/AShaderInputProperty.h
+    ShaderInputView/InputWidget/FloatInputProperty.h
+#     ShaderInputView/InputWidget/TestWidget.h
+#     ShaderInputView/ShaderInputDelegate.h
     ShaderInputView/ShaderInputView.h
     ShaderInputView/ShaderInputModel.h
     ShaderStagesView/StagesModel.h

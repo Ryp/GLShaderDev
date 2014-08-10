@@ -18,51 +18,51 @@
 #include "AShaderInputItem.h"
 
 AShaderInputItem::AShaderInputItem(Type type, const std::string& name)
-: _handle(0),
-  _enabled(true),
-  _loaded(false),
-  _type(type),
-  _name(name)
+:   _handle(0),
+    _enabled(true),
+    _isLoaded(false),
+    _type(type),
+    _name(name)
 {}
 
 AShaderInputItem::~AShaderInputItem() {}
 
 GLuint AShaderInputItem::getHandle() const
 {
-  return (_handle);
+    return (_handle);
 }
 
 IShaderInputItem::Type AShaderInputItem::getType() const
 {
-  return (_type);
+    return (_type);
 }
 
 const std::string& AShaderInputItem::getInputName() const
 {
-  return (_name);
+    return (_name);
 }
 
 void AShaderInputItem::setInputName(const std::string& name)
 {
-  _name = name;
+    _name = name;
 }
 
 bool AShaderInputItem::isEnabled() const
 {
-  return (_enabled);
+    return (_enabled);
 }
 
 void AShaderInputItem::setEnabled(bool enabled)
 {
-  _enabled = enabled;
+    _enabled = enabled;
 }
 
 void AShaderInputItem::toggle()
 {
-  _enabled = !_enabled;
+    _enabled = !_enabled;
 }
 
 bool AShaderInputItem::isLoaded() const
 {
-  return (_loaded);
+    return (_isLoaded);
 }

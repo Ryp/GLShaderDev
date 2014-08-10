@@ -27,30 +27,30 @@ class ShaderProgram;
 class IShaderInputItem
 {
 public:
-  enum Type {
-    None,
-    Texture,
-    Float
-  };
+    enum class Type {
+        None,
+        Texture,
+        Float
+    };
 
 public:
-  virtual ~IShaderInputItem() {}
+    virtual ~IShaderInputItem() {}
 
-  virtual GLuint		getHandle() const = 0;
-  virtual Type			getType() const = 0;
-  virtual const std::string&	getInputName() const = 0;
-  virtual void			setInputName(const std::string& name) = 0;
+    virtual GLuint              getHandle() const = 0;
+    virtual Type                getType() const = 0;
+    virtual const std::string&  getInputName() const = 0;
+    virtual void                setInputName(const std::string& name) = 0;
 
-  virtual bool			isEnabled() const = 0;
-  virtual void			setEnabled(bool enabled) = 0;
-  virtual void			toggle() = 0;
+public:
+    virtual bool    isEnabled() const = 0;
+    virtual void    setEnabled(bool enabled) = 0;
+    virtual void    toggle() = 0;
+    virtual bool    isLoaded() const = 0;
 
-  virtual bool			isLoaded() const = 0;
-
-  virtual void			load() = 0;
-  virtual void			reload() = 0;
-  virtual void			unload() = 0;
-  virtual void			bind(ShaderProgram* prgm) = 0;
+    virtual void    load() = 0;
+    virtual void    reload() = 0;
+    virtual void    unload() = 0;
+    virtual void    bind(ShaderProgram* prgm) = 0;
 };
 
 #endif // ISHADERINPUTITEM_H

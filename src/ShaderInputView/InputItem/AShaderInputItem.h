@@ -23,34 +23,35 @@
 class AShaderInputItem : public IShaderInputItem
 {
 public:
-  AShaderInputItem(Type type, const std::string& name = "");
-  virtual ~AShaderInputItem();
+    AShaderInputItem(Type type, const std::string& name = "");
+    virtual ~AShaderInputItem();
 
 public:
-  GLuint		getHandle() const;
-  Type			getType() const;
-  const std::string&	getInputName() const;
-  void			setInputName(const std::string& name);
+    GLuint              getHandle() const;
+    Type                getType() const;
+    const std::string&  getInputName() const;
+    void                setInputName(const std::string& name);
 
-  bool			isEnabled() const;
-  void			setEnabled(bool enabled);
-  void			toggle();
+    bool                isEnabled() const;
+    void                setEnabled(bool enabled);
+    void                toggle();
 
-  bool			isLoaded() const;
+    bool                isLoaded() const;
 
-  virtual void		load() = 0;
-  virtual void		reload() = 0;
-  virtual void		unload() = 0;
-  virtual void		bind(ShaderProgram* prgm) = 0;
+public:
+    virtual void    load() = 0;
+    virtual void    reload() = 0;
+    virtual void    unload() = 0;
+    virtual void    bind(ShaderProgram* prgm) = 0;
 
 protected:
-  GLuint	_handle;
-  bool		_enabled;
-  bool		_loaded;
+    GLuint  _handle;
+    bool    _enabled;
+    bool    _isLoaded;
 
 private:
-  Type		_type;
-  std::string	_name;
+    Type        _type;
+    std::string _name;
 };
 
 #endif // ASHADERINPUTITEM_H

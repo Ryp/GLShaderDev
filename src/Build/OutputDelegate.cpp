@@ -27,28 +27,33 @@ OutputDelegate::~OutputDelegate() {}
 
 void OutputDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
 {
-  QStyleOptionViewItem	opt = option;
-  QVariant		status = index.data(OutputModel::OutputItemTypeRole);
-  QBrush		brush;
+    QStyleOptionViewItem  opt = option;
+    QVariant      status = index.data(OutputModel::OutputItemTypeRole);
+    QBrush        brush;
 
-  if (status.isValid())
-  {
-    OutputItem::OutputItemType type = static_cast<OutputItem::OutputItemType>(status.toInt());
-
-    switch (type)
+    if (status.isValid())
     {
-      case OutputItem::ErrorItem:
-      {
-	brush.setColor(QColor("#BF0303"));
-	opt.palette.setBrush(QPalette::Text, brush);
-      } break;
-      case OutputItem::InformationItem: {
-	brush.setColor(QColor("#006E28"));
-	opt.palette.setBrush(QPalette::Text, brush);
-      } break;
-      default:
-	break;
+        OutputItem::OutputItemType type = static_cast<OutputItem::OutputItemType>(status.toInt());
+
+        switch (type)
+        {
+            case OutputItem::ErrorItem:
+            {
+                brush.setColor(QColor("#BF0303"));
+                opt.palette.setBrush(QPalette::Text, brush);
+            } break;
+            case OutputItem::WarningItem:
+            {
+                brush.setColor(QColor("#B08000"));
+                opt.palette.setBrush(QPalette::Text, brush);
+            } break;
+            case OutputItem::InformationItem: {
+                brush.setColor(QColor("#006E28"));
+                opt.palette.setBrush(QPalette::Text, brush);
+            } break;
+            default:
+                break;
+        }
     }
-  }
-  QItemDelegate::paint(painter, opt, index);
+    QItemDelegate::paint(painter, opt, index);
 }

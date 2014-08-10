@@ -26,13 +26,14 @@ struct OutputItem
     {
         HiddenItem = 0,
         ErrorItem,
+        WarningItem,
         StandardItem,
         InformationItem
     };
-    
+
     explicit OutputItem(const QString& line = QString());
     OutputItem(const QString& line, OutputItemType type);
-    
+
     OutputItemType  type;
     QString         originalString;
     QString         shortenedString;
@@ -40,7 +41,7 @@ struct OutputItem
     QString         file;
     int             lineNo;
     int             columnNo;
-    int             errNo;
+    QString         errNo;
 };
 
 #endif // OUTPUTITEM_H

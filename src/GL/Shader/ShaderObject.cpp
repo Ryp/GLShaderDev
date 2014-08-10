@@ -50,7 +50,7 @@ bool ShaderObject::compile(const std::string& code, ShaderType type)
     {
       std::vector<GLchar> infoLog(logLength);
       glGetShaderInfoLog(handle, logLength, &logLength, &infoLog[0]);
-      infoLog[logLength - 1] = '\0'; // Overwrite endline
+      infoLog[logLength - 1] = '\0'; // Overwrite endline NOTE set to -1 for intel parser (-2 ATI) -> check
       _log = &infoLog[0];
     }
     glDeleteShader(handle);

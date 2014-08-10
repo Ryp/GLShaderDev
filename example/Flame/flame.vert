@@ -1,3 +1,5 @@
+#version 130
+
 in vec3 vertex;
 in vec2 uv;
 

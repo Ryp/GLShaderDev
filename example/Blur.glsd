@@ -1,0 +1,2 @@
+[General]
+stages=Fragment:../example/Blur/blur.frag, Vertex:../example/Blur/blur.vert

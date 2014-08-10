@@ -22,15 +22,18 @@
 
 #include "IShaderInputItem.h"
 
+class TextureInputItem;
+class FloatInputItem;
+
 class ShaderInputFactory
 {
 public:
-  ShaderInputFactory();
-  ~ShaderInputFactory();
+    ShaderInputFactory();
+    ~ShaderInputFactory();
 
 public:
-  IShaderInputItem*	createTexture();
-  IShaderInputItem*	createFloat();
+    TextureInputItem*   createTexture();
+    FloatInputItem*     createFloat();
 };
 
 #endif // SHADERINPUTFACTORY_H

@@ -2,7 +2,7 @@
 
 _gitname=GLShaderDev
 pkgname=glshaderdev-git
-pkgver=0.9.1.r13.ge215fe6
+pkgver=0.9.1.r17.g051074d
 pkgrel=1
 pkgdesc="Qt IDE for modern OpenGL shaders"
 arch=('i686' 'x86_64')

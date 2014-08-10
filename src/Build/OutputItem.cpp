@@ -18,23 +18,23 @@
 #include "OutputItem.h"
 
 OutputItem::OutputItem(const QString& line)
-: type(HiddenItem),
-  originalString(line),
-  shortenedString(line),
-  isDeferencable(false),
-  file(QString()),
-  lineNo(0),
-  columnNo(0),
-  errNo(0)
+:   type(HiddenItem),
+    originalString(line),
+    shortenedString(line),
+    isDeferencable(false),
+    file(QString()),
+    lineNo(0),
+    columnNo(0),
+    errNo(QString())
 {}
 
 OutputItem::OutputItem(const QString& line, OutputItemType type)
-: type(type),
-  originalString(line),
-  shortenedString(line),
-  isDeferencable(false),
-  file(QString()),
-  lineNo(0),
-  columnNo(0),
-  errNo(0)
+:   type(type),
+    originalString(line),
+    shortenedString(line),
+    isDeferencable(false),
+    file(QString()),
+    lineNo(0),
+    columnNo(0),
+    errNo(QString())
 {}
